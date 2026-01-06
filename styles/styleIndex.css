@@ -1,0 +1,521 @@
+/* header */
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.7px solid #ccc;
+    background-color: white;
+    padding-top : 15px;
+    padding-bottom: 15px;
+    padding-right: 70px;
+    padding-left: 70px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+
+header .header-img {
+    width: 160px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+header .header-img:hover {
+    transform: scale(1.05);
+}
+
+header .ls {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+header .ls ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+header .ls li {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+}
+
+header .ls li:not(:last-child) {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+header .ls li:not(:last-child):hover {
+    color: #1C4D8D;
+}
+
+header .ls li a {
+    text-decoration: none;
+    color: inherit;
+}
+
+header .ls li button {
+    cursor: pointer;
+    color: white;
+    background-color: #1C4D8D;
+    width: 100px;
+    height: 40px;
+    border: none;
+    outline: none;
+}
+
+/*hero*/
+
+main{
+    width: 100%;
+}
+
+.cointener{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hero{
+    width: 50%;
+    padding-left: 70px;
+    padding-right: 70px;
+    padding-top : 90px;
+    padding-bottom: 90px;
+}
+
+.hero h1{
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    color: #2c3e50;
+}
+
+.hero p{
+    color: #6c757d;
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.hero .inizia{
+    cursor: pointer;
+    color: white;
+    background-color: #1C4D8D;
+    width: 140px;
+    height: 40px;
+    border: none;
+    outline: none;
+    margin-right: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.hero .inizia:hover {
+    background-color: #153a6b;
+}
+
+.hero .scopri{
+    cursor: pointer;
+    color: black;
+    background-color: #ffffff;
+    width: 140px;
+    height: 40px;
+    border: 0.7px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.hero .scopri:hover {
+    border-color: #1C4D8D;
+}
+
+.hero-img{
+    width: 50%;
+    padding-left: 70px;
+    padding-right: 70px;
+    padding-top : 90px;
+    padding-bottom: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-img img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Section Divider */
+.section-divider {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 0;
+}
+
+/* Carousel Navigation */
+.card-container-wrapper {
+    position: relative;
+    padding: 60px 70px;
+}
+
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1C4D8D;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-nav:hover {
+    background-color: #153a6b;
+}
+
+.carousel-nav.prev {
+    left: 20px;
+}
+
+.carousel-nav.next {
+    right: 20px;
+}
+
+/* Carousel Cards */
+.card-container {
+    display: flex;
+    gap: 30px;
+    overflow-x: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+.card-container-slogan {
+    width: 100%;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.card-container-slogan::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #1C4D8D;
+    border-radius: 2px;
+}
+
+.card-container::after {
+    content: '';
+    min-width: 70px;
+    height: 1px;
+}
+
+.card-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.card-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.card-container::-webkit-scrollbar-thumb {
+    background: #1C4D8D;
+    border-radius: 10px;
+}
+
+.card {
+    min-width: 350px;
+    height: 300px;
+    scroll-snap-align: start;
+    background: white;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.card-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 15px 0;
+}
+
+.card p {
+    font-size: 14px;
+    color: #6c757d;
+    line-height: 1.5;
+    margin: 0;
+    text-align: center;
+    max-width: 280px;
+}
+
+.card-link {
+    color: #1C4D8D;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    margin-top: 20px;
+}
+
+.card-link:hover {
+    color: #153a6b;
+}
+
+/* Contact Section */
+.contattaci {
+    padding: 60px 70px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.contattaci h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.contattaci h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #1C4D8D;
+    border-radius: 2px;
+}
+
+.contact-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 200px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.cont-form {
+    flex: 1;
+}
+
+.contact-form input,
+.contact-form select {
+    width: 100%;
+    height: 50px;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    background: white;
+    font-size: 16px;
+    color: #2c3e50;
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.contact-form input:focus,
+.contact-form select:focus {
+    border-color: #1C4D8D;
+}
+
+.contact-form button {
+    background-color: #1C4D8D;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+}
+
+.contact-form button:hover {
+    background-color: #153a6b;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    justify-content: center;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.info-item .icon {
+    font-size: 20px;
+    color: #1C4D8D;
+}
+
+.info-item p {
+    font-size: 16px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Footer */
+footer {
+    background-color: #1C4D8D;
+    padding: 20px 0;
+    margin-top: 0;
+}
+
+.footer-content {
+    text-align: center;
+    padding: 0 70px;
+}
+
+.footer-content p {
+    color: white;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Norme Page Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 70px;
+}
+
+.norme-content {
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.card-norme {
+    min-width: 350px;
+    height: auto;
+    background: white;
+    scroll-snap-align: start;
+    background: white;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card-norme h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+    text-transform: capitalize;
+    text-align: center;
+
+}
+
+
+.card-norme .divider {
+    width: 100%;
+    height: 1px;
+    background-color: #e9ecef;
+    margin: 15px 0;
+}
+
+.card-norme p {
+    color: #6c757d;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    text-align: center;
+    max-width: 280px;
+}
+
+.card-norme ul {
+    margin: 15px 0;
+    padding-left: 20px;
+    width: 100%;
+    text-align: left;
+}
+
+.card-norme li {
+    color: #6c757d;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
