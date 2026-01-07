@@ -17,6 +17,10 @@ app.use(morgan('dev'));
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 
+// Serve uploaded avatars
+const avatarsDir = path.resolve(__dirname, '../storage/avatars');
+app.use('/uploads/avatars', express.static(avatarsDir));
+
 app.get('/api/health', (req, res) => {
   res.json({ ok: true });
 });

@@ -47,12 +47,15 @@
                             <p>Dati relativi alla tua identità e foto profilo utilizzati nei servizi di Equo Compenso.</p>
                         </div>
                         <div class="account-avatar-editor">
-                            <div class="account-avatar-circle"><i class="fas fa-user"></i></div>
-                            <button class="account-avatar-action" type="button" onclick="document.getElementById('avatarInput').click()">
+                            <div class="account-avatar-circle" id="avatarDisplay">
+                                <img id="avatarImg" class="account-avatar-img" alt="Avatar" style="display:none;">
+                                <span id="avatarInitials" class="account-avatar-initials">?</span>
+                            </div>
+                            <button id="change_photo_trigger" class="account-avatar-action" type="button" onclick="document.getElementById('avatarInput').click()">
                                 <i class="fas fa-camera"></i>
-                                <span>Cambia foto</span>
+                                <span>Cambia Foto</span>
                             </button>
-                            <input id="avatarInput" type="file" accept="image/*" style="display:none;">
+                            <input id="avatarInput" type="file" accept="image/png,image/jpeg,image/webp" style="display:none;">
                         </div>
                     </div>
 
@@ -167,7 +170,7 @@
         </div>
 
         <div class="account-save-wrap">
-            <button class="account-save-btn" type="button" onclick="saveAccount()">Salva tutte le modifiche</button>
+            <button id="save_all_changes" class="account-save-btn" type="button" onclick="saveAccount()">Salva Modifiche</button>
         </div>
     </main>
 
@@ -317,6 +320,46 @@
             const d = new Date(value);
             if (Number.isNaN(d.getTime())) return value;
             return d.toLocaleString('it-IT');
+        }
+
+        function showToast(message) {
+            const t = document.getElementById('toast');
+            if (!t) return;
+            t.textContent = message;
+            t.classList.add('open');
+            window.clearTimeout(t._hideTimer);
+            t._hideTimer = window.setTimeout(() => {
+                t.classList.remove('open');
+            }, 2500);
+        }
+
+        function getInitials(nome, cognome, email) {
+            const n = String(nome || '').trim();
+            const c = String(cognome || '').trim();
+            if (n || c) {
+                return `${(n[0] || '').toUpperCase()}${(c[0] || '').toUpperCase()}`.trim() || '?';
+            }
+            const e = String(email || '').trim();
+            return e ? (e[0] || '?').toUpperCase() : '?';
+        }
+
+        function setAvatarDisplay({ avatarUrl, nome, cognome, email } = {}) {
+            const img = document.getElementById('avatarImg');
+            const initials = document.getElementById('avatarInitials');
+            if (!img || !initials) return;
+
+            const init = getInitials(nome, cognome, email);
+            initials.textContent = init;
+
+            if (avatarUrl) {
+                img.src = avatarUrl;
+                img.style.display = '';
+                initials.style.display = 'none';
+            } else {
+                img.removeAttribute('src');
+                img.style.display = 'none';
+                initials.style.display = '';
+            }
         }
 
         let calculationsCache = [];
@@ -541,6 +584,8 @@
                 return;
             }
 
+            setAvatarDisplay({ nome: user.nome, cognome: user.cognome, email: user.email });
+
             try {
                 const me = await apiRequest('/api/me', { method: 'GET' });
                 const u = me.user || {};
@@ -551,9 +596,42 @@
                 document.getElementById('accEmail').value = u.email || '';
                 const badge = document.getElementById('accEmailBadge');
                 if (badge) badge.style.display = u.email ? '' : 'none';
+                setAvatarDisplay({ avatarUrl: u.avatar_url, nome: u.nome, cognome: u.cognome, email: u.email });
             } catch {
                 document.getElementById('accEmail').value = user.email || '';
+                setAvatarDisplay({ nome: user.nome, cognome: user.cognome, email: user.email });
             }
+        }
+
+        async function uploadAvatar(file) {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                alert('Devi effettuare il login.');
+                return;
+            }
+
+            const form = new FormData();
+            form.append('avatar', file);
+
+            const res = await fetch('/api/me/avatar', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+                body: form
+            });
+
+            if (!res.ok) {
+                let data = null;
+                try {
+                    data = await res.json();
+                } catch {
+                    data = null;
+                }
+                const msg = data && data.error ? data.error : 'Upload non disponibile';
+                throw new Error(msg);
+            }
+
+            const data = await res.json();
+            return data;
         }
 
         async function downloadDocument(docId, type) {
@@ -616,7 +694,7 @@
                     localStorage.setItem('authToken', data.token);
                 }
                 updateHeaderUser();
-                alert('Modifiche salvate.');
+                showToast('Modifiche salvate');
             } catch (e) {
                 alert(e.message || 'Errore');
             }
@@ -647,6 +725,52 @@
             }
 
             loadAccount();
+
+            const avatarInput = document.getElementById('avatarInput');
+            if (avatarInput) {
+                avatarInput.addEventListener('change', async () => {
+                    const file = avatarInput.files && avatarInput.files[0] ? avatarInput.files[0] : null;
+                    if (!file) return;
+
+                    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+                    if (!allowed.includes(file.type)) {
+                        alert('Formato non supportato. Usa JPG, PNG o WEBP.');
+                        avatarInput.value = '';
+                        return;
+                    }
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('File troppo grande. Max 2MB.');
+                        avatarInput.value = '';
+                        return;
+                    }
+
+                    const previewUrl = URL.createObjectURL(file);
+                    const img = document.getElementById('avatarImg');
+                    const initials = document.getElementById('avatarInitials');
+                    if (img && initials) {
+                        img.src = previewUrl;
+                        img.style.display = '';
+                        initials.style.display = 'none';
+                    }
+
+                    try {
+                        const out = await uploadAvatar(file);
+                        if (out && out.user) {
+                            setAvatarDisplay({ avatarUrl: out.user.avatar_url, nome: out.user.nome, cognome: out.user.cognome, email: out.user.email });
+                        }
+                        if (out && out.token) {
+                            localStorage.setItem('authToken', out.token);
+                            updateHeaderUser();
+                        }
+                        showToast('Foto profilo aggiornata');
+                    } catch (e) {
+                        alert(e && e.message ? e.message : 'Errore');
+                    } finally {
+                        avatarInput.value = '';
+                        URL.revokeObjectURL(previewUrl);
+                    }
+                });
+            }
         })();
     </script>
 
@@ -660,6 +784,8 @@
             </div>
         </div>
     </div>
+
+    <div id="toast" class="account-toast" role="status" aria-live="polite"></div>
 
 </body>
 </html>

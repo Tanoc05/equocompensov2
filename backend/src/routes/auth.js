@@ -15,6 +15,7 @@ function signToken(user) {
       nome: user.nome,
       cognome: user.cognome,
       professione: user.professione,
+      avatar_url: user.avatar_url,
     },
     process.env.JWT_SECRET,
     { expiresIn: '7d' }
@@ -39,7 +40,7 @@ router.post('/register', async (req, res) => {
     const { rows } = await pool.query(
       `INSERT INTO users (id, email, password_hash, nome, cognome, data_nascita, professione)
        VALUES ($1,$2,$3,$4,$5,$6,$7)
-       RETURNING id, email, nome, cognome, professione`,
+       RETURNING id, email, nome, cognome, professione, avatar_url`,
       [userId, email, passwordHash, nome, cognome, dataNascita, professione]
     );
 
@@ -62,7 +63,7 @@ router.post('/login', async (req, res) => {
   }
 
   const { rows } = await pool.query(
-    'SELECT id, email, password_hash, nome, cognome, professione FROM users WHERE email = $1',
+    'SELECT id, email, password_hash, nome, cognome, professione, avatar_url FROM users WHERE email = $1',
     [email]
   );
 
@@ -77,7 +78,7 @@ router.post('/login', async (req, res) => {
   }
 
   const token = signToken(user);
-  return res.json({ token, user: { id: user.id, email: user.email, nome: user.nome, cognome: user.cognome, professione: user.professione } });
+  return res.json({ token, user: { id: user.id, email: user.email, nome: user.nome, cognome: user.cognome, professione: user.professione, avatar_url: user.avatar_url } });
 });
 
 module.exports = router;

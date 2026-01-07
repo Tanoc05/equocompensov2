@@ -38,6 +38,9 @@ async function ensureSchema() {
 
     ALTER TABLE calculations
       ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
+
+    ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS avatar_url TEXT;
   `);
 }
 

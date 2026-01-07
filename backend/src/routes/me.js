@@ -1,9 +1,42 @@
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
 const { pool } = require('../db/pool');
 const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
+
+const avatarsDir = path.resolve(__dirname, '../../storage/avatars');
+
+function ensureDir(dir) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      ensureDir(avatarsDir);
+      cb(null, avatarsDir);
+    },
+    filename: (req, file, cb) => {
+      const ext = String(path.extname(file.originalname) || '').toLowerCase();
+      const safeExt = ['.jpg', '.jpeg', '.png', '.webp'].includes(ext) ? ext : '.bin';
+      cb(null, `avatar-${req.user.sub}-${Date.now()}${safeExt}`);
+    },
+  }),
+  limits: { fileSize: 2 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.mimetype)) {
+      const err = new Error('Invalid file type');
+      err.code = 'INVALID_FILE_TYPE';
+      return cb(err);
+    }
+    return cb(null, true);
+  },
+});
 
 function signToken(user) {
   return jwt.sign(
@@ -13,6 +46,7 @@ function signToken(user) {
       nome: user.nome,
       cognome: user.cognome,
       professione: user.professione,
+      avatar_url: user.avatar_url,
     },
     process.env.JWT_SECRET,
     { expiresIn: '7d' }
@@ -22,7 +56,7 @@ function signToken(user) {
 router.get('/', requireAuth, async (req, res) => {
   const userId = req.user.sub;
   const { rows } = await pool.query(
-    'SELECT id, email, nome, cognome, data_nascita, professione, created_at FROM users WHERE id = $1',
+    'SELECT id, email, nome, cognome, data_nascita, professione, avatar_url, created_at FROM users WHERE id = $1',
     [userId]
   );
   if (!rows[0]) return res.status(404).json({ error: 'Not found' });
@@ -41,13 +75,49 @@ router.put('/', requireAuth, async (req, res) => {
     `UPDATE users
      SET nome = $2, cognome = $3, data_nascita = $4, professione = $5
      WHERE id = $1
-     RETURNING id, email, nome, cognome, data_nascita, professione, created_at`,
+     RETURNING id, email, nome, cognome, data_nascita, professione, avatar_url, created_at`,
     [userId, nome, cognome, dataNascita, professione]
   );
 
   const user = rows[0];
   const token = signToken(user);
   return res.json({ user, token });
+});
+
+router.post('/avatar', requireAuth, (req, res) => {
+  upload.single('avatar')(req, res, async (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'File too large (max 2MB)' });
+      }
+      if (err.code === 'INVALID_FILE_TYPE') {
+        return res.status(400).json({ error: 'Invalid file type' });
+      }
+      return res.status(400).json({ error: 'Upload error' });
+    }
+
+    const userId = req.user.sub;
+    if (!req.file) return res.status(400).json({ error: 'Missing file' });
+
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+    try {
+      const { rows } = await pool.query(
+        `UPDATE users
+         SET avatar_url = $2
+         WHERE id = $1
+         RETURNING id, email, nome, cognome, data_nascita, professione, avatar_url, created_at`,
+        [userId, avatarUrl]
+      );
+
+      const user = rows[0];
+      if (!user) return res.status(404).json({ error: 'Not found' });
+
+      const token = signToken(user);
+      return res.json({ user, token });
+    } catch {
+      return res.status(500).json({ error: 'Server error' });
+    }
+  });
 });
 
 module.exports = router;
