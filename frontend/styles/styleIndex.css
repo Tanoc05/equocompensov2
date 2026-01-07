@@ -647,19 +647,51 @@ main{
     display: inline-block;
 }
 
-.user-btn {
-    background: none;
+header .ls li.user-item .user-btn {
+    background: transparent;
     border: none;
     color: #1C4D8D;
-    font-size: 16px;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    padding: 6px 10px;
+    width: auto;
+    height: auto;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.user-btn:hover {
+header .ls li.user-item .user-btn:hover {
     background-color: rgba(28, 77, 141, 0.1);
+}
+
+header .ls li.user-item .user-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(28, 77, 141, 0.2);
+}
+
+header .ls li.user-item .user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: #1C4D8D;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 34px;
+}
+
+header .ls li.user-item .user-avatar i {
+    font-size: 16px;
+}
+
+header .ls li.user-item .user-welcome-text {
+    color: #1C4D8D;
+    white-space: nowrap;
 }
 
 .user-dropdown-menu {
@@ -669,25 +701,27 @@ main{
     background: white;
     border: 1px solid #1C4D8D;
     border-radius: 0;
-    box-shadow: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    min-width: 140px;
+    min-width: 160px;
 }
 
-.user-dropdown-menu button {
+header .user-dropdown-menu button {
     display: block;
     width: 100%;
+    height: auto;
     padding: 10px 14px;
-    background: none;
+    background: transparent;
     border: none;
     text-align: left;
     font-size: 14px;
+    font-weight: 600;
     color: #333;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.user-dropdown-menu button:hover {
+header .user-dropdown-menu button:hover {
     background-color: rgba(28, 77, 141, 0.1);
     color: #1C4D8D;
 }
