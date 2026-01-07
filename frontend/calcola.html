@@ -992,19 +992,26 @@
             const headerUl = document.querySelector('.ls ul');
             if (!headerUl) return;
             const isLogged = !!token && (!!user.sub || !!user.id || !!user.email);
+
+            function isAuthLi(li) {
+                const txt = (li.textContent || '').trim().toLowerCase();
+                if (txt === 'login' || txt === 'registrati') return true;
+                const btn = li.querySelector('button');
+                if (btn && btn.onclick) {
+                    const fn = btn.onclick.toString();
+                    if (fn.includes('login') || fn.includes('openRegisterModal') || fn.includes('register')) return true;
+                }
+                const a = li.querySelector('a');
+                if (a) {
+                    const href = (a.getAttribute('href') || '').toLowerCase();
+                    if (href.includes('login') || href.includes('register')) return true;
+                }
+                return false;
+            }
+
             if (isLogged) {
-                const buttons = headerUl.querySelectorAll('button');
-                buttons.forEach(btn => {
-                    if (btn.onclick && btn.onclick.toString().includes('login')) {
-                        btn.parentElement.style.display = 'none';
-                    }
-                    if (
-                        (btn.onclick && btn.onclick.toString().includes('register')) ||
-                        (btn.onclick && btn.onclick.toString().includes('openRegisterModal')) ||
-                        (btn.textContent && btn.textContent.trim().toLowerCase() === 'registrati')
-                    ) {
-                        btn.parentElement.style.display = 'none';
-                    }
+                headerUl.querySelectorAll('li').forEach(li => {
+                    if (isAuthLi(li)) li.style.display = 'none';
                 });
                 if (!headerUl.querySelector('.user-item')) {
                     const userLi = document.createElement('li');
@@ -1024,18 +1031,8 @@
                     headerUl.appendChild(userLi);
                 }
             } else {
-                const buttons = headerUl.querySelectorAll('button');
-                buttons.forEach(btn => {
-                    if (btn.onclick && btn.onclick.toString().includes('login')) {
-                        btn.parentElement.style.display = '';
-                    }
-                    if (
-                        (btn.onclick && btn.onclick.toString().includes('register')) ||
-                        (btn.onclick && btn.onclick.toString().includes('openRegisterModal')) ||
-                        (btn.textContent && btn.textContent.trim().toLowerCase() === 'registrati')
-                    ) {
-                        btn.parentElement.style.display = '';
-                    }
+                headerUl.querySelectorAll('li').forEach(li => {
+                    if (isAuthLi(li)) li.style.display = '';
                 });
                 const userLi = headerUl.querySelector('.user-item');
                 if (userLi) userLi.remove();
