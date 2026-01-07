@@ -996,7 +996,11 @@
                     if (btn.onclick && btn.onclick.toString().includes('login')) {
                         btn.parentElement.style.display = 'none';
                     }
-                    if (btn.onclick && btn.onclick.toString().includes('register')) {
+                    if (
+                        (btn.onclick && btn.onclick.toString().includes('register')) ||
+                        (btn.onclick && btn.onclick.toString().includes('openRegisterModal')) ||
+                        (btn.textContent && btn.textContent.trim().toLowerCase() === 'registrati')
+                    ) {
                         btn.parentElement.style.display = 'none';
                     }
                 });
@@ -1020,7 +1024,11 @@
                     if (btn.onclick && btn.onclick.toString().includes('login')) {
                         btn.parentElement.style.display = '';
                     }
-                    if (btn.onclick && btn.onclick.toString().includes('register')) {
+                    if (
+                        (btn.onclick && btn.onclick.toString().includes('register')) ||
+                        (btn.onclick && btn.onclick.toString().includes('openRegisterModal')) ||
+                        (btn.textContent && btn.textContent.trim().toLowerCase() === 'registrati')
+                    ) {
                         btn.parentElement.style.display = '';
                     }
                 });
