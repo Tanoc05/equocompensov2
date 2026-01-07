@@ -225,7 +225,7 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
 
       const aCons = toNumber(input && input.aliquota_consulenza);
       if (Number.isFinite(aCons)) inputRows.push(['Aliquota consulenza', 'Valore selezionato', `${(aCons * 100).toFixed(2)}%`]);
-      if (input && input.percentuale != null && !Number.isNaN(input.percentuale)) inputRows.push(['Percentuale', 'Adeguamento', `${input.percentuale}%`]);
+      if (input && input.percentuale != null && !Number.isNaN(input.percentuale)) inputRows.push(['Percentuale', 'Posizionamento nel range (0%=min, 100%=max)', `${input.percentuale}%`]);
       if (input && input.corrispettivoPattuito != null && !Number.isNaN(input.corrispettivoPattuito)) inputRows.push(['Corrispettivo pattuito', 'Valore inserito', currency(input.corrispettivoPattuito)]);
       if (criterio) inputRows.push(['Criterio', 'Selezione valore', String(criterio)]);
 
@@ -557,7 +557,7 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       }
 
       const pct = input && input.percentuale != null && !Number.isNaN(input.percentuale) ? Number(input.percentuale) : NaN;
-      if (Number.isFinite(pct) && pct > 0 && pct !== 100) mods.push(`Adeguamento percentuale applicato: ${pct}%.`);
+      if (Number.isFinite(pct)) mods.push(`Percentuale (posizionamento nel range 0%=min, 100%=max): ${pct}%.`);
 
       if (!scaglioniRows.length) {
         scaglioniRows.push(['N/D', 'Scaglioni non disponibili per questo riquadro', '-']);
@@ -592,6 +592,14 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     const docType = input && input.documentType ? String(input.documentType) : '';
     const normativa = normativeReferenceFor(riquadro, docType);
     const m = methodologyData({ riquadro, input, criterio: calculation && calculation.criterio ? calculation.criterio : '', result });
+
+    sectionTitle('METODOLOGIA DI CALCOLO');
+    fontRegular();
+    doc.fontSize(10).fillColor('#111');
+    doc.text('Il compenso è determinato applicando i parametri ministeriali al valore di riferimento indicato, calcolando un range (minimo e massimo) e individuando un valore all\'interno del range secondo il criterio (min/medio/max) o la percentuale (0%=min, 100%=max). Eventuali riduzioni o maggiorazioni previste dalla norma e il corrispettivo pattuito sono riportati a fini di trasparenza.', {
+      align: 'left',
+    });
+    doc.moveDown(0.6);
 
     sectionTitle('DETTAGLIO DELLA METODOLOGIA DI CALCOLO');
     keyValueRow('Riferimento normativo', normativa);
@@ -630,7 +638,7 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     const rows = [
       ['Corrispettivo pattuito', 'Valore inserito', inputCorr],
       ['Parametro di riferimento ministeriale', `Criterio: ${calculation.criterio}`, String(result.chosen || '-')],
-      ['Percentuale applicata', 'Adeguamento', inputPct],
+      ['Percentuale', 'Posizionamento nel range (0%=min, 100%=max)', inputPct],
       ['TOTALE EQUO COMPENSO', 'Importo finale', String(result.compenso_pattuito || result.chosen || '-')],
     ];
 

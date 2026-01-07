@@ -58,6 +58,7 @@
                                     <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
                                     <input id="nome_pratica" name="nome_pratica" type="text" placeholder="es. Progetto Ristrutturazione" required>
                                 </div>
+                                <div class="calc-help">Serve a identificare il calcolo e personalizzare l'intestazione del PDF.</div>
                             </div>
 
                             <div class="form-group">
@@ -121,6 +122,7 @@
                                 <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-percent"></i></span>
                                 <input id="percentuale" name="percentuale" type="number" min="0" max="100" step="0.01" placeholder="0,00">
                             </div>
+                            <div class="calc-help">Calibra il compenso nel range ministeriale: 0% = minimo, 50% = medio, 100% = massimo. Se vuota, vale il criterio Min/Medio/Massimo.</div>
                         </div>
 
                         <div class="form-group">
@@ -133,6 +135,7 @@
                                     <option value="max">Massimo</option>
                                 </select>
                             </div>
+                            <div class="calc-help">Seleziona il livello in base a importanza, difficoltà e complessità della pratica (parametri generali).</div>
                         </div>
 
                         <div class="form-group" id="groupAliquotaSc1">
@@ -200,6 +203,7 @@
                                 <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-scale-balanced"></i></span>
                                 <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
                             </div>
+                            <div class="calc-help">Importo in euro che costituisce il parametro di base (es. reddito, attivo, passivo, capitale, ecc.).</div>
                         </div>
 
                         <div class="form-group">
@@ -1419,34 +1423,27 @@
                             const chosenCustom = custom;
                             const chosen = chosenCustom;
                             const pct = percentualeEl && percentualeEl.value !== '' ? Number(percentualeEl.value) : NaN;
-                            const factor = Number.isFinite(pct) && pct > 0 ? (pct / 100) : 1;
-                            const chosenAdj = chosen * factor;
-
-                            if (factor !== 1) {
-                                details.push(`Adeguamento percentuale: ${pct}%.`);
+                            if (Number.isFinite(pct) && pct >= 0 && pct <= 100) {
+                                details.push(`Percentuale inserita: ${pct}%. (Non applicata: è già stata selezionata un'aliquota specifica)`);
                             }
 
                             const pattuitoNum = pattuitoEl && pattuitoEl.value !== '' ? Number(pattuitoEl.value) : NaN;
-                            const compensoPattuito = Number.isFinite(pattuitoNum) && pattuitoNum >= 0 ? pattuitoNum : chosenAdj;
+                            const compensoPattuito = Number.isFinite(pattuitoNum) && pattuitoNum >= 0 ? pattuitoNum : chosen;
 
                             const payload = buildPayloadFromForm({ tipo, criterio, min, max, chosen, details });
-                            payload.result.chosen = euro(chosenAdj);
-                            payload.result.mid = euro(((min + max) / 2) * factor);
-                            payload.result.min = euro(min * factor);
-                            payload.result.max = euro(max * factor);
                             payload.result.compenso_pattuito = euro(compensoPattuito);
 
                             btnDownloadPdf.disabled = false;
                             btnDownloadPdf.dataset.payload = JSON.stringify(payload);
 
-                            setResult(`Risultato: Compenso di riferimento ${euro(chosenAdj)} | Compenso pattuito ${euro(compensoPattuito)}`, false);
+                            setResult(`Risultato: Compenso di riferimento ${euro(chosen)} | Compenso pattuito ${euro(compensoPattuito)}`, false);
 
                             const detailHtml = details.length
                                 ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${escapeHtml(d)}`).join('<br>')}</div>`
                                 : '';
                             setPreview([
-                                `<div><strong>Valore personalizzato:</strong> ${euro(chosenAdj)}</div>`,
-                                `<div><strong>Range ministeriale:</strong> ${euro(min * factor)} - ${euro(max * factor)}</div>`,
+                                `<div><strong>Valore personalizzato:</strong> ${euro(chosen)}</div>`,
+                                `<div><strong>Range ministeriale:</strong> ${euro(min)} - ${euro(max)}</div>`,
                                 detailHtml,
                             ].join(''));
                             return;
@@ -1518,36 +1515,30 @@
                         return;
                     }
 
-                    const chosen = pickRate(min, max, criterio);
                     const pct = percentualeEl && percentualeEl.value !== '' ? Number(percentualeEl.value) : NaN;
-                    const factor = Number.isFinite(pct) && pct > 0 ? (pct / 100) : 1;
-                    const chosenAdj = chosen * factor;
-
-                    if (factor !== 1) {
-                        details.push(`Adeguamento percentuale: ${pct}%.`);
+                    let chosen = pickRate(min, max, criterio);
+                    if (Number.isFinite(pct) && pct >= 0 && pct <= 100 && max > min) {
+                        chosen = min + ((max - min) * (pct / 100));
+                        details.push(`Percentuale applicata nel range ministeriale: ${pct}%.`);
                     }
 
                     const pattuitoNum = pattuitoEl && pattuitoEl.value !== '' ? Number(pattuitoEl.value) : NaN;
-                    const compensoPattuito = Number.isFinite(pattuitoNum) && pattuitoNum >= 0 ? pattuitoNum : chosenAdj;
+                    const compensoPattuito = Number.isFinite(pattuitoNum) && pattuitoNum >= 0 ? pattuitoNum : chosen;
 
                     const payload = buildPayloadFromForm({ tipo, criterio, min, max, chosen, details });
-                    payload.result.chosen = euro(chosenAdj);
-                    payload.result.mid = euro(((min + max) / 2) * factor);
-                    payload.result.min = euro(min * factor);
-                    payload.result.max = euro(max * factor);
                     payload.result.compenso_pattuito = euro(compensoPattuito);
 
                     btnDownloadPdf.disabled = false;
                     btnDownloadPdf.dataset.payload = JSON.stringify(payload);
 
-                    setResult(`Risultato: Compenso di riferimento ${euro(chosenAdj)} | Compenso pattuito ${euro(compensoPattuito)}`, false);
+                    setResult(`Risultato: Compenso di riferimento ${euro(chosen)} | Compenso pattuito ${euro(compensoPattuito)}`, false);
 
                     const detailHtml = details.length
                         ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${escapeHtml(d)}`).join('<br>')}</div>`
                         : '';
                     setPreview([
-                        `<div><strong>Compenso (${escapeHtml(criterio)}):</strong> ${euro(chosenAdj)}</div>`,
-                        `<div><strong>Range:</strong> ${euro(min * factor)} - ${euro(max * factor)}</div>`,
+                        `<div><strong>Compenso (${escapeHtml(criterio)}):</strong> ${euro(chosen)}</div>`,
+                        `<div><strong>Range:</strong> ${euro(min)} - ${euro(max)}</div>`,
                         detailHtml,
                     ].join(''));
                 } finally {

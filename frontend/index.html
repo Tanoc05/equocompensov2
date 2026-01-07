@@ -390,7 +390,16 @@
 
                 const avatarUrl = u && u.avatar_url ? String(u.avatar_url) : '';
                 if (avatarUrl) {
-                    img.src = avatarUrl;
+                    const normalized = (/^https?:\/\//i.test(avatarUrl) || avatarUrl.startsWith('/'))
+                        ? avatarUrl
+                        : `/${avatarUrl}`;
+                    img.onerror = () => {
+                        img.removeAttribute('src');
+                        img.style.display = 'none';
+                        initials.textContent = initialsFrom(u);
+                        initials.style.display = '';
+                    };
+                    img.src = normalized;
                     img.style.display = '';
                     initials.style.display = 'none';
                 } else {
