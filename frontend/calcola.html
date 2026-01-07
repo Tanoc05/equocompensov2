@@ -68,6 +68,23 @@
                             </select>
                         </div>
 
+                        <div class="form-group" id="groupCategory">
+                            <label for="documentCategory">Categoria / Prestazione</label>
+                            <select id="documentCategory" name="documentCategory">
+                                <option value="" selected>Seleziona</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="groupPattuito">
+                            <label for="corrispettivoPattuito">Corrispettivo pattuito (€)</label>
+                            <input id="corrispettivoPattuito" name="corrispettivoPattuito" type="number" min="0" step="0.01" placeholder="0,00">
+                        </div>
+
+                        <div class="form-group" id="groupPercentuale">
+                            <label for="percentuale">Percentuale (%)</label>
+                            <input id="percentuale" name="percentuale" type="number" min="0" max="100" step="0.01" placeholder="0,00">
+                        </div>
+
                         <div class="dashboard-grid">
                             <div>
                                 <form id="calcForm" class="dashboard-form">
@@ -179,6 +196,7 @@
         (function() {
             const prestazioneEl = document.getElementById('prestazione');
             const documentTypeEl = document.getElementById('documentType');
+            const documentCategoryEl = document.getElementById('documentCategory');
             const criterioEl = document.getElementById('criterio');
             const valoreEl = document.getElementById('valore');
             const valore2El = document.getElementById('valore2');
@@ -186,6 +204,11 @@
             const dichiarazioneEl = document.getElementById('dichiarazione');
             const esitoNegativoEl = document.getElementById('esitoNegativo');
             const conteggiareEl = document.getElementById('conteggiare');
+            const pattuitoEl = document.getElementById('corrispettivoPattuito');
+            const percentualeEl = document.getElementById('percentuale');
+            const groupCategory = document.getElementById('groupCategory');
+            const groupPattuito = document.getElementById('groupPattuito');
+            const groupPercentuale = document.getElementById('groupPercentuale');
             const groupConteggiare = document.getElementById('groupConteggiare');
             const groupEsitoNegativo = document.getElementById('groupEsitoNegativo');
             const btn = document.getElementById('btnCalcola');
@@ -234,45 +257,137 @@
                         v1: 'Componenti positivi di redditi lordi (€)',
                         v2: 'Totale attività (€)',
                     },
-                    show: { v2: true, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                    show: { v2: true, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+                contabilita_ordinaria: {
+                    riquadro: 'r4',
+                    sumR1: false,
+                    labels: {
+                        v1: 'a) CORRISPETTIVO PATTUITO (€)',
+                        v2: 'b) TOTALE ATTIVITA\' (€)',
+                        v3: 'c) AMMONTARE DELLE PASSIVITA\' (€)',
+                    },
+                    show: { v2: true, v3: true, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    showPattuito: false,
+                    showPercentuale: true,
+                },
+                contabilita_semplicata: {
+                    riquadro: 'r1',
+                    sumR1: false,
+                    labels: {
+                        v1: 'a) CORRISPETTIVO PATTUITO (€)',
+                    },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    showPattuito: false,
+                    showPercentuale: true,
+                },
+                formazione_bilancio: {
+                    riquadro: 'r4',
+                    sumR1: false,
+                    labels: {
+                        v1: 'TOTALE COMPONENTI POSITIVI DI REDDITO LORDI (€)',
+                        v2: 'TOTALE DELLE ATTIVITA\' (€)',
+                        v3: 'AMMONTARE DELLE PASSIVITA\' (€)',
+                    },
+                    show: { v2: true, v3: true, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    showPattuito: true,
+                    showPercentuale: true,
                 },
                 procedure_concorsuali: {
                     riquadro: 'r9',
                     sumR1: false,
                     labels: { v1: 'Totale delle passività (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: true, conteggiare: true }
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: true, conteggiare: true },
+                    showPattuito: true,
+                    showPercentuale: true,
                 },
                 consulente_finanziamento: {
                     riquadro: 'r8_2',
                     sumR1: false,
                     labels: { v1: 'Capitale mutuato/finanziato (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    showPattuito: true,
+                    showPercentuale: true,
                 },
                 consulente_economico_finanziaria: {
                     riquadro: 'r8_2',
                     sumR1: false,
                     labels: { v1: 'Capitali/valori econ-finanziari (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    showPattuito: true,
+                    showPercentuale: true,
                 },
                 dichiarazione: {
                     riquadro: 'r10_1',
                     sumR1: false,
                     labels: { },
-                    show: { v2: false, v3: false, dichiarazione: true, esitoNegativo: false, conteggiare: false }
+                    show: { v2: false, v3: false, dichiarazione: true, esitoNegativo: false, conteggiare: false },
+                    showPattuito: true,
+                    showPercentuale: true,
                 },
                 perizie_valutazioni: {
                     riquadro: 'r3',
                     sumR1: false,
                     labels: { v1: 'Valore perizia / valutazione (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    showPattuito: true,
+                    showPercentuale: true,
                 },
                 default: {
                     riquadro: 'r1',
                     sumR1: false,
                     labels: { v1: 'Valore di riferimento (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    showPattuito: true,
+                    showPercentuale: true,
                 }
             };
+
+            const docCategories = {
+                amministrazione_custodia: [
+                    { id: 'amm_custodia_base', label: 'Attività di amministrazione e custodia (base)', percent: 100 },
+                    { id: 'amm_custodia_complessa', label: 'Attività complessa / urgenza', percent: 120 },
+                ],
+                procedure_concorsuali: [
+                    { id: 'proc_assistenza', label: 'Assistenza in procedure concorsuali', percent: 100 },
+                    { id: 'proc_esito_neg', label: 'Esito negativo (riduzione)', percent: 50 },
+                ],
+                dichiarazione: [
+                    { id: 'dich_pf', label: 'Dichiarazione PF', percent: 100 },
+                    { id: 'dich_sc', label: 'Dichiarazione Società di capitali', percent: 100 },
+                ],
+                perizie_valutazioni: [
+                    { id: 'perizia', label: 'Perizia / Valutazione', percent: 100 },
+                ],
+            };
+
+            function fillCategoryOptions() {
+                if (!documentCategoryEl) return;
+                const key = documentTypeEl ? documentTypeEl.value : '';
+                const list = docCategories[key] || [];
+
+                documentCategoryEl.innerHTML = '<option value="" selected>Seleziona</option>';
+                for (const item of list) {
+                    const opt = document.createElement('option');
+                    opt.value = item.id;
+                    opt.textContent = item.label;
+                    opt.dataset.percent = String(item.percent);
+                    documentCategoryEl.appendChild(opt);
+                }
+
+                setBlockVisible(groupCategory, list.length > 0);
+            }
+
+            function applyCategory() {
+                if (!documentCategoryEl || !percentualeEl) return;
+                const opt = documentCategoryEl.options[documentCategoryEl.selectedIndex];
+                const p = opt && opt.dataset && opt.dataset.percent ? Number(opt.dataset.percent) : NaN;
+                if (Number.isFinite(p)) {
+                    percentualeEl.value = String(p);
+                }
+            }
 
             function applyDocType() {
                 const key = documentTypeEl ? documentTypeEl.value : '';
@@ -291,6 +406,9 @@
                 setBlockVisible(groupEsitoNegativo, !!cfg.show.esitoNegativo);
                 setBlockVisible(groupConteggiare, !!cfg.show.conteggiare);
 
+                setBlockVisible(groupPattuito, cfg.showPattuito !== false);
+                setBlockVisible(groupPercentuale, cfg.showPercentuale !== false);
+
                 // required
                 if (valoreEl) valoreEl.required = cfg.riquadro !== 'r10_1';
                 if (valore2El) valore2El.required = !!cfg.show.v2;
@@ -302,6 +420,10 @@
                     btnDownloadPdf.dataset.payload = '';
                 }
                 setPreview('Seleziona una sezione e inserisci i dati per vedere l\'anteprima.');
+
+                fillCategoryOptions();
+                if (percentualeEl) percentualeEl.value = '';
+                if (pattuitoEl) pattuitoEl.value = '';
             }
 
             function setEnabled(el, enabled) {
@@ -478,6 +600,10 @@
 
             function buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }) {
                 const input = {
+                    documentType: documentTypeEl ? documentTypeEl.value : null,
+                    documentCategory: documentCategoryEl ? documentCategoryEl.value : null,
+                    corrispettivoPattuito: pattuitoEl ? Number(pattuitoEl.value) : null,
+                    percentuale: percentualeEl ? Number(percentualeEl.value) : null,
                     valore: Number(valoreEl.value),
                     valore2: Number(valore2El.value),
                     valore3: Number(valore3El.value),
@@ -753,16 +879,31 @@
                 }
 
                 const chosen = pickRate(min, max, criterio);
+
+                const pattuito = pattuitoEl && pattuitoEl.value !== '' ? Number(pattuitoEl.value) : null;
+                const percentuale = percentualeEl && percentualeEl.value !== '' ? Number(percentualeEl.value) : null;
+                const isPattuitoValid = pattuito !== null && Number.isFinite(pattuito) && pattuito >= 0;
+                const diff = isPattuitoValid ? (pattuito - chosen) : null;
+                const adeguamento = isPattuitoValid ? Math.max(0, chosen - pattuito) : null;
+                const ratio = isPattuitoValid && chosen > 0 ? (pattuito / chosen) * 100 : null;
                 resultEl.innerHTML = `
                     Compenso (${criterio}): <strong>${euro(chosen)}</strong><br>
                     Range: ${euro(min)} - ${euro(max)}<br>
+                    ${isPattuitoValid ? `Corrispettivo pattuito: <strong>${euro(pattuito)}</strong><br>` : ''}
+                    ${isPattuitoValid ? `Differenza (pattuito - equo): <strong>${euro(diff)}</strong><br>` : ''}
+                    ${isPattuitoValid ? `Adeguamento minimo per equità: <strong>${euro(adeguamento)}</strong><br>` : ''}
+                    ${isPattuitoValid && ratio !== null ? `Percentuale rispetto all'equo: <strong>${ratio.toFixed(2)}%</strong><br>` : ''}
                     ${details.length ? `<br><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}` : ''}
                 `;
 
                 setPreview(`
                     <div><strong>Sezione:</strong> ${(documentTypeEl && documentTypeEl.options[documentTypeEl.selectedIndex]?.textContent) || ''}</div>
+                    ${documentCategoryEl && documentCategoryEl.value ? `<div><strong>Categoria:</strong> ${documentCategoryEl.options[documentCategoryEl.selectedIndex]?.textContent || ''}</div>` : ''}
                     <div style="margin-top:10px;"><strong>Compenso (${criterio}):</strong> ${euro(chosen)}</div>
                     <div><strong>Range:</strong> ${euro(min)} - ${euro(max)}</div>
+                    ${isPattuitoValid ? `<div style="margin-top:10px;"><strong>Corrispettivo pattuito:</strong> ${euro(pattuito)}</div>` : ''}
+                    ${isPattuitoValid ? `<div><strong>Adeguamento minimo:</strong> ${euro(adeguamento)}</div>` : ''}
+                    ${Number.isFinite(percentuale) ? `<div><strong>Percentuale:</strong> ${percentuale.toFixed(2)}%</div>` : ''}
                     ${details.length ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}</div>` : ''}
                 `);
 
@@ -812,12 +953,24 @@
 
             updateFieldVisibility();
             updateWelcome();
+            if (typeof updateHeaderUser === 'function') {
+                updateHeaderUser();
+            }
 
             if (documentTypeEl) {
                 documentTypeEl.addEventListener('change', () => {
                     applyDocType();
                 });
             }
+
+            if (documentCategoryEl) {
+                documentCategoryEl.addEventListener('change', () => {
+                    applyCategory();
+                });
+            }
+
+            setBlockVisible(groupPattuito, true);
+            setBlockVisible(groupPercentuale, true);
 
             applyDocType();
         })();

@@ -30,113 +30,125 @@
     <main>
 
         <div class="container">
-            <div class="hero">
-                <h2>Calcola i Tuoi Compensi</h2>
-                <p>Strumento per il calcolo dei compensi professionali secondo la Legge 49/2023.</p>
+            <div class="dashboard-top">
+                <div id="welcomeUser" class="dashboard-welcome">Benvenuto</div>
+                <button class="dashboard-logout" type="button" onclick="handleLogout()">logout</button>
             </div>
-        </div>
 
-        <div class="section-divider"></div>
+            <div class="dashboard-layout">
+                <aside class="dashboard-sidebar">
+                    <button class="dashboard-nav-btn is-active" type="button">Crea documento</button>
+                    <button class="dashboard-nav-btn" type="button" onclick="window.location.href='index.html?profile=1'">Modifica dati</button>
+                    <button class="dashboard-nav-btn" type="button" onclick="alert('Sezione in arrivo');">Documenti prodotti</button>
+                </aside>
 
-        <div class="container">
-            <section class="calcola-section">
-                <h2 class="calcola-title">Inserisci i dati</h2>
-                <p class="calcola-subtitle">Compila i campi per preparare il calcolo. La logica di calcolo verrà collegata nella fase successiva.</p>
+                <section class="dashboard-card" aria-label="Calcolo compenso">
+                    <div class="dashboard-card-inner">
+                        <div class="dashboard-grid">
+                            <div>
+                                <form>
+                                    <div class="calcola-grid">
+                                        <div class="form-group">
+                                            <label for="professione">Professione</label>
+                                            <select id="professione" name="professione" required>
+                                                <option value="commercialista" selected>Commercialista</option>
+                                            </select>
+                                        </div>
 
-                <div class="calcola-card">
-                    <form>
-                        <div class="calcola-grid">
-                            <div class="form-group">
-                                <label for="professione">Professione</label>
-                                <select id="professione" name="professione" required>
-                                    <option value="commercialista" selected>Commercialista</option>
-                                </select>
+                                        <div class="form-group">
+                                            <label for="prestazione">Tipologia (DM 140/2012 - Tabella C)</label>
+                                            <select id="prestazione" name="prestazione" required>
+                                                <option value="" disabled selected>Seleziona</option>
+                                                <option value="r1">Riquadro 1 (Art. 19) - Redditi + Attività</option>
+                                                <option value="r2">Riquadro 2 (Art. 20) - Attivo realizzato + Passivo accertato</option>
+                                                <option value="r3">Riquadro 3 (Art. 21) - Perizia / Valutazione</option>
+                                                <option value="r4">Riquadro 4 (Art. 22) - Redditi + Attività + Passività</option>
+                                                <option value="r5_1">Riquadro 5.1 (Art. 23 c.1) - Redditi + Attività + Passività</option>
+                                                <option value="r5_2">Riquadro 5.2 (Art. 23 c.2) - Redditi (scaglioni)</option>
+                                                <option value="r6">Riquadro 6 (Art. 24) - Redditi + Attività + Passività</option>
+                                                <option value="r7_1">Riquadro 7.1 (Art. 25 c.1) - Capitale sottoscritto</option>
+                                                <option value="r7_2">Riquadro 7.2 (Art. 25 c.2) - Totale attività</option>
+                                                <option value="r8_1">Riquadro 8.1 (Art. 26 c.1) - Corrispettivo pattuito</option>
+                                                <option value="r8_2">Riquadro 8.2 (Art. 26 c.2-3) - Capitale mutuato/erogato</option>
+                                                <option value="r9">Riquadro 9 (Art. 27) - Totale passività</option>
+                                                <option value="r10_1">Riquadro 10.1 (Art. 28 c.1) - Dichiarazioni (importi fissi)</option>
+                                                <option value="r10_2">Riquadro 10.2 (Art. 28 c.2) - Imposte/tasse/contributi (percentuale)</option>
+                                                <option value="r10_3">Riquadro 10.3 (Art. 28 c.3) - Imposte/tasse/contributi (percentuale)</option>
+                                                <option value="r11">Riquadro 11 (Art. 29) - Redditi + Attività (range + scaglioni)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="criterio">Criterio calcolo</label>
+                                            <select id="criterio" name="criterio" required>
+                                                <option value="min">Minimo</option>
+                                                <option value="medio" selected>Medio</option>
+                                                <option value="max">Massimo</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label id="labelValore" for="valore">Valore di riferimento (€)</label>
+                                            <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label id="labelValore2" for="valore2">Secondo valore (€)</label>
+                                            <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label id="labelValore3" for="valore3">Terzo valore (€)</label>
+                                            <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="dichiarazione">Dichiarazione (solo Riquadro 10.1)</label>
+                                            <select id="dichiarazione" name="dichiarazione">
+                                                <option value="" selected>N/A</option>
+                                                <option value="pf">Dichiarazione redditi persone fisiche</option>
+                                                <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
+                                                <option value="sp">Dichiarazione redditi società di persone</option>
+                                                <option value="sc">Dichiarazione redditi società di capitali</option>
+                                                <option value="irap">Dichiarazione IRAP</option>
+                                                <option value="iva">Dichiarazione IVA</option>
+                                                <option value="770">Dichiarazione sostituti d'imposta</option>
+                                                <option value="invio">Invio telematico</option>
+                                                <option value="successione">Dichiarazione di successione</option>
+                                                <option value="altre">Altre dichiarazioni e comunicazioni</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="esitoNegativo">Procedure concorsuali (solo Riquadro 9)</label>
+                                            <div>
+                                                <input id="esitoNegativo" name="esitoNegativo" type="checkbox">
+                                                <label for="esitoNegativo">Esito negativo (riduzione fino alla metà)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="calcola-actions">
+                                        <button id="btnCalcola" class="btn-primary" type="button">Calcola</button>
+                                        <button class="btn-secondary" type="reset">Reset</button>
+                                    </div>
+
+                                    <div id="calcolaResult" class="calcola-result">
+                                        Risultato: in attesa di calcolo.
+                                    </div>
+                                </form>
                             </div>
 
-                            <div class="form-group">
-                                <label for="prestazione">Tipologia (DM 140/2012 - Tabella C)</label>
-                                <select id="prestazione" name="prestazione" required>
-                                    <option value="" disabled selected>Seleziona</option>
-                                    <option value="r1">Riquadro 1 (Art. 19) - Redditi + Attività</option>
-                                    <option value="r2">Riquadro 2 (Art. 20) - Attivo realizzato + Passivo accertato</option>
-                                    <option value="r3">Riquadro 3 (Art. 21) - Perizia / Valutazione</option>
-                                    <option value="r4">Riquadro 4 (Art. 22) - Redditi + Attività + Passività</option>
-                                    <option value="r5_1">Riquadro 5.1 (Art. 23 c.1) - Redditi + Attività + Passività</option>
-                                    <option value="r5_2">Riquadro 5.2 (Art. 23 c.2) - Redditi (scaglioni)</option>
-                                    <option value="r6">Riquadro 6 (Art. 24) - Redditi + Attività + Passività</option>
-                                    <option value="r7_1">Riquadro 7.1 (Art. 25 c.1) - Capitale sottoscritto</option>
-                                    <option value="r7_2">Riquadro 7.2 (Art. 25 c.2) - Totale attività</option>
-                                    <option value="r8_1">Riquadro 8.1 (Art. 26 c.1) - Corrispettivo pattuito</option>
-                                    <option value="r8_2">Riquadro 8.2 (Art. 26 c.2-3) - Capitale mutuato/erogato</option>
-                                    <option value="r9">Riquadro 9 (Art. 27) - Totale passività</option>
-                                    <option value="r10_1">Riquadro 10.1 (Art. 28 c.1) - Dichiarazioni (importi fissi)</option>
-                                    <option value="r10_2">Riquadro 10.2 (Art. 28 c.2) - Imposte/tasse/contributi (percentuale)</option>
-                                    <option value="r10_3">Riquadro 10.3 (Art. 28 c.3) - Imposte/tasse/contributi (percentuale)</option>
-                                    <option value="r11">Riquadro 11 (Art. 29) - Redditi + Attività (range + scaglioni)</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="criterio">Criterio calcolo</label>
-                                <select id="criterio" name="criterio" required>
-                                    <option value="min">Minimo</option>
-                                    <option value="medio" selected>Medio</option>
-                                    <option value="max">Massimo</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label id="labelValore" for="valore">Valore di riferimento (€)</label>
-                                <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label id="labelValore2" for="valore2">Secondo valore (€)</label>
-                                <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
-                            </div>
-
-                            <div class="form-group">
-                                <label id="labelValore3" for="valore3">Terzo valore (€)</label>
-                                <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="dichiarazione">Dichiarazione (solo Riquadro 10.1)</label>
-                                <select id="dichiarazione" name="dichiarazione">
-                                    <option value="" selected>N/A</option>
-                                    <option value="pf">Dichiarazione redditi persone fisiche</option>
-                                    <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
-                                    <option value="sp">Dichiarazione redditi società di persone</option>
-                                    <option value="sc">Dichiarazione redditi società di capitali</option>
-                                    <option value="irap">Dichiarazione IRAP</option>
-                                    <option value="iva">Dichiarazione IVA</option>
-                                    <option value="770">Dichiarazione sostituti d'imposta</option>
-                                    <option value="invio">Invio telematico</option>
-                                    <option value="successione">Dichiarazione di successione</option>
-                                    <option value="altre">Altre dichiarazioni e comunicazioni</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="esitoNegativo">Procedure concorsuali (solo Riquadro 9)</label>
-                                <div>
-                                    <input id="esitoNegativo" name="esitoNegativo" type="checkbox">
-                                    <label for="esitoNegativo">Esito negativo (riduzione fino alla metà)</label>
+                            <aside class="dashboard-preview" aria-label="Anteprima documento">
+                                <div class="dashboard-preview-title">Anteprima documento</div>
+                                <div id="documentPreview" class="dashboard-preview-body">
+                                    Seleziona una tipologia e inserisci i dati per vedere l'anteprima.
                                 </div>
-                            </div>
+                            </aside>
                         </div>
-
-                        <div class="calcola-actions">
-                            <button id="btnCalcola" class="btn-primary" type="button">Calcola</button>
-                            <button class="btn-secondary" type="reset">Reset</button>
-                        </div>
-
-                        <div id="calcolaResult" class="calcola-result">
-                            Risultato: in attesa di calcolo.
-                        </div>
-                    </form>
-                </div>
-            </section>
+                    </div>
+                </section>
+            </div>
         </div>
 
     </main>
@@ -251,10 +263,25 @@
             const esitoNegativoEl = document.getElementById('esitoNegativo');
             const btn = document.getElementById('btnCalcola');
             const resultEl = document.getElementById('calcolaResult');
+            const previewEl = document.getElementById('documentPreview');
+            const welcomeEl = document.getElementById('welcomeUser');
 
             const labelValore = document.getElementById('labelValore');
             const labelValore2 = document.getElementById('labelValore2');
             const labelValore3 = document.getElementById('labelValore3');
+
+            function setPreview(html) {
+                if (!previewEl) return;
+                previewEl.innerHTML = html;
+            }
+
+            function updateWelcome() {
+                const token = localStorage.getItem('authToken');
+                const user = token ? parseJwt(token) : {};
+                if (welcomeEl) {
+                    welcomeEl.textContent = `Benvenuto, ${user.nome || user.email || ''}`;
+                }
+            }
 
             function setEnabled(el, enabled) {
                 if (!el) return;
@@ -415,6 +442,10 @@
 
                     const amount = fixed[d];
                     resultEl.innerHTML = `Compenso (${criterio}): <strong>${euro(amount)}</strong>`;
+                    setPreview(`
+                        <div><strong>Tipologia:</strong> ${tipo}</div>
+                        <div style="margin-top:10px;"><strong>Compenso (${criterio}):</strong> ${euro(amount)}</div>
+                    `);
                     return;
                 }
 
@@ -626,6 +657,13 @@
                     Range: ${euro(min)} - ${euro(max)}<br>
                     ${details.length ? `<br><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}` : ''}
                 `;
+
+                setPreview(`
+                    <div><strong>Tipologia:</strong> ${tipo}</div>
+                    <div style="margin-top:10px;"><strong>Compenso (${criterio}):</strong> ${euro(chosen)}</div>
+                    <div><strong>Range:</strong> ${euro(min)} - ${euro(max)}</div>
+                    ${details.length ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}</div>` : ''}
+                `);
             }
 
             if (prestazioneEl) {
@@ -636,6 +674,7 @@
             }
 
             updateFieldVisibility();
+            updateWelcome();
         })();
 
         function parseJwt(token) {
