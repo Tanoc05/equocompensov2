@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styleIndex.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Dashboard Account - equo compenso</title>
+</head>
+<body class="account-page">
+
+    <header>
+
+        <section class="header-img">
+            <img src="img/logo2.png" alt="logo">
+        </section>
+
+        <div class="ls">
+            <ul>
+                <li><a href="index.html">home</a></li>
+                <li><a href="chi-siamo.html">chi siamo</a></li>
+                <li><a href="calcola.html">calcola</a></li>
+                <li><a href="norme.html">norme</a></li>
+                <li><button onclick="window.location.href='index.html?login=1'">login</button></li>
+                <li><button onclick="window.location.href='index.html?register=1'">registrati</button></li>
+            </ul>
+        </div>
+
+    </header>
+
+    <main class="account-main-wrap">
+        <div class="account-layout">
+            <aside class="account-sidebar">
+                <div class="account-sidebar-title">Gestione Account</div>
+                <button class="account-nav-item active" data-view="profile"><i class="fas fa-id-card"></i><span>Informazioni Personali</span></button>
+                <button class="account-nav-item" data-view="professional"><i class="fas fa-briefcase"></i><span>Dati Professionali</span></button>
+                <button class="account-nav-item" data-view="security"><i class="fas fa-shield-halved"></i><span>Sicurezza e Password</span></button>
+                <button class="account-nav-item" data-view="calculations"><i class="fas fa-clock-rotate-left"></i><span>I miei Calcoli</span></button>
+                <button class="account-nav-item" data-view="subscription"><i class="fas fa-credit-card"></i><span>Abbonamento</span></button>
+            </aside>
+
+            <section class="account-content">
+                <div class="account-view" id="view-profile">
+                    <div class="account-profile-header">
+                        <div class="account-profile-head">
+                            <h1>Informazioni personali</h1>
+                            <p>Dati relativi alla tua identità e foto profilo utilizzati nei servizi di Equo Compenso.</p>
+                        </div>
+                        <div class="account-avatar-editor">
+                            <div class="account-avatar-circle"><i class="fas fa-user"></i></div>
+                            <button class="account-avatar-action" type="button" onclick="document.getElementById('avatarInput').click()">
+                                <i class="fas fa-camera"></i>
+                                <span>Cambia foto</span>
+                            </button>
+                            <input id="avatarInput" type="file" accept="image/*" style="display:none;">
+                        </div>
+                    </div>
+
+                    <div class="account-grid">
+                        <div class="account-card">
+                            <div class="account-card-title">Dati di Base</div>
+                            <div class="account-field">
+                                <label>Nome</label>
+                                <input id="accNome" type="text" value="">
+                            </div>
+                            <div class="account-field">
+                                <label>Cognome</label>
+                                <input id="accCognome" type="text" value="">
+                            </div>
+                            <div class="account-field">
+                                <label>Data di Nascita</label>
+                                <input id="accDataNascita" type="date" value="">
+                            </div>
+                        </div>
+
+                        <div class="account-card">
+                            <div class="account-card-title">Contatti e Accesso</div>
+                            <div class="account-field">
+                                <label>Email</label>
+                                <div class="account-inline">
+                                    <input id="accEmail" type="email" value="" readonly>
+                                    <span class="account-badge" id="accEmailBadge" style="display:none;">Verificata</span>
+                                </div>
+                            </div>
+                            <div class="account-field">
+                                <label>Password</label>
+                                <div class="account-inline">
+                                    <input type="password" value="********" readonly>
+                                    <button class="account-link-btn" type="button" onclick="setActiveView('security')">Aggiorna</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="account-card">
+                            <div class="account-card-title">Professione</div>
+                            <div class="account-field">
+                                <label>Ruolo Professionale</label>
+                                <select id="accProfessione">
+                                    <option value="commercialista">Commercialista</option>
+                                    <option value="avvocato">Avvocato</option>
+                                    <option value="ingegnere">Ingegnere</option>
+                                    <option value="architetto">Architetto</option>
+                                    <option value="geometra">Geometra</option>
+                                    <option value="perito">Perito industriale</option>
+                                    <option value="ragioniere">Ragioniere</option>
+                                    <option value="consulente_lavoro">Consulente del lavoro</option>
+                                </select>
+                            </div>
+                            <div class="account-field">
+                                <label>Ordine di Appartenenza</label>
+                                <input id="accOrdine" type="text" value="" placeholder="(non disponibile)" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="account-view" id="view-professional" style="display:none;">
+                    <div class="account-card">
+                        <div class="account-card-title">Dati Professionali</div>
+                        <div class="account-muted">Sezione in arrivo.</div>
+                    </div>
+                </div>
+
+                <div class="account-view" id="view-security" style="display:none;">
+                    <div class="account-card">
+                        <div class="account-card-title">Sicurezza e Password</div>
+                        <div class="account-muted">Per ora puoi gestire l’account dal tuo profilo. La modifica password verrà aggiunta a breve.</div>
+                    </div>
+                </div>
+
+                <div class="account-view" id="view-calculations" style="display:none;">
+                    <div class="account-card">
+                        <div class="account-card-title">I miei Calcoli</div>
+                        <div id="docsList" class="account-muted">Caricamento...</div>
+                    </div>
+                </div>
+
+                <div class="account-view" id="view-subscription" style="display:none;">
+                    <div class="account-card">
+                        <div class="account-card-title">Abbonamento</div>
+                        <div class="account-muted">Sezione in arrivo.</div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <div class="account-save-wrap">
+            <button class="account-save-btn" type="button" onclick="saveAccount()">Salva tutte le modifiche</button>
+        </div>
+    </main>
+
+    <script>
+        function parseJwt(token) {
+            if (!token || typeof token !== 'string') return {};
+            const parts = token.split('.');
+            if (parts.length !== 3) return {};
+            try {
+                return JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+            } catch {
+                return {};
+            }
+        }
+
+        async function apiRequest(path, options = {}) {
+            const token = localStorage.getItem('authToken');
+            const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
+            if (token) headers.Authorization = `Bearer ${token}`;
+
+            const res = await fetch(path, Object.assign({}, options, { headers }));
+            let data = null;
+            try {
+                data = await res.json();
+            } catch {
+                data = null;
+            }
+            if (!res.ok) {
+                const msg = data && data.error ? data.error : 'Errore server';
+                throw new Error(msg);
+            }
+            return data;
+        }
+
+        function updateHeaderUser() {
+            const token = localStorage.getItem('authToken');
+            const user = parseJwt(token);
+            const headerUl = document.querySelector('.ls ul');
+            if (!headerUl) return;
+            const isLogged = !!token && (!!user.sub || !!user.id || !!user.email);
+
+            function isAuthLi(li) {
+                const txt = (li.textContent || '').trim().toLowerCase();
+                if (txt === 'login' || txt === 'registrati') return true;
+                const btn = li.querySelector('button');
+                if (btn && btn.onclick) {
+                    const fn = btn.onclick.toString();
+                    if (fn.includes('login') || fn.includes('openRegisterModal') || fn.includes('register')) return true;
+                }
+                const a = li.querySelector('a');
+                if (a) {
+                    const href = (a.getAttribute('href') || '').toLowerCase();
+                    if (href.includes('login') || href.includes('register')) return true;
+                }
+                return false;
+            }
+
+            if (isLogged) {
+                headerUl.querySelectorAll('li').forEach(li => {
+                    if (isAuthLi(li)) li.style.display = 'none';
+                });
+                if (!headerUl.querySelector('.user-item')) {
+                    const userLi = document.createElement('li');
+                    userLi.className = 'user-item';
+                    userLi.innerHTML = `
+                        <div class="user-dropdown">
+                            <button class="user-btn" onclick="toggleUserDropdown(event)">
+                                <span class="user-avatar"><i class="fas fa-user"></i></span>
+                                <span class="user-welcome-text">Ciao, ${user.nome || user.email || ''}</span>
+                            </button>
+                            <div id="userDropdownMenu" class="user-dropdown-menu">
+                                <div class="user-menu-info">
+                                    <div class="user-menu-avatar-lg"><i class="fas fa-user"></i></div>
+                                    <div>
+                                        <div class="user-menu-name">${(user.nome || '').trim() ? `Ciao, ${user.nome}` : 'Account'}</div>
+                                        <div class="user-menu-email">${user.email || ''}</div>
+                                    </div>
+                                </div>
+                                <div class="user-menu-items">
+                                    <button class="user-menu-item" onclick="window.location.href='dashboard.html?view=profile'"><i class="fas fa-user"></i><span>Il mio Profilo</span></button>
+                                    <button class="user-menu-item" onclick="window.location.href='dashboard.html?view=calculations'"><i class="fas fa-history"></i><span>I miei Calcoli</span></button>
+                                    <button class="user-menu-item" onclick="window.location.href='dashboard.html?view=security'"><i class="fas fa-gear"></i><span>Impostazioni</span></button>
+                                </div>
+                                <div class="user-menu-footer">
+                                    <button class="user-menu-item danger" onclick="handleLogout()"><i class="fas fa-right-from-bracket"></i><span>Esci / Logout</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    headerUl.appendChild(userLi);
+                }
+            } else {
+                headerUl.querySelectorAll('li').forEach(li => {
+                    if (isAuthLi(li)) li.style.display = '';
+                });
+                const userLi = headerUl.querySelector('.user-item');
+                if (userLi) userLi.remove();
+            }
+        }
+
+        function toggleUserDropdown(event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('userDropdownMenu');
+            if (!menu) return;
+            menu.classList.toggle('open');
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('authToken');
+            updateHeaderUser();
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.user-dropdown')) {
+                const menu = document.getElementById('userDropdownMenu');
+                if (menu) menu.classList.remove('open');
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const menu = document.getElementById('userDropdownMenu');
+                if (menu) menu.classList.remove('open');
+            }
+        });
+
+        function setActiveView(view) {
+            document.querySelectorAll('.account-nav-item').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-view') === view);
+            });
+            document.querySelectorAll('.account-view').forEach(v => {
+                v.style.display = v.id === `view-${view}` ? '' : 'none';
+            });
+
+            if (view === 'calculations') {
+                loadDocuments();
+            }
+
+            const url = new URL(window.location.href);
+            url.searchParams.set('view', view);
+            window.history.replaceState({}, '', url);
+        }
+
+        function formatDateTime(value) {
+            if (!value) return '';
+            const d = new Date(value);
+            if (Number.isNaN(d.getTime())) return value;
+            return d.toLocaleString('it-IT');
+        }
+
+        async function loadDocuments() {
+            const container = document.getElementById('docsList');
+            if (!container) return;
+
+            container.className = '';
+            container.textContent = 'Caricamento...';
+
+            try {
+                const data = await apiRequest('/api/documents', { method: 'GET' });
+                const docs = (data && data.documents) ? data.documents : [];
+
+                if (!docs.length) {
+                    container.className = 'account-muted';
+                    container.textContent = 'Nessun documento disponibile al momento.';
+                    return;
+                }
+
+                const rows = docs.map(d => {
+                    const type = d.type || 'pdf';
+                    return `
+                        <div class="account-doc-row">
+                            <div class="account-doc-main">
+                                <div class="account-doc-title">Documento ${d.id}</div>
+                                <div class="account-doc-meta">${formatDateTime(d.created_at)} • ${type}</div>
+                            </div>
+                            <div class="account-doc-actions">
+                                <button class="account-link-btn" type="button" onclick="downloadDocument('${d.id}', '${type}')">Scarica</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                container.className = 'account-doc-list';
+                container.innerHTML = rows;
+            } catch (e) {
+                container.className = 'account-muted';
+                container.textContent = e && e.message ? e.message : 'Errore nel caricamento dei documenti.';
+            }
+        }
+
+        async function loadAccount() {
+            const token = localStorage.getItem('authToken');
+            const user = parseJwt(token);
+            if (!token || (!user.sub && !user.id && !user.email)) {
+                localStorage.setItem('postLoginRedirect', 'dashboard.html');
+                window.location.href = 'index.html?login=1';
+                return;
+            }
+
+            try {
+                const me = await apiRequest('/api/me', { method: 'GET' });
+                const u = me.user || {};
+                document.getElementById('accNome').value = u.nome || '';
+                document.getElementById('accCognome').value = u.cognome || '';
+                document.getElementById('accDataNascita').value = (u.data_nascita || '').slice(0, 10);
+                document.getElementById('accProfessione').value = u.professione || 'commercialista';
+                document.getElementById('accEmail').value = u.email || '';
+                const badge = document.getElementById('accEmailBadge');
+                if (badge) badge.style.display = u.email ? '' : 'none';
+            } catch {
+                document.getElementById('accEmail').value = user.email || '';
+            }
+        }
+
+        async function downloadDocument(docId, type) {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                alert('Devi effettuare il login.');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/documents/${docId}/download`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (!res.ok) {
+                    let data = null;
+                    try {
+                        data = await res.json();
+                    } catch {
+                        data = null;
+                    }
+                    const msg = data && data.error ? data.error : 'Errore download';
+                    throw new Error(msg);
+                }
+
+                const blob = await res.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${docId}.${type === 'pdf' ? 'pdf' : 'bin'}`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (e) {
+                alert(e && e.message ? e.message : 'Errore');
+            }
+        }
+
+        async function saveAccount() {
+            const nome = document.getElementById('accNome').value;
+            const cognome = document.getElementById('accCognome').value;
+            const dataNascita = document.getElementById('accDataNascita').value;
+            const professione = document.getElementById('accProfessione').value;
+
+            if (!nome || !cognome || !dataNascita || !professione) {
+                alert('Compila tutti i campi.');
+                return;
+            }
+
+            try {
+                const data = await apiRequest('/api/me', {
+                    method: 'PUT',
+                    body: JSON.stringify({ nome, cognome, dataNascita, professione })
+                });
+                if (data && data.token) {
+                    localStorage.setItem('authToken', data.token);
+                }
+                updateHeaderUser();
+                alert('Modifiche salvate.');
+            } catch (e) {
+                alert(e.message || 'Errore');
+            }
+        }
+
+        (function() {
+            updateHeaderUser();
+            const params = new URLSearchParams(window.location.search);
+            const view = params.get('view') || 'profile';
+            setActiveView(view);
+
+            document.querySelectorAll('.account-nav-item').forEach(btn => {
+                btn.addEventListener('click', () => setActiveView(btn.getAttribute('data-view')));
+            });
+
+            loadAccount();
+        })();
+    </script>
+
+</body>
+</html>
