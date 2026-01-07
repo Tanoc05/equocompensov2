@@ -30,114 +30,129 @@
     <main>
 
         <div class="container">
-            <div class="hero">
-                <h2>Calcola i Tuoi Compensi</h2>
-                <p>Strumento per il calcolo dei compensi professionali secondo la Legge 49/2023.</p>
+            <div class="dashboard-top">
+                <div id="welcomeUser" class="dashboard-welcome">Benvenuto</div>
+                <button class="dashboard-logout" type="button" onclick="handleLogout()">logout</button>
             </div>
-        </div>
 
-        <div class="section-divider"></div>
+            <div class="dashboard-layout">
+                <aside class="dashboard-sidebar">
+                    <button class="dashboard-nav-btn is-active" type="button">Crea documento</button>
+                    <button class="dashboard-nav-btn" type="button" onclick="window.location.href='index.html?profile=1'">Modifica dati</button>
+                    <button class="dashboard-nav-btn" type="button" onclick="alert('Sezione in arrivo');">Documenti prodotti</button>
+                </aside>
 
-        <div class="container">
-            <section class="calcola-section">
-                <h2 class="calcola-title">Inserisci i dati</h2>
-                <p class="calcola-subtitle">Compila i campi per preparare il calcolo. La logica di calcolo verrà collegata nella fase successiva.</p>
+                <section class="dashboard-card" aria-label="Crea documento">
+                    <div class="dashboard-card-inner">
+                        <div class="form-group">
+                            <label for="documentType">Nome del documento <span aria-hidden="true" style="color:#b00020">*</span></label>
+                            <select id="documentType" name="documentType" required>
+                                <option value="" disabled selected>Seleziona</option>
+                                <option value="amministrazione_custodia">Amministrazione e custodia</option>
+                                <option value="procedure_concorsuali">Assistenza in procedure concorsuali</option>
+                                <option value="consulente_finanziamento">Consulente finanziamento</option>
+                                <option value="consulente_economico_finanziaria">Consulente economico-finanziaria</option>
+                                <option value="consulenza_contrattuale">Consulenza contrattuale</option>
+                                <option value="consulenza_tributaria">Consulenza tributaria</option>
+                                <option value="contabilita_ordinaria">Contabilità ordinaria</option>
+                                <option value="contabilita_semplicata">Contabilità semplificata</option>
+                                <option value="dichiarazione">Dichiarazione</option>
+                                <option value="perizie_valutazioni">Perizie e valutazioni</option>
+                                <option value="formazione_bilancio">Formazione del Bilancio</option>
+                                <option value="liquidazione">Liquidazione</option>
+                                <option value="operazioni_societarie_1">Operazioni societarie 1</option>
+                                <option value="operazioni_societarie_2">Operazioni societarie 2</option>
+                                <option value="consulenza_finanziamenti">Consulenza su finanziamenti</option>
+                                <option value="revisioni_contabili">Revisioni Contabili</option>
+                                <option value="rappresentanza_tributaria">Rappresentanza Tributaria</option>
+                            </select>
+                        </div>
 
-                <div class="calcola-card">
-                    <form>
-                        <div class="calcola-grid">
-                            <div class="form-group">
-                                <label for="professione">Professione</label>
-                                <select id="professione" name="professione" required>
-                                    <option value="commercialista" selected>Commercialista</option>
-                                </select>
+                        <div class="dashboard-grid">
+                            <div>
+                                <form id="calcForm" class="dashboard-form">
+                                    <input type="hidden" id="professione" name="professione" value="commercialista">
+                                    <input type="hidden" id="prestazione" name="prestazione" value="">
+
+                                    <div class="form-group">
+                                        <label for="criterio">Criterio calcolo</label>
+                                        <select id="criterio" name="criterio" required>
+                                            <option value="min">Minimo</option>
+                                            <option value="medio" selected>Medio</option>
+                                            <option value="max">Massimo</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group" id="groupConteggiare">
+                                        <label for="conteggiare">Conteggiare?</label>
+                                        <select id="conteggiare" name="conteggiare">
+                                            <option value="no" selected>No</option>
+                                            <option value="si">Sì</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label id="labelValore" for="valore">Valore</label>
+                                        <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label id="labelValore2" for="valore2">Secondo valore</label>
+                                        <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label id="labelValore3" for="valore3">Terzo valore</label>
+                                        <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="dichiarazione">Dichiarazione (solo sezione "Dichiarazione")</label>
+                                        <select id="dichiarazione" name="dichiarazione">
+                                            <option value="" selected>N/A</option>
+                                            <option value="pf">Dichiarazione redditi persone fisiche</option>
+                                            <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
+                                            <option value="sp">Dichiarazione redditi società di persone</option>
+                                            <option value="sc">Dichiarazione redditi società di capitali</option>
+                                            <option value="irap">Dichiarazione IRAP</option>
+                                            <option value="iva">Dichiarazione IVA</option>
+                                            <option value="770">Dichiarazione sostituti d'imposta</option>
+                                            <option value="invio">Invio telematico</option>
+                                            <option value="successione">Dichiarazione di successione</option>
+                                            <option value="altre">Altre dichiarazioni e comunicazioni</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group" id="groupEsitoNegativo">
+                                        <label>Procedure concorsuali (solo sezione "Assistenza in procedure concorsuali")</label>
+                                        <div>
+                                            <input id="esitoNegativo" name="esitoNegativo" type="checkbox">
+                                            <label for="esitoNegativo">Esito negativo (riduzione fino alla metà)</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="calcola-actions">
+                                        <button id="btnCalcola" class="btn-primary" type="button">Calcola</button>
+                                        <button id="btnDownloadPdf" class="btn-secondary" type="button" disabled>Scarica documento (PDF)</button>
+                                        <button class="btn-secondary" type="reset">Reset</button>
+                                    </div>
+
+                                    <div id="calcolaResult" class="calcola-result">
+                                        Risultato: in attesa di calcolo.
+                                    </div>
+                                </form>
                             </div>
 
-                            <div class="form-group">
-                                <label for="prestazione">Tipologia (DM 140/2012 - Tabella C)</label>
-                                <select id="prestazione" name="prestazione" required>
-                                    <option value="" disabled selected>Seleziona</option>
-                                    <option value="r1">Riquadro 1 (Art. 19) - Redditi + Attività</option>
-                                    <option value="r2">Riquadro 2 (Art. 20) - Attivo realizzato + Passivo accertato</option>
-                                    <option value="r3">Riquadro 3 (Art. 21) - Perizia / Valutazione</option>
-                                    <option value="r4">Riquadro 4 (Art. 22) - Redditi + Attività + Passività</option>
-                                    <option value="r5_1">Riquadro 5.1 (Art. 23 c.1) - Redditi + Attività + Passività</option>
-                                    <option value="r5_2">Riquadro 5.2 (Art. 23 c.2) - Redditi (scaglioni)</option>
-                                    <option value="r6">Riquadro 6 (Art. 24) - Redditi + Attività + Passività</option>
-                                    <option value="r7_1">Riquadro 7.1 (Art. 25 c.1) - Capitale sottoscritto</option>
-                                    <option value="r7_2">Riquadro 7.2 (Art. 25 c.2) - Totale attività</option>
-                                    <option value="r8_1">Riquadro 8.1 (Art. 26 c.1) - Corrispettivo pattuito</option>
-                                    <option value="r8_2">Riquadro 8.2 (Art. 26 c.2-3) - Capitale mutuato/erogato</option>
-                                    <option value="r9">Riquadro 9 (Art. 27) - Totale passività</option>
-                                    <option value="r10_1">Riquadro 10.1 (Art. 28 c.1) - Dichiarazioni (importi fissi)</option>
-                                    <option value="r10_2">Riquadro 10.2 (Art. 28 c.2) - Imposte/tasse/contributi (percentuale)</option>
-                                    <option value="r10_3">Riquadro 10.3 (Art. 28 c.3) - Imposte/tasse/contributi (percentuale)</option>
-                                    <option value="r11">Riquadro 11 (Art. 29) - Redditi + Attività (range + scaglioni)</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="criterio">Criterio calcolo</label>
-                                <select id="criterio" name="criterio" required>
-                                    <option value="min">Minimo</option>
-                                    <option value="medio" selected>Medio</option>
-                                    <option value="max">Massimo</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label id="labelValore" for="valore">Valore di riferimento (€)</label>
-                                <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label id="labelValore2" for="valore2">Secondo valore (€)</label>
-                                <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
-                            </div>
-
-                            <div class="form-group">
-                                <label id="labelValore3" for="valore3">Terzo valore (€)</label>
-                                <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="dichiarazione">Dichiarazione (solo Riquadro 10.1)</label>
-                                <select id="dichiarazione" name="dichiarazione">
-                                    <option value="" selected>N/A</option>
-                                    <option value="pf">Dichiarazione redditi persone fisiche</option>
-                                    <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
-                                    <option value="sp">Dichiarazione redditi società di persone</option>
-                                    <option value="sc">Dichiarazione redditi società di capitali</option>
-                                    <option value="irap">Dichiarazione IRAP</option>
-                                    <option value="iva">Dichiarazione IVA</option>
-                                    <option value="770">Dichiarazione sostituti d'imposta</option>
-                                    <option value="invio">Invio telematico</option>
-                                    <option value="successione">Dichiarazione di successione</option>
-                                    <option value="altre">Altre dichiarazioni e comunicazioni</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="esitoNegativo">Procedure concorsuali (solo Riquadro 9)</label>
-                                <div>
-                                    <input id="esitoNegativo" name="esitoNegativo" type="checkbox">
-                                    <label for="esitoNegativo">Esito negativo (riduzione fino alla metà)</label>
+                            <aside class="dashboard-preview" aria-label="Anteprima documento">
+                                <div class="dashboard-preview-title">Anteprima documento</div>
+                                <div id="documentPreview" class="dashboard-preview-body">
+                                    Seleziona una sezione e inserisci i dati per vedere l'anteprima.
                                 </div>
-                            </div>
+                            </aside>
                         </div>
-
-                        <div class="calcola-actions">
-                            <button id="btnCalcola" class="btn-primary" type="button">Calcola</button>
-                            <button id="btnDownloadPdf" class="btn-secondary" type="button" disabled>Scarica documento (PDF)</button>
-                            <button class="btn-secondary" type="reset">Reset</button>
-                        </div>
-
-                        <div id="calcolaResult" class="calcola-result">
-                            Risultato: in attesa di calcolo.
-                        </div>
-                    </form>
-                </div>
-            </section>
+                    </div>
+                </section>
+            </div>
         </div>
 
     </main>
@@ -157,107 +172,137 @@
             }
         })();
 
-        // Register Modal Functions (copiate da index.html)
-        function base64UrlEncode(str) {
-            return btoa(str)
-                .replace(/\+/g, '-')
-                .replace(/\//g, '_')
-                .replace(/=+$/g, '');
-        }
-
-        function createFakeJwt(email) {
-            const header = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-            const payload = base64UrlEncode(JSON.stringify({ sub: email, iat: Math.floor(Date.now() / 1000) }));
-            const signature = base64UrlEncode('demo-signature');
-            return `${header}.${payload}.${signature}`;
-        }
-
         function openRegisterModal() {
             window.location.href = 'index.html?register=1';
         }
 
-        function closeRegisterModal() {
-            document.getElementById('registerModal').style.display = 'none';
-            hideRegisterError();
-        }
-
-        function showRegisterError(message) {
-            const el = document.getElementById('registerError');
-            if (!el) return;
-            el.textContent = message;
-            el.style.display = 'block';
-        }
-
-        function hideRegisterError() {
-            const el = document.getElementById('registerError');
-            if (!el) return;
-            el.textContent = '';
-            el.style.display = 'none';
-        }
-
-        function handleRegister(event) {
-            event.preventDefault();
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const passwordConfirm = document.getElementById('regPasswordConfirm').value;
-
-            if (!email || !password || !passwordConfirm) {
-                showRegisterError('Compila tutti i campi.');
-                return;
-            }
-
-            if (!email.includes('@')) {
-                showRegisterError('Email non valida.');
-                return;
-            }
-
-            if (password.length < 6) {
-                showRegisterError('La password deve essere di almeno 6 caratteri.');
-                return;
-            }
-
-            if (password !== passwordConfirm) {
-                showRegisterError('Le password non coincidono.');
-                return;
-            }
-
-            const users = JSON.parse(localStorage.getItem('users') || '{}');
-            if (users[email]) {
-                showRegisterError('Utente già registrato.');
-                return;
-            }
-            users[email] = { password };
-            localStorage.setItem('users', JSON.stringify(users));
-
-            const token = createFakeJwt(email);
-            localStorage.setItem('authToken', token);
-            window.location.href = 'calcola.html';
-        }
-
-        (function() {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('register') === '1') {
-                // Se arriviamo da registrati, apriamo il Register Modal su index.html
-                window.location.replace('index.html?register=1');
-            }
-        })();
-
         (function() {
             const prestazioneEl = document.getElementById('prestazione');
+            const documentTypeEl = document.getElementById('documentType');
             const criterioEl = document.getElementById('criterio');
             const valoreEl = document.getElementById('valore');
             const valore2El = document.getElementById('valore2');
             const valore3El = document.getElementById('valore3');
             const dichiarazioneEl = document.getElementById('dichiarazione');
             const esitoNegativoEl = document.getElementById('esitoNegativo');
+            const conteggiareEl = document.getElementById('conteggiare');
+            const groupConteggiare = document.getElementById('groupConteggiare');
+            const groupEsitoNegativo = document.getElementById('groupEsitoNegativo');
             const btn = document.getElementById('btnCalcola');
             const btnDownloadPdf = document.getElementById('btnDownloadPdf');
             const resultEl = document.getElementById('calcolaResult');
             const professioneEl = document.getElementById('professione');
+            const previewEl = document.getElementById('documentPreview');
+            const welcomeEl = document.getElementById('welcomeUser');
 
             const labelValore = document.getElementById('labelValore');
             const labelValore2 = document.getElementById('labelValore2');
             const labelValore3 = document.getElementById('labelValore3');
+
+            let sumModeR1 = false;
+
+            function setPreview(html) {
+                if (!previewEl) return;
+                previewEl.innerHTML = html;
+            }
+
+            function setBlockVisible(el, visible) {
+                if (!el) return;
+                el.style.display = visible ? '' : 'none';
+            }
+
+            function setInputGroupVisible(inputEl, visible) {
+                if (!inputEl) return;
+                const group = inputEl.closest('.form-group');
+                if (!group) return;
+                group.style.display = visible ? '' : 'none';
+            }
+
+            function updateWelcome() {
+                const token = localStorage.getItem('authToken');
+                const user = parseJwt(token);
+                if (welcomeEl) {
+                    welcomeEl.textContent = `Benvenuto, ${user.nome || user.email || ''}`;
+                }
+            }
+
+            const docConfig = {
+                amministrazione_custodia: {
+                    riquadro: 'r1',
+                    sumR1: true,
+                    labels: {
+                        v1: 'Componenti positivi di redditi lordi (€)',
+                        v2: 'Totale attività (€)',
+                    },
+                    show: { v2: true, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                },
+                procedure_concorsuali: {
+                    riquadro: 'r9',
+                    sumR1: false,
+                    labels: { v1: 'Totale delle passività (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: true, conteggiare: true }
+                },
+                consulente_finanziamento: {
+                    riquadro: 'r8_2',
+                    sumR1: false,
+                    labels: { v1: 'Capitale mutuato/finanziato (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                },
+                consulente_economico_finanziaria: {
+                    riquadro: 'r8_2',
+                    sumR1: false,
+                    labels: { v1: 'Capitali/valori econ-finanziari (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                },
+                dichiarazione: {
+                    riquadro: 'r10_1',
+                    sumR1: false,
+                    labels: { },
+                    show: { v2: false, v3: false, dichiarazione: true, esitoNegativo: false, conteggiare: false }
+                },
+                perizie_valutazioni: {
+                    riquadro: 'r3',
+                    sumR1: false,
+                    labels: { v1: 'Valore perizia / valutazione (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                },
+                default: {
+                    riquadro: 'r1',
+                    sumR1: false,
+                    labels: { v1: 'Valore di riferimento (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false }
+                }
+            };
+
+            function applyDocType() {
+                const key = documentTypeEl ? documentTypeEl.value : '';
+                const cfg = docConfig[key] || docConfig.default;
+
+                sumModeR1 = !!cfg.sumR1;
+                if (prestazioneEl) prestazioneEl.value = cfg.riquadro;
+
+                if (labelValore) labelValore.textContent = cfg.labels.v1 || 'Valore (€)';
+                if (labelValore2) labelValore2.textContent = cfg.labels.v2 || 'Secondo valore (€)';
+                if (labelValore3) labelValore3.textContent = cfg.labels.v3 || 'Terzo valore (€)';
+
+                setInputGroupVisible(valore2El, !!cfg.show.v2);
+                setInputGroupVisible(valore3El, !!cfg.show.v3);
+                setInputGroupVisible(dichiarazioneEl, !!cfg.show.dichiarazione);
+                setBlockVisible(groupEsitoNegativo, !!cfg.show.esitoNegativo);
+                setBlockVisible(groupConteggiare, !!cfg.show.conteggiare);
+
+                // required
+                if (valoreEl) valoreEl.required = cfg.riquadro !== 'r10_1';
+                if (valore2El) valore2El.required = !!cfg.show.v2;
+                if (valore3El) valore3El.required = !!cfg.show.v3;
+
+                // reset buttons/preview
+                if (btnDownloadPdf) {
+                    btnDownloadPdf.disabled = true;
+                    btnDownloadPdf.dataset.payload = '';
+                }
+                setPreview('Seleziona una sezione e inserisci i dati per vedere l\'anteprima.');
+            }
 
             function setEnabled(el, enabled) {
                 if (!el) return;
@@ -281,15 +326,13 @@
             function updateFieldVisibility() {
                 const tipo = prestazioneEl ? prestazioneEl.value : '';
 
+                // Manteniamo la logica originale per i riquadri "puri" (fallback)
                 // valore = principale. valore2 = secondario (quando serve). valore3 = terzo (quando serve). dichiarazione = solo Riquadro 10.1
                 setEnabled(valoreEl, tipo !== 'r10_1');
                 setEnabled(valore2El, ['r2', 'r4', 'r5_1', 'r6'].includes(tipo));
                 setEnabled(valore3El, ['r4', 'r5_1', 'r6'].includes(tipo));
                 setEnabled(dichiarazioneEl, tipo === 'r10_1');
                 setEnabled(esitoNegativoEl, tipo === 'r9');
-
-                setGroupVisible(dichiarazioneEl, tipo === 'r10_1');
-                setGroupVisible(esitoNegativoEl, tipo === 'r9');
 
                 if (tipo === 'r10_1') {
                     valoreEl.required = false;
@@ -526,7 +569,8 @@
 
                 // Percentuali in forma decimale (es. 3% = 0.03)
                 if (tipo === 'r1') {
-                    const t = tiered(v1, [
+                    const base = sumModeR1 ? (Number.isFinite(v2) ? (v1 + v2) : v1) : v1;
+                    const t = tiered(base, [
                         { upto: 10000, ...rateRange(0.03, 0.04) },
                         { upto: 50000, ...rateRange(0.02, 0.03) },
                         { upto: Infinity, ...rateRange(0.01, 0.02) },
@@ -534,6 +578,9 @@
                     min = t.minTotal;
                     max = t.maxTotal;
                     details.push('Base: sommatoria componenti positivi di reddito lordi e attività.');
+                    if (sumModeR1) {
+                        details.push(`Somma utilizzata: ${euro(v1)} + ${euro(v2)} = ${euro(base)}`);
+                    }
                 } else if (tipo === 'r2') {
                     const attivo = tiered(v1, [
                         { upto: 400000, ...rateRange(0.04, 0.06) },
@@ -712,6 +759,13 @@
                     ${details.length ? `<br><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}` : ''}
                 `;
 
+                setPreview(`
+                    <div><strong>Sezione:</strong> ${(documentTypeEl && documentTypeEl.options[documentTypeEl.selectedIndex]?.textContent) || ''}</div>
+                    <div style="margin-top:10px;"><strong>Compenso (${criterio}):</strong> ${euro(chosen)}</div>
+                    <div><strong>Range:</strong> ${euro(min)} - ${euro(max)}</div>
+                    ${details.length ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}</div>` : ''}
+                `);
+
                 if (btnDownloadPdf) {
                     btnDownloadPdf.disabled = false;
                     btnDownloadPdf.dataset.payload = JSON.stringify(buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }));
@@ -738,6 +792,9 @@
                         btnDownloadPdf.textContent = 'Generazione PDF...';
 
                         const payload = JSON.parse(raw);
+                        if (conteggiareEl && conteggiareEl.value === 'si' && esitoNegativoEl) {
+                            esitoNegativoEl.checked = true;
+                        }
                         const data = await apiRequest('/api/calculations', {
                             method: 'POST',
                             body: JSON.stringify(payload)
@@ -754,6 +811,15 @@
             }
 
             updateFieldVisibility();
+            updateWelcome();
+
+            if (documentTypeEl) {
+                documentTypeEl.addEventListener('change', () => {
+                    applyDocType();
+                });
+            }
+
+            applyDocType();
         })();
 
         function parseJwt(token) {
