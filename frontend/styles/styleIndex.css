@@ -1281,7 +1281,187 @@ body.account-page {
 .account-doc-actions {
     display: flex;
     align-items: center;
+    gap: 8px;
+}
+
+.account-calcs-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    margin-bottom: 12px;
+}
+
+.account-search-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
     gap: 10px;
+    border: 1px solid #E0E0E0;
+    border-radius: 0px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    background: #FFFFFF;
+}
+
+.account-search-wrap i {
+    color: #1C4D8D;
+}
+
+.account-search-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: transparent;
+    color: #2c3e50;
+}
+
+.account-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.account-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.account-table thead th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 800;
+    color: #1C4D8D;
+    padding: 10px 8px;
+    border-bottom: 1px solid #E0E0E0;
+    white-space: nowrap;
+}
+
+.account-table tbody td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #EEEEEE;
+    font-size: 14px;
+    color: #2c3e50;
+    vertical-align: middle;
+}
+
+.account-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.account-icon-btn {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 0px;
+    cursor: pointer;
+    color: #1C4D8D;
+}
+
+.account-icon-btn:hover {
+    background: #f3f6fb;
+}
+
+.account-icon-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.account-icon-btn.danger {
+    color: #FF6B6B;
+}
+
+.account-icon-btn.danger:hover {
+    background: #FFF5F5;
+}
+
+.account-rename {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.account-rename-input {
+    width: 100%;
+    min-width: 180px;
+    border: 1px solid #E0E0E0;
+    border-radius: 0px;
+    padding: 10px 12px;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.account-rename-input:focus {
+    border-color: #1C4D8D;
+    box-shadow: 0 0 0 3px rgba(28, 77, 141, 0.15);
+}
+
+.account-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 2000;
+}
+
+.account-modal-backdrop.open {
+    display: flex;
+}
+
+.account-modal {
+    width: 100%;
+    max-width: 420px;
+    background: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 0px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.12);
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.account-modal-title {
+    font-size: 14px;
+    font-weight: 900;
+    color: #1C4D8D;
+    margin-bottom: 8px;
+}
+
+.account-modal-body {
+    font-size: 14px;
+    color: #2c3e50;
+    line-height: 1.5;
+}
+
+.account-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.account-danger-btn {
+    background: #FF6B6B;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 0px;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.account-danger-btn:hover {
+    background: #ff5252;
 }
 
 @media (max-width: 820px) {

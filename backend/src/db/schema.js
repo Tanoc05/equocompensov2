@@ -32,6 +32,12 @@ async function ensureSchema() {
       file_path TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+
+    ALTER TABLE calculations
+      ADD COLUMN IF NOT EXISTS name TEXT;
+
+    ALTER TABLE calculations
+      ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
   `);
 }
 

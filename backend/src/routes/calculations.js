@@ -8,6 +8,80 @@ const { generateCalculationPdf } = require('../services/pdf');
 
 const router = express.Router();
 
+router.get('/', requireAuth, async (req, res) => {
+  const userId = req.user.sub;
+  const q = String(req.query.q || '').trim();
+
+  let where = 'c.user_id = $1 AND c.deleted_at IS NULL';
+  const params = [userId];
+  if (q) {
+    params.push(`%${q}%`);
+    where += ` AND (
+      COALESCE(c.name, '') ILIKE $2 OR
+      to_char(c.created_at, 'YYYY-MM-DD') ILIKE $2
+    )`;
+  }
+
+  const { rows } = await pool.query(
+    `SELECT
+       c.id,
+       c.name,
+       c.created_at,
+       c.input_json,
+       c.result_json,
+       d.id AS document_id
+     FROM calculations c
+     LEFT JOIN LATERAL (
+       SELECT id
+       FROM documents
+       WHERE calculation_id = c.id AND user_id = $1
+       ORDER BY created_at DESC
+       LIMIT 1
+     ) d ON true
+     WHERE ${where}
+     ORDER BY c.created_at DESC`,
+    params
+  );
+
+  return res.json({ calculations: rows });
+});
+
+router.patch('/:id/rename', requireAuth, async (req, res) => {
+  const userId = req.user.sub;
+  const id = req.params.id;
+  const name = (req.body && typeof req.body.name === 'string') ? req.body.name.trim() : '';
+  if (!name) return res.status(400).json({ error: 'Missing name' });
+
+  const { rows } = await pool.query(
+    `UPDATE calculations
+     SET name = $1
+     WHERE id = $2 AND user_id = $3 AND deleted_at IS NULL
+     RETURNING id, name, created_at`,
+    [name, id, userId]
+  );
+
+  const row = rows[0];
+  if (!row) return res.status(404).json({ error: 'Not found' });
+  return res.json({ calculation: row });
+});
+
+router.delete('/:id', requireAuth, async (req, res) => {
+  const userId = req.user.sub;
+  const id = req.params.id;
+
+  const { rows } = await pool.query(
+    `UPDATE calculations
+     SET deleted_at = NOW()
+     WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL
+     RETURNING id`,
+    [id, userId]
+  );
+
+  const row = rows[0];
+  if (!row) return res.status(404).json({ error: 'Not found' });
+  return res.json({ ok: true });
+});
+
 router.post('/', requireAuth, async (req, res) => {
   const userId = req.user.sub;
   const { professione, riquadro, criterio, input, result } = req.body || {};

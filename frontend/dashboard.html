@@ -131,7 +131,28 @@
                 <div class="account-view" id="view-calculations" style="display:none;">
                     <div class="account-card">
                         <div class="account-card-title">I miei Calcoli</div>
-                        <div id="docsList" class="account-muted">Caricamento...</div>
+                        <div class="account-calcs-toolbar">
+                            <div class="account-search-wrap">
+                                <i class="fas fa-magnifying-glass"></i>
+                                <input id="calcSearch" class="account-search-input" type="text" placeholder="Cerca per nome pratica o data (es. 2025-01-07)...">
+                            </div>
+                        </div>
+
+                        <div class="account-table-wrap">
+                            <table class="account-table" aria-label="Tabella calcoli">
+                                <thead>
+                                    <tr>
+                                        <th>Nome File</th>
+                                        <th>Data Creazione</th>
+                                        <th>Valore Pratica</th>
+                                        <th>Compenso</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="calcTableBody"></tbody>
+                            </table>
+                            <div id="calcEmpty" class="account-muted" style="display:none;">Nessun calcolo disponibile al momento.</div>
+                        </div>
                     </div>
                 </div>
 
@@ -283,7 +304,7 @@
             });
 
             if (view === 'calculations') {
-                loadDocuments();
+                loadCalculations();
             }
 
             const url = new URL(window.location.href);
@@ -298,43 +319,216 @@
             return d.toLocaleString('it-IT');
         }
 
-        async function loadDocuments() {
-            const container = document.getElementById('docsList');
-            if (!container) return;
+        let calculationsCache = [];
+        let searchDebounce = null;
 
-            container.className = '';
-            container.textContent = 'Caricamento...';
+        function escapeHtml(str) {
+            return String(str || '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function extractValorePratica(inputJson) {
+            if (!inputJson || typeof inputJson !== 'object') return '';
+            const v = inputJson.valore;
+            if (typeof v === 'number' && Number.isFinite(v)) return `€ ${v.toFixed(2)}`;
+            if (typeof v === 'string' && v.trim()) return v;
+            return '';
+        }
+
+        function extractCompenso(resultJson) {
+            if (!resultJson || typeof resultJson !== 'object') return '';
+            const c = resultJson.chosen;
+            if (typeof c === 'number' && Number.isFinite(c)) return `€ ${c.toFixed(2)}`;
+            if (typeof c === 'string' && c.trim()) return c;
+            return '';
+        }
+
+        function formatCalcName(c) {
+            if (c && c.name && String(c.name).trim()) return String(c.name).trim();
+            const date = c && c.created_at ? formatDateTime(c.created_at) : '';
+            return date ? `Calcolo ${date}` : 'Calcolo';
+        }
+
+        function renderCalculations(rows) {
+            const body = document.getElementById('calcTableBody');
+            const empty = document.getElementById('calcEmpty');
+            if (!body || !empty) return;
+
+            body.innerHTML = '';
+            if (!rows.length) {
+                empty.style.display = '';
+                return;
+            }
+            empty.style.display = 'none';
+
+            rows.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.setAttribute('data-id', c.id);
+
+                const encodedName = encodeURIComponent(formatCalcName(c));
+
+                const nameCell = document.createElement('td');
+                nameCell.innerHTML = `
+                    <div class="account-cell-main">
+                        <div class="account-cell-title">${escapeHtml(formatCalcName(c))}</div>
+                    </div>
+                `;
+
+                const dateCell = document.createElement('td');
+                dateCell.textContent = formatDateTime(c.created_at);
+
+                const valoreCell = document.createElement('td');
+                valoreCell.textContent = extractValorePratica(c.input_json);
+
+                const compensoCell = document.createElement('td');
+                compensoCell.textContent = extractCompenso(c.result_json);
+
+                const actionsCell = document.createElement('td');
+                actionsCell.innerHTML = `
+                    <div class="account-actions">
+                        <button class="account-icon-btn" type="button" ${c.document_id ? '' : 'disabled'} aria-label="Scarica PDF" title="Scarica PDF" onclick="handleCalcDownload('${c.document_id || ''}')">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="account-icon-btn" type="button" aria-label="Rinomina" title="Rinomina" onclick="startRenameCalc('${c.id}', '${encodedName}')">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="account-icon-btn danger" type="button" aria-label="Elimina" title="Elimina" onclick="confirmDeleteCalc('${c.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                tr.appendChild(nameCell);
+                tr.appendChild(dateCell);
+                tr.appendChild(valoreCell);
+                tr.appendChild(compensoCell);
+                tr.appendChild(actionsCell);
+                body.appendChild(tr);
+            });
+        }
+
+        function filterCalculationsFrontend(q) {
+            const term = String(q || '').trim().toLowerCase();
+            if (!term) return calculationsCache;
+            return calculationsCache.filter(c => {
+                const name = (c.name || '').toLowerCase();
+                const date = (c.created_at ? String(c.created_at) : '').toLowerCase();
+                const dateFmt = formatDateTime(c.created_at).toLowerCase();
+                return name.includes(term) || date.includes(term) || dateFmt.includes(term);
+            });
+        }
+
+        async function loadCalculations(query = '') {
+            const body = document.getElementById('calcTableBody');
+            const empty = document.getElementById('calcEmpty');
+            if (!body || !empty) return;
+
+            empty.style.display = 'none';
+            body.innerHTML = `
+                <tr>
+                    <td colspan="5" class="account-muted">Caricamento...</td>
+                </tr>
+            `;
 
             try {
-                const data = await apiRequest('/api/documents', { method: 'GET' });
-                const docs = (data && data.documents) ? data.documents : [];
-
-                if (!docs.length) {
-                    container.className = 'account-muted';
-                    container.textContent = 'Nessun documento disponibile al momento.';
-                    return;
-                }
-
-                const rows = docs.map(d => {
-                    const type = d.type || 'pdf';
-                    return `
-                        <div class="account-doc-row">
-                            <div class="account-doc-main">
-                                <div class="account-doc-title">Documento ${d.id}</div>
-                                <div class="account-doc-meta">${formatDateTime(d.created_at)} • ${type}</div>
-                            </div>
-                            <div class="account-doc-actions">
-                                <button class="account-link-btn" type="button" onclick="downloadDocument('${d.id}', '${type}')">Scarica</button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                container.className = 'account-doc-list';
-                container.innerHTML = rows;
+                const url = new URL('/api/v1/calculations', window.location.origin);
+                if (query && String(query).trim()) url.searchParams.set('q', String(query).trim());
+                const data = await apiRequest(url.pathname + url.search, { method: 'GET' });
+                calculationsCache = (data && data.calculations) ? data.calculations : [];
+                renderCalculations(filterCalculationsFrontend(query));
             } catch (e) {
-                container.className = 'account-muted';
-                container.textContent = e && e.message ? e.message : 'Errore nel caricamento dei documenti.';
+                body.innerHTML = '';
+                empty.style.display = '';
+                empty.textContent = e && e.message ? e.message : 'Errore nel caricamento dei calcoli.';
+            }
+        }
+
+        function handleCalcDownload(documentId) {
+            if (!documentId) return;
+            downloadDocument(documentId, 'pdf');
+        }
+
+        function startRenameCalc(calcId, currentName) {
+            const tr = document.querySelector(`tr[data-id="${calcId}"]`);
+            if (!tr) return;
+            const nameTd = tr.querySelector('td');
+            if (!nameTd) return;
+            let decoded = '';
+            try {
+                decoded = decodeURIComponent(String(currentName || ''));
+            } catch {
+                decoded = String(currentName || '');
+            }
+            const safe = String(decoded || '').trim();
+            nameTd.innerHTML = `
+                <div class="account-rename">
+                    <input class="account-rename-input" type="text" value="${escapeHtml(safe)}" />
+                    <button class="account-link-btn" type="button" onclick="saveRenameCalc('${calcId}')">Salva</button>
+                    <button class="account-link-btn" type="button" onclick="cancelRenameCalc()">Annulla</button>
+                </div>
+            `;
+        }
+
+        function cancelRenameCalc() {
+            renderCalculations(filterCalculationsFrontend((document.getElementById('calcSearch') || {}).value || ''));
+        }
+
+        async function saveRenameCalc(calcId) {
+            const tr = document.querySelector(`tr[data-id="${calcId}"]`);
+            if (!tr) return;
+            const input = tr.querySelector('.account-rename-input');
+            const name = input ? input.value.trim() : '';
+            if (!name) {
+                alert('Inserisci un nome valido.');
+                return;
+            }
+
+            try {
+                await apiRequest(`/api/v1/calculations/${calcId}/rename`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ name })
+                });
+                const idx = calculationsCache.findIndex(x => x.id === calcId);
+                if (idx >= 0) calculationsCache[idx].name = name;
+                renderCalculations(filterCalculationsFrontend((document.getElementById('calcSearch') || {}).value || ''));
+            } catch (e) {
+                alert(e && e.message ? e.message : 'Errore');
+            }
+        }
+
+        let pendingDeleteId = null;
+
+        function openConfirmModal(id) {
+            pendingDeleteId = id;
+            const m = document.getElementById('confirmModal');
+            if (m) m.classList.add('open');
+        }
+
+        function closeConfirmModal() {
+            pendingDeleteId = null;
+            const m = document.getElementById('confirmModal');
+            if (m) m.classList.remove('open');
+        }
+
+        function confirmDeleteCalc(calcId) {
+            openConfirmModal(calcId);
+        }
+
+        async function performDeleteCalc() {
+            if (!pendingDeleteId) return;
+            const id = pendingDeleteId;
+            try {
+                await apiRequest(`/api/v1/calculations/${id}`, { method: 'DELETE' });
+                calculationsCache = calculationsCache.filter(c => c.id !== id);
+                renderCalculations(filterCalculationsFrontend((document.getElementById('calcSearch') || {}).value || ''));
+            } catch (e) {
+                alert(e && e.message ? e.message : 'Errore');
+            } finally {
+                closeConfirmModal();
             }
         }
 
@@ -438,9 +632,34 @@
                 btn.addEventListener('click', () => setActiveView(btn.getAttribute('data-view')));
             });
 
+            const search = document.getElementById('calcSearch');
+            if (search) {
+                search.addEventListener('input', () => {
+                    const q = search.value || '';
+                    renderCalculations(filterCalculationsFrontend(q));
+                    if (searchDebounce) window.clearTimeout(searchDebounce);
+                    searchDebounce = window.setTimeout(() => {
+                        if (document.getElementById('view-calculations') && document.getElementById('view-calculations').style.display !== 'none') {
+                            loadCalculations(q);
+                        }
+                    }, 350);
+                });
+            }
+
             loadAccount();
         })();
     </script>
+
+    <div id="confirmModal" class="account-modal-backdrop" role="dialog" aria-modal="true" aria-label="Conferma eliminazione" onclick="if(event.target.id==='confirmModal'){closeConfirmModal();}">
+        <div class="account-modal">
+            <div class="account-modal-title">Conferma</div>
+            <div class="account-modal-body">Sei sicuro di voler eliminare questo calcolo?</div>
+            <div class="account-modal-actions">
+                <button class="account-link-btn" type="button" onclick="closeConfirmModal()">Annulla</button>
+                <button class="account-danger-btn" type="button" onclick="performDeleteCalc()">Elimina</button>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

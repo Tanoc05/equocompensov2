@@ -24,6 +24,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/me', meRoutes);
 app.use('/api/calculations', calculationsRoutes);
+app.use('/api/v1/calculations', calculationsRoutes);
 app.use('/api/documents', documentsRoutes);
 
 // Serve frontend static
