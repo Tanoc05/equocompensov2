@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/styleIndex.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Calcola - equo compenso</title>
 </head>
-<body>
+<body class="calc-page">
 
     <header>
         <section class="header-img">
@@ -29,21 +30,13 @@
     
     <main>
 
-        <div class="container">
-            <div class="dashboard-top">
-                <div id="welcomeUser" class="dashboard-welcome">Benvenuto</div>
-                <button class="dashboard-logout" type="button" onclick="handleLogout()">logout</button>
-            </div>
+        <div class="calc-page-wrap">
+            <section class="calc-card" aria-label="Calcolo Equo Compenso">
+                <div class="calc-card-inner">
+                    <form id="calcForm" class="calc-form">
+                        <input type="hidden" id="professione" name="professione" value="commercialista">
+                        <input type="hidden" id="prestazione" name="prestazione" value="">
 
-            <div class="dashboard-layout">
-                <aside class="dashboard-sidebar">
-                    <button class="dashboard-nav-btn is-active" type="button">Crea documento</button>
-                    <button class="dashboard-nav-btn" type="button" onclick="window.location.href='index.html?profile=1'">Modifica dati</button>
-                    <button class="dashboard-nav-btn" type="button" onclick="alert('Sezione in arrivo');">Documenti prodotti</button>
-                </aside>
-
-                <section class="dashboard-card" aria-label="Crea documento">
-                    <div class="dashboard-card-inner">
                         <div class="form-group">
                             <label for="documentType">Nome del documento <span aria-hidden="true" style="color:#b00020">*</span></label>
                             <select id="documentType" name="documentType" required>
@@ -85,91 +78,78 @@
                             <input id="percentuale" name="percentuale" type="number" min="0" max="100" step="0.01" placeholder="0,00">
                         </div>
 
-                        <div class="dashboard-grid">
-                            <div>
-                                <form id="calcForm" class="dashboard-form">
-                                    <input type="hidden" id="professione" name="professione" value="commercialista">
-                                    <input type="hidden" id="prestazione" name="prestazione" value="">
-
-                                    <div class="form-group">
-                                        <label for="criterio">Criterio calcolo</label>
-                                        <select id="criterio" name="criterio" required>
-                                            <option value="min">Minimo</option>
-                                            <option value="medio" selected>Medio</option>
-                                            <option value="max">Massimo</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group" id="groupConteggiare">
-                                        <label for="conteggiare">Conteggiare?</label>
-                                        <select id="conteggiare" name="conteggiare">
-                                            <option value="no" selected>No</option>
-                                            <option value="si">Sì</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label id="labelValore" for="valore">Valore</label>
-                                        <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label id="labelValore2" for="valore2">Secondo valore</label>
-                                        <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label id="labelValore3" for="valore3">Terzo valore</label>
-                                        <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="dichiarazione">Dichiarazione (solo sezione "Dichiarazione")</label>
-                                        <select id="dichiarazione" name="dichiarazione">
-                                            <option value="" selected>N/A</option>
-                                            <option value="pf">Dichiarazione redditi persone fisiche</option>
-                                            <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
-                                            <option value="sp">Dichiarazione redditi società di persone</option>
-                                            <option value="sc">Dichiarazione redditi società di capitali</option>
-                                            <option value="irap">Dichiarazione IRAP</option>
-                                            <option value="iva">Dichiarazione IVA</option>
-                                            <option value="770">Dichiarazione sostituti d'imposta</option>
-                                            <option value="invio">Invio telematico</option>
-                                            <option value="successione">Dichiarazione di successione</option>
-                                            <option value="altre">Altre dichiarazioni e comunicazioni</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group" id="groupEsitoNegativo">
-                                        <label>Procedure concorsuali (solo sezione "Assistenza in procedure concorsuali")</label>
-                                        <div>
-                                            <input id="esitoNegativo" name="esitoNegativo" type="checkbox">
-                                            <label for="esitoNegativo">Esito negativo (riduzione fino alla metà)</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="calcola-actions">
-                                        <button id="btnCalcola" class="btn-primary" type="button">Calcola</button>
-                                        <button id="btnDownloadPdf" class="btn-secondary" type="button" disabled>Scarica documento (PDF)</button>
-                                        <button class="btn-secondary" type="reset">Reset</button>
-                                    </div>
-
-                                    <div id="calcolaResult" class="calcola-result">
-                                        Risultato: in attesa di calcolo.
-                                    </div>
-                                </form>
-                            </div>
-
-                            <aside class="dashboard-preview" aria-label="Anteprima documento">
-                                <div class="dashboard-preview-title">Anteprima documento</div>
-                                <div id="documentPreview" class="dashboard-preview-body">
-                                    Seleziona una sezione e inserisci i dati per vedere l'anteprima.
-                                </div>
-                            </aside>
+                        <div class="form-group">
+                            <label for="criterio">Criterio calcolo</label>
+                            <select id="criterio" name="criterio" required>
+                                <option value="min">Minimo</option>
+                                <option value="medio" selected>Medio</option>
+                                <option value="max">Massimo</option>
+                            </select>
                         </div>
-                    </div>
-                </section>
-            </div>
+
+                        <div class="form-group" id="groupConteggiare">
+                            <label for="conteggiare">Conteggiare?</label>
+                            <select id="conteggiare" name="conteggiare">
+                                <option value="no" selected>No</option>
+                                <option value="si">Sì</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="labelValore" for="valore">Valore</label>
+                            <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="labelValore2" for="valore2">Secondo valore</label>
+                            <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
+                        </div>
+
+                        <div class="form-group">
+                            <label id="labelValore3" for="valore3">Terzo valore</label>
+                            <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dichiarazione">Dichiarazione (solo sezione "Dichiarazione")</label>
+                            <select id="dichiarazione" name="dichiarazione">
+                                <option value="" selected>N/A</option>
+                                <option value="pf">Dichiarazione redditi persone fisiche</option>
+                                <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
+                                <option value="sp">Dichiarazione redditi società di persone</option>
+                                <option value="sc">Dichiarazione redditi società di capitali</option>
+                                <option value="irap">Dichiarazione IRAP</option>
+                                <option value="iva">Dichiarazione IVA</option>
+                                <option value="770">Dichiarazione sostituti d'imposta</option>
+                                <option value="invio">Invio telematico</option>
+                                <option value="successione">Dichiarazione di successione</option>
+                                <option value="altre">Altre dichiarazioni e comunicazioni</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="groupEsitoNegativo">
+                            <label>Procedure concorsuali (solo sezione "Assistenza in procedure concorsuali")</label>
+                            <div class="calc-checkbox">
+                                <input id="esitoNegativo" name="esitoNegativo" type="checkbox">
+                                <label for="esitoNegativo">Esito negativo (riduzione fino alla metà)</label>
+                            </div>
+                        </div>
+
+                        <div class="calc-action-bar">
+                            <button id="btn_calcola" class="calc-btn calc-btn-primary" type="button">ESSEGUI CALCOLO</button>
+                            <button id="btn_pdf" class="calc-btn calc-btn-outline" type="button" disabled>GENERA E SCARICA PDF</button>
+                            <button id="btn_reset" class="calc-btn calc-btn-link" type="reset">RESET CAMPI</button>
+                        </div>
+
+                        <div id="calcolaResult" class="calcola-result">Risultato: in attesa di calcolo.</div>
+
+                        <div class="calc-preview">
+                            <div class="calc-preview-title">Anteprima Istanza</div>
+                            <div id="documentPreview" class="calc-preview-body">Seleziona una sezione e inserisci i dati per vedere l'anteprima.</div>
+                        </div>
+                    </form>
+                </div>
+            </section>
         </div>
 
     </main>
@@ -211,12 +191,12 @@
             const groupPercentuale = document.getElementById('groupPercentuale');
             const groupConteggiare = document.getElementById('groupConteggiare');
             const groupEsitoNegativo = document.getElementById('groupEsitoNegativo');
-            const btn = document.getElementById('btnCalcola');
-            const btnDownloadPdf = document.getElementById('btnDownloadPdf');
+            const btn = document.getElementById('btn_calcola');
+            const btnDownloadPdf = document.getElementById('btn_pdf');
             const resultEl = document.getElementById('calcolaResult');
             const professioneEl = document.getElementById('professione');
             const previewEl = document.getElementById('documentPreview');
-            const welcomeEl = document.getElementById('welcomeUser');
+            const welcomeEl = null;
 
             const labelValore = document.getElementById('labelValore');
             const labelValore2 = document.getElementById('labelValore2');
@@ -239,14 +219,6 @@
                 const group = inputEl.closest('.form-group');
                 if (!group) return;
                 group.style.display = visible ? '' : 'none';
-            }
-
-            function updateWelcome() {
-                const token = localStorage.getItem('authToken');
-                const user = parseJwt(token);
-                if (welcomeEl) {
-                    welcomeEl.textContent = `Benvenuto, ${user.nome || user.email || ''}`;
-                }
             }
 
             const docConfig = {
@@ -930,7 +902,7 @@
                         }
 
                         btnDownloadPdf.disabled = true;
-                        btnDownloadPdf.textContent = 'Generazione PDF...';
+                        btnDownloadPdf.textContent = 'GENERAZIONE PDF...';
 
                         const payload = JSON.parse(raw);
                         if (conteggiareEl && conteggiareEl.value === 'si' && esitoNegativoEl) {
@@ -945,14 +917,13 @@
                     } catch (e) {
                         alert(e.message || 'Errore');
                     } finally {
-                        btnDownloadPdf.textContent = 'Scarica documento (PDF)';
+                        btnDownloadPdf.textContent = 'GENERA E SCARICA PDF';
                         btnDownloadPdf.disabled = false;
                     }
                 });
             }
 
             updateFieldVisibility();
-            updateWelcome();
             if (typeof updateHeaderUser === 'function') {
                 updateHeaderUser();
             }
