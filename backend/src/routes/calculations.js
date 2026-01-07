@@ -104,11 +104,15 @@ router.post('/', requireAuth, async (req, res) => {
   try {
     await client.query('BEGIN');
 
+    const nomePratica = (input && typeof input.nome_pratica === 'string') ? input.nome_pratica.trim() : '';
+    const clienteNome = (input && typeof input.cliente_nome === 'string') ? input.cliente_nome.trim() : '';
+    const calcName = (nomePratica || clienteNome) ? `${nomePratica}${nomePratica && clienteNome ? ' - ' : ''}${clienteNome}` : null;
+
     const { rows: calcRows } = await client.query(
-      `INSERT INTO calculations (id, user_id, professione, riquadro, criterio, input_json, result_json)
-       VALUES ($1,$2,$3,$4,$5,$6,$7)
+      `INSERT INTO calculations (id, user_id, professione, riquadro, criterio, input_json, result_json, name)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
        RETURNING *`,
-      [calcId, userId, professione, riquadro, criterio, input, result]
+      [calcId, userId, professione, riquadro, criterio, input, result, calcName]
     );
 
     const calculation = calcRows[0];
@@ -131,7 +135,11 @@ router.post('/', requireAuth, async (req, res) => {
 
     await client.query('COMMIT');
 
-    return res.status(201).json({ calculationId: calcId, documentId: docId });
+    return res.status(201).json({
+      calculationId: calcId,
+      documentId: docId,
+      document_id: docId,
+    });
   } catch {
     await client.query('ROLLBACK');
     return res.status(500).json({ error: 'Server error' });

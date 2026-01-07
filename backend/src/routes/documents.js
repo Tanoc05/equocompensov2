@@ -23,7 +23,10 @@ router.get('/:id/download', requireAuth, async (req, res) => {
   const docId = req.params.id;
 
   const { rows } = await pool.query(
-    'SELECT id, file_path, type FROM documents WHERE id = $1 AND user_id = $2',
+    `SELECT d.id, d.file_path, d.type, c.input_json
+     FROM documents d
+     LEFT JOIN calculations c ON c.id = d.calculation_id
+     WHERE d.id = $1 AND d.user_id = $2`,
     [docId, userId]
   );
 
@@ -31,7 +34,23 @@ router.get('/:id/download', requireAuth, async (req, res) => {
   if (!doc) return res.status(404).json({ error: 'Not found' });
 
   const filePath = doc.file_path;
-  const fileName = `${docId}.${doc.type === 'pdf' ? 'pdf' : 'bin'}`;
+
+  function safePart(v) {
+    return String(v || '')
+      .trim()
+      .replace(/\s+/g, '_')
+      .replace(/[^a-zA-Z0-9_-]/g, '')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '');
+  }
+
+  const input = doc.input_json || {};
+  const p1 = safePart(input.nome_pratica);
+  const p2 = safePart(input.cliente_nome);
+  const ext = doc.type === 'pdf' ? 'pdf' : 'bin';
+  const fileName = (p1 && p2)
+    ? `${p1}_${p2}.${ext}`
+    : (p1 ? `${p1}.${ext}` : (p2 ? `${p2}.${ext}` : `${docId}.${ext}`));
 
   res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
   res.setHeader('Content-Type', doc.type === 'pdf' ? 'application/pdf' : 'application/octet-stream');

@@ -51,6 +51,24 @@
                                 <input type="hidden" id="professione" name="professione" value="commercialista">
                                 <input type="hidden" id="prestazione" name="prestazione" value="">
 
+                        <div class="calc-form-header">
+                            <div class="form-group">
+                                <label for="nome_pratica">Nome del Compenso</label>
+                                <div class="calc-input">
+                                    <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
+                                    <input id="nome_pratica" name="nome_pratica" type="text" placeholder="es. Progetto Ristrutturazione">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cliente_nome">Nominativo Cliente / Società</label>
+                                <div class="calc-input">
+                                    <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-building"></i></span>
+                                    <input id="cliente_nome" name="cliente_nome" type="text" placeholder="es. Rossi S.r.l.">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="documentType">Nome del documento <span aria-hidden="true" style="color:#b00020">*</span></label>
                             <div class="calc-input">
@@ -184,7 +202,7 @@
                                 <span class="calc-btn-text">ELABORA COMPENSO</span>
                                 <span class="calc-btn-progress" aria-hidden="true"><span class="calc-btn-progress-bar"></span></span>
                             </button>
-                            <button id="btn_pdf" class="calc-btn calc-btn-outline" type="button" disabled>GENERA E SCARICA PDF</button>
+                            <button id="btn_scarica" class="calc-btn calc-btn-outline" type="button" disabled>GENERA E SCARICA PDF</button>
                             <button id="btn_reset" class="calc-btn calc-btn-link" type="reset">RESET CAMPI</button>
                         </div>
 
@@ -244,11 +262,14 @@
             const groupConteggiare = document.getElementById('groupConteggiare');
             const groupEsitoNegativo = document.getElementById('groupEsitoNegativo');
             const btn = document.getElementById('btn_calcola');
-            const btnDownloadPdf = document.getElementById('btn_pdf');
+            const btnDownloadPdf = document.getElementById('btn_scarica');
             const resultEl = document.getElementById('calcolaResult');
             const professioneEl = document.getElementById('professione');
             const previewEl = document.getElementById('documentPreview');
             const welcomeEl = null;
+
+            const nomePraticaEl = document.getElementById('nome_pratica');
+            const clienteNomeEl = document.getElementById('cliente_nome');
 
             const presetButtons = document.querySelectorAll('[data-preset]');
 
@@ -699,7 +720,7 @@
                 return data;
             }
 
-            async function downloadDocumentPdf(documentId) {
+            async function downloadDocumentPdf(documentId, fileName) {
                 const token = localStorage.getItem('authToken');
                 const res = await fetch(`/api/documents/${documentId}/download`, {
                     method: 'GET',
@@ -719,7 +740,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `documento-compenso-${documentId}.pdf`;
+                a.download = fileName || `documento-compenso-${documentId}.pdf`;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -736,6 +757,10 @@
             }
 
             function renderDraftPreview() {
+                if (!previewEl) return;
+
+                const nomePratica = nomePraticaEl ? String(nomePraticaEl.value || '').trim() : '';
+                const clienteNome = clienteNomeEl ? String(clienteNomeEl.value || '').trim() : '';
                 const docText = documentTypeEl && documentTypeEl.selectedIndex > -1
                     ? (documentTypeEl.options[documentTypeEl.selectedIndex].textContent || '')
                     : '';
@@ -745,6 +770,8 @@
 
                 const tipo = prestazioneEl ? prestazioneEl.value : '';
                 const parts = [];
+                if (nomePratica) parts.push(`<div><strong>Nome pratica:</strong> ${escapeHtml(nomePratica)}</div>`);
+                if (clienteNome) parts.push(`<div><strong>Cliente / Società:</strong> ${escapeHtml(clienteNome)}</div>`);
                 if (docText) parts.push(`<div><strong>Documento:</strong> ${escapeHtml(docText)}</div>`);
                 if (catText && (documentCategoryEl && documentCategoryEl.value)) parts.push(`<div><strong>Categoria:</strong> ${escapeHtml(catText)}</div>`);
                 if (tipo) parts.push(`<div><strong>Riquadro:</strong> ${escapeHtml(tipo)}</div>`);
@@ -766,6 +793,8 @@
 
             function buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }) {
                 const input = {
+                    nome_pratica: nomePraticaEl ? String(nomePraticaEl.value || '') : '',
+                    cliente_nome: clienteNomeEl ? String(clienteNomeEl.value || '') : '',
                     documentType: documentTypeEl ? documentTypeEl.value : null,
                     documentCategory: documentCategoryEl ? documentCategoryEl.value : null,
                     corrispettivoPattuito: pattuitoEl ? Number(pattuitoEl.value) : null,
@@ -1146,11 +1175,29 @@
                             body: JSON.stringify(payload)
                         });
 
-                        if (!data || !data.document_id) {
+                        const docId = data && (data.document_id || data.documentId);
+                        if (!docId) {
                             throw new Error('Risposta non valida dal server');
                         }
 
-                        await downloadDocumentPdf(data.document_id);
+                        function safePart(v) {
+                            return String(v || '')
+                                .trim()
+                                .replace(/\s+/g, '_')
+                                .replace(/[^a-zA-Z0-9_-]/g, '')
+                                .replace(/_+/g, '_')
+                                .replace(/^_+|_+$/g, '');
+                        }
+
+                        const np = payload && payload.input ? payload.input.nome_pratica : '';
+                        const cn = payload && payload.input ? payload.input.cliente_nome : '';
+                        const p1 = safePart(np);
+                        const p2 = safePart(cn);
+                        const suggested = (p1 && p2)
+                            ? `${p1}_${p2}.pdf`
+                            : (p1 ? `${p1}.pdf` : (p2 ? `${p2}.pdf` : `documento-compenso-${docId}.pdf`));
+
+                        await downloadDocumentPdf(docId, suggested);
                         setStepper(3);
                     } catch (e) {
                         setResult((e && e.message) ? e.message : 'Errore', true);
