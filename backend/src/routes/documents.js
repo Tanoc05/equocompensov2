@@ -47,10 +47,15 @@ router.get('/:id/download', requireAuth, async (req, res) => {
   const input = doc.input_json || {};
   const p1 = safePart(input.nome_pratica);
   const p2 = safePart(input.cliente_nome);
+  const docType = input && input.documentType ? String(input.documentType) : '';
   const ext = doc.type === 'pdf' ? 'pdf' : 'bin';
-  const fileName = (p1 && p2)
-    ? `${p1}_${p2}.${ext}`
-    : (p1 ? `${p1}.${ext}` : (p2 ? `${p2}.${ext}` : `${docId}.${ext}`));
+
+  const baseName = (p1 && p2)
+    ? `${p1}_${p2}`
+    : (p1 ? p1 : (p2 ? p2 : docId));
+
+  const suffix = docType === 'contabilita_ordinaria' ? '_Contabilita' : '';
+  const fileName = `${baseName}${suffix}.${ext}`;
 
   res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
   res.setHeader('Content-Type', doc.type === 'pdf' ? 'application/pdf' : 'application/octet-stream');

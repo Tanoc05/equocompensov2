@@ -679,15 +679,15 @@ header .ls li.user-item .user-btn:focus-visible {
 }
 
 header .ls li.user-item .user-avatar {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
     border-radius: 999px;
     background: #1C4D8D;
     color: #ffffff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 34px;
+    flex: 0 0 40px;
     overflow: hidden;
 }
 
@@ -1800,7 +1800,7 @@ body.calc-page .calc-action-bar {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: nowrap;
     margin-top: 30px;
 }

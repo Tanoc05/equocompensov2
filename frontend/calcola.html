@@ -56,7 +56,7 @@
                                 <label for="nome_pratica">Nome del Compenso</label>
                                 <div class="calc-input">
                                     <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
-                                    <input id="nome_pratica" name="nome_pratica" type="text" placeholder="es. Progetto Ristrutturazione">
+                                    <input id="nome_pratica" name="nome_pratica" type="text" placeholder="es. Progetto Ristrutturazione" required>
                                 </div>
                             </div>
 
@@ -64,7 +64,7 @@
                                 <label for="cliente_nome">Nominativo Cliente / Società</label>
                                 <div class="calc-input">
                                     <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-building"></i></span>
-                                    <input id="cliente_nome" name="cliente_nome" type="text" placeholder="es. Rossi S.r.l.">
+                                    <input id="cliente_nome" name="cliente_nome" type="text" placeholder="es. Rossi S.r.l." required>
                                 </div>
                             </div>
                         </div>
@@ -76,6 +76,7 @@
                                 <select id="documentType" name="documentType" required>
                                     <option value="" disabled selected>Seleziona</option>
                                     <option value="amministrazione_custodia">Amministrazione e custodia</option>
+                                    <option value="collegio_sindacale">Collegio Sindacale</option>
                                     <option value="procedure_concorsuali">Assistenza in procedure concorsuali</option>
                                     <option value="consulente_finanziamento">Consulente finanziamento</option>
                                     <option value="consulente_economico_finanziaria">Consulente economico-finanziaria</option>
@@ -134,6 +135,54 @@
                             </div>
                         </div>
 
+                        <div class="form-group" id="groupAliquotaSc1">
+                            <label for="aliquota_scaglione_1">Aliquota Fascia 1 (Fino a 2M)</label>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-percent"></i></span>
+                                <input id="aliquota_scaglione_1" name="aliquota_scaglione_1" type="number" min="0.0075" max="0.02" step="0.0001" value="0.0075">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="groupAliquotaSc2">
+                            <label for="aliquota_scaglione_2">Aliquota Fascia 2 (Oltre 2M)</label>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-percent"></i></span>
+                                <input id="aliquota_scaglione_2" name="aliquota_scaglione_2" type="number" min="0.005" max="0.0075" step="0.0001" value="0.005">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="groupIntensitySc1">
+                            <label for="intensity_scaglione_1">Intensità Fascia 1 (Fino a 2M)</label>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-gauge-high"></i></span>
+                                <select id="intensity_scaglione_1" name="intensity_scaglione_1">
+                                    <option value="min" selected>Minimo</option>
+                                    <option value="medio">Medio</option>
+                                    <option value="max">Massimo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="groupIntensitySc2">
+                            <label for="intensity_scaglione_2">Intensità Fascia 2 (Oltre 2M)</label>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-gauge-high"></i></span>
+                                <select id="intensity_scaglione_2" name="intensity_scaglione_2">
+                                    <option value="min" selected>Minimo</option>
+                                    <option value="medio">Medio</option>
+                                    <option value="max">Massimo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="groupAliquotaConsulenza">
+                            <label for="aliquota_consulenza">Aliquota applicata (solo sezione "Consulenza tributaria")</label>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-percent"></i></span>
+                                <input id="aliquota_consulenza" name="aliquota_consulenza" type="number" min="0.01" max="0.05" step="0.0001" value="0.01">
+                            </div>
+                        </div>
+
                         <div class="form-group" id="groupConteggiare">
                             <label for="conteggiare">Conteggiare?</label>
                             <div class="calc-input">
@@ -189,11 +238,45 @@
                             </div>
                         </div>
 
+                        <div class="form-group" id="groupDichiarazioniMulti">
+                            <label>Assistenza tributaria (Dichiarazioni) - seleziona le voci</label>
+                            <div class="calc-checkbox"><input id="dich_pf_no_piva" type="checkbox" name="dich_multi" value="pf_no_piva"><label for="dich_pf_no_piva">Redditi Persone Fisiche (no P.IVA) — € 150,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_pf_piva" type="checkbox" name="dich_multi" value="pf_piva"><label for="dich_pf_piva">Redditi Persone Fisiche con P.IVA — € 450,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_soc_persone" type="checkbox" name="dich_multi" value="soc_persone"><label for="dich_soc_persone">Redditi Società di Persone — € 550,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_soc_capitali" type="checkbox" name="dich_multi" value="soc_capitali"><label for="dich_soc_capitali">Redditi Società di Capitali — € 650,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_irap" type="checkbox" name="dich_multi" value="irap"><label for="dich_irap">Dichiarazione IRAP — € 200,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_iva" type="checkbox" name="dich_multi" value="iva"><label for="dich_iva">Dichiarazione IVA — € 250,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_sostituti" type="checkbox" name="dich_multi" value="sostituti"><label for="dich_sostituti">Sostituti d'Imposta — € 150,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_successione" type="checkbox" name="dich_multi" value="successione"><label for="dich_successione">Dichiarazione di Successione — € 350,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_altre" type="checkbox" name="dich_multi" value="altre"><label for="dich_altre">Altre comunicazioni/dichiarazioni — € 100,00</label></div>
+                            <div class="calc-checkbox"><input id="dich_invio" type="checkbox" name="dich_multi" value="invio"><label for="dich_invio">Invio Telematico (per singola voce) — € 20,00</label></div>
+                        </div>
+
                         <div class="form-group" id="groupEsitoNegativo">
                             <label>Procedure concorsuali (solo sezione "Assistenza in procedure concorsuali")</label>
                             <div class="calc-checkbox">
                                 <input id="esitoNegativo" name="esitoNegativo" type="checkbox">
                                 <label for="esitoNegativo">Esito negativo (riduzione fino alla metà)</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="groupRuoloSindaco">
+                            <label for="ruoloSindaco">Carica ricoperta (solo sezione "Collegio Sindacale")</label>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-user-tie"></i></span>
+                                <select id="ruoloSindaco" name="ruoloSindaco">
+                                    <option value="membro" selected>Sindaco (Membro)</option>
+                                    <option value="presidente">Presidente Collegio Sindacale</option>
+                                    <option value="sindaco_unico">Sindaco Unico</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="groupRiduzioneComma2">
+                            <label>Collegio Sindacale (solo sezione "Collegio Sindacale")</label>
+                            <div class="calc-checkbox">
+                                <input id="riduzioneComma2" name="riduzioneComma2" type="checkbox">
+                                <label for="riduzioneComma2">Società di sola amministrazione/godimento o liquidazione (riduzione fino alla metà)</label>
                             </div>
                         </div>
 
@@ -252,7 +335,15 @@
             const valore2El = document.getElementById('valore2');
             const valore3El = document.getElementById('valore3');
             const dichiarazioneEl = document.getElementById('dichiarazione');
+            const groupDichiarazioniMulti = document.getElementById('groupDichiarazioniMulti');
             const esitoNegativoEl = document.getElementById('esitoNegativo');
+            const ruoloSindacoEl = document.getElementById('ruoloSindaco');
+            const riduzioneComma2El = document.getElementById('riduzioneComma2');
+            const aliquotaSc1El = document.getElementById('aliquota_scaglione_1');
+            const aliquotaSc2El = document.getElementById('aliquota_scaglione_2');
+            const intensitySc1El = document.getElementById('intensity_scaglione_1');
+            const intensitySc2El = document.getElementById('intensity_scaglione_2');
+            const aliquotaConsulenzaEl = document.getElementById('aliquota_consulenza');
             const conteggiareEl = document.getElementById('conteggiare');
             const pattuitoEl = document.getElementById('corrispettivoPattuito');
             const percentualeEl = document.getElementById('percentuale');
@@ -261,6 +352,13 @@
             const groupPercentuale = document.getElementById('groupPercentuale');
             const groupConteggiare = document.getElementById('groupConteggiare');
             const groupEsitoNegativo = document.getElementById('groupEsitoNegativo');
+            const groupRuoloSindaco = document.getElementById('groupRuoloSindaco');
+            const groupRiduzioneComma2 = document.getElementById('groupRiduzioneComma2');
+            const groupAliquotaSc1 = document.getElementById('groupAliquotaSc1');
+            const groupAliquotaSc2 = document.getElementById('groupAliquotaSc2');
+            const groupIntensitySc1 = document.getElementById('groupIntensitySc1');
+            const groupIntensitySc2 = document.getElementById('groupIntensitySc2');
+            const groupAliquotaConsulenza = document.getElementById('groupAliquotaConsulenza');
             const btn = document.getElementById('btn_calcola');
             const btnDownloadPdf = document.getElementById('btn_scarica');
             const resultEl = document.getElementById('calcolaResult');
@@ -406,30 +504,41 @@
                         v1: 'Componenti positivi di redditi lordi (€)',
                         v2: 'Totale attività (€)',
                     },
-                    show: { v2: true, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    show: { v2: true, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+                collegio_sindacale: {
+                    riquadro: 'r11',
+                    sumR1: false,
+                    labels: {
+                        v1: 'Componenti positivi reddito lordo (€)',
+                        v2: 'Totale attività (€)',
+                    },
+                    show: { v2: true, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: true, riduzioneComma2: true },
                     showPattuito: true,
                     showPercentuale: true,
                 },
                 contabilita_ordinaria: {
-                    riquadro: 'r4',
+                    riquadro: 'r5_1',
                     sumR1: false,
                     labels: {
-                        v1: 'a) CORRISPETTIVO PATTUITO (€)',
-                        v2: 'b) TOTALE ATTIVITA\' (€)',
-                        v3: 'c) AMMONTARE DELLE PASSIVITA\' (€)',
+                        v1: 'Totale Componenti Positivi di Reddito Lordi (€)',
+                        v2: 'Totale Attività (€)',
+                        v3: 'Ammontare delle Passività (Bilancio fine esercizio) (€)',
                     },
-                    show: { v2: true, v3: true, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    show: { v2: true, v3: true, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false },
                     showPattuito: false,
                     showPercentuale: true,
                 },
                 contabilita_semplicata: {
-                    riquadro: 'r1',
+                    riquadro: 'r5_2',
                     sumR1: false,
                     labels: {
-                        v1: 'a) CORRISPETTIVO PATTUITO (€)',
+                        v1: 'Componenti Positivi di Reddito Lordi (€)',
                     },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
-                    showPattuito: false,
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false },
+                    showPattuito: true,
                     showPercentuale: true,
                 },
                 formazione_bilancio: {
@@ -440,7 +549,7 @@
                         v2: 'TOTALE DELLE ATTIVITA\' (€)',
                         v3: 'AMMONTARE DELLE PASSIVITA\' (€)',
                     },
-                    show: { v2: true, v3: true, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    show: { v2: true, v3: true, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false },
                     showPattuito: true,
                     showPercentuale: true,
                 },
@@ -448,7 +557,7 @@
                     riquadro: 'r9',
                     sumR1: false,
                     labels: { v1: 'Totale delle passività (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: true, conteggiare: true },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: true, conteggiare: true, ruoloSindaco: false, riduzioneComma2: false },
                     showPattuito: true,
                     showPercentuale: true,
                 },
@@ -456,7 +565,7 @@
                     riquadro: 'r8_2',
                     sumR1: false,
                     labels: { v1: 'Capitale mutuato/finanziato (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false },
                     showPattuito: true,
                     showPercentuale: true,
                 },
@@ -464,23 +573,99 @@
                     riquadro: 'r8_2',
                     sumR1: false,
                     labels: { v1: 'Capitali/valori econ-finanziari (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false },
                     showPattuito: true,
+                    showPercentuale: true,
+                },
+                consulenza_finanziamenti: {
+                    riquadro: 'r8_2',
+                    sumR1: false,
+                    labels: { v1: 'Capitale Mutuato/Finanziato/Contributi (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: true, intensitySc2: true },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+                consulenza_tributaria: {
+                    riquadro: 'r10_3',
+                    sumR1: false,
+                    labels: { v1: 'Imposte, sanzioni e interessi in contestazione (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false, aliquotaConsulenza: true },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+
+                rappresentanza_tributaria: {
+                    riquadro: 'r10_2',
+                    sumR1: false,
+                    labels: { v1: 'Valore della Pratica / Importo Complessivo (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, dichiarazioniMulti: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false, aliquotaConsulenza: false },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+
+                liquidazione: {
+                    riquadro: 'r2',
+                    sumR1: false,
+                    labels: {
+                        v1: 'Totale Attivo Realizzato (€)',
+                        v2: 'Totale Passivo Accertato (€)',
+                    },
+                    show: { v2: true, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+
+                operazioni_societarie_1: {
+                    riquadro: 'r7_1',
+                    sumR1: false,
+                    labels: { v1: 'Capitale Sottoscritto (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, dichiarazioniMulti: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false, aliquotaConsulenza: false },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+
+                operazioni_societarie_2: {
+                    riquadro: 'r7_2',
+                    sumR1: false,
+                    labels: { v1: 'Totale Attività Situazioni Patrimoniali (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, dichiarazioniMulti: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false, aliquotaConsulenza: false },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+                consulenza_contrattuale: {
+                    riquadro: 'r8_1',
+                    sumR1: false,
+                    labels: { v1: 'Corrispettivo pattuito (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: true, aliquotaSc2: true, intensitySc1: false, intensitySc2: false },
+                    showPattuito: false,
                     showPercentuale: true,
                 },
                 dichiarazione: {
                     riquadro: 'r10_1',
                     sumR1: false,
                     labels: { },
-                    show: { v2: false, v3: false, dichiarazione: true, esitoNegativo: false, conteggiare: false },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, dichiarazioniMulti: true },
                     showPattuito: true,
                     showPercentuale: true,
                 },
                 perizie_valutazioni: {
                     riquadro: 'r3',
                     sumR1: false,
-                    labels: { v1: 'Valore perizia / valutazione (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    labels: { v1: 'Valore risultante dalla perizia/valutazione (€)' },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false },
+                    showPattuito: true,
+                    showPercentuale: true,
+                },
+
+                revisioni_contabili: {
+                    riquadro: 'r4',
+                    sumR1: false,
+                    labels: {
+                        v1: 'Totale Componenti Positivi di Reddito Lordi (€)',
+                        v2: 'Totale delle Attività (€)',
+                        v3: 'Ammontare delle Passività (€)',
+                    },
+                    show: { v2: true, v3: true, dichiarazione: false, dichiarazioniMulti: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false, aliquotaSc1: false, aliquotaSc2: false, intensitySc1: false, intensitySc2: false, aliquotaConsulenza: false },
                     showPattuito: true,
                     showPercentuale: true,
                 },
@@ -488,7 +673,7 @@
                     riquadro: 'r1',
                     sumR1: false,
                     labels: { v1: 'Valore di riferimento (€)' },
-                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false },
+                    show: { v2: false, v3: false, dichiarazione: false, esitoNegativo: false, conteggiare: false, ruoloSindaco: false, riduzioneComma2: false },
                     showPattuito: true,
                     showPercentuale: true,
                 }
@@ -542,7 +727,6 @@
                 const key = documentTypeEl ? documentTypeEl.value : '';
                 const cfg = docConfig[key] || docConfig.default;
 
-                sumModeR1 = !!cfg.sumR1;
                 if (prestazioneEl) prestazioneEl.value = cfg.riquadro;
 
                 if (labelValore) labelValore.textContent = cfg.labels.v1 || 'Valore (€)';
@@ -552,8 +736,42 @@
                 setInputGroupVisible(valore2El, !!cfg.show.v2);
                 setInputGroupVisible(valore3El, !!cfg.show.v3);
                 setInputGroupVisible(dichiarazioneEl, !!cfg.show.dichiarazione);
+                setBlockVisible(groupDichiarazioniMulti, !!(cfg.show && cfg.show.dichiarazioniMulti));
                 setBlockVisible(groupEsitoNegativo, !!cfg.show.esitoNegativo);
                 setBlockVisible(groupConteggiare, !!cfg.show.conteggiare);
+                setBlockVisible(groupRuoloSindaco, !!cfg.show.ruoloSindaco);
+                setBlockVisible(groupRiduzioneComma2, !!cfg.show.riduzioneComma2);
+                setBlockVisible(groupAliquotaSc1, !!(cfg.show && cfg.show.aliquotaSc1));
+                setBlockVisible(groupAliquotaSc2, !!(cfg.show && cfg.show.aliquotaSc2));
+                setBlockVisible(groupIntensitySc1, !!(cfg.show && cfg.show.intensitySc1));
+                setBlockVisible(groupIntensitySc2, !!(cfg.show && cfg.show.intensitySc2));
+                setBlockVisible(groupAliquotaConsulenza, !!(cfg.show && cfg.show.aliquotaConsulenza));
+
+                if (valoreEl) {
+                    valoreEl.placeholder = key === 'consulenza_contrattuale'
+                        ? 'Inserisci il valore del contratto'
+                        : (key === 'rappresentanza_tributaria'
+                            ? 'Inserisci il valore della pratica'
+                            : '0,00');
+                }
+
+                if (cfg.show && cfg.show.aliquotaSc1 && aliquotaSc1El && String(aliquotaSc1El.value || '').trim() === '') {
+                    aliquotaSc1El.value = '0.0075';
+                }
+                if (cfg.show && cfg.show.aliquotaSc2 && aliquotaSc2El && String(aliquotaSc2El.value || '').trim() === '') {
+                    aliquotaSc2El.value = '0.005';
+                }
+
+                if (cfg.show && cfg.show.intensitySc1 && intensitySc1El && String(intensitySc1El.value || '').trim() === '') {
+                    intensitySc1El.value = 'min';
+                }
+                if (cfg.show && cfg.show.intensitySc2 && intensitySc2El && String(intensitySc2El.value || '').trim() === '') {
+                    intensitySc2El.value = 'min';
+                }
+
+                if (cfg.show && cfg.show.aliquotaConsulenza && aliquotaConsulenzaEl && String(aliquotaConsulenzaEl.value || '').trim() === '') {
+                    aliquotaConsulenzaEl.value = '0.01';
+                }
 
                 setBlockVisible(groupPattuito, cfg.showPattuito !== false);
                 setBlockVisible(groupPercentuale, cfg.showPercentuale !== false);
@@ -595,15 +813,27 @@
             }
 
             function updateFieldVisibility() {
-                const tipo = prestazioneEl ? prestazioneEl.value : '';
+                const docKey = documentTypeEl ? documentTypeEl.value : '';
+                const cfg = docKey && docConfig[docKey] ? docConfig[docKey] : null;
+                const tipo = prestazioneEl ? prestazioneEl.value : (cfg ? cfg.riquadro : '');
+
+                const needsV2 = cfg ? !!(cfg.show && cfg.show.v2) : ['r2', 'r4', 'r5_1', 'r6'].includes(tipo);
+                const needsV3 = cfg ? !!(cfg.show && cfg.show.v3) : ['r4', 'r5_1', 'r6'].includes(tipo);
 
                 // Manteniamo la logica originale per i riquadri "puri" (fallback)
                 // valore = principale. valore2 = secondario (quando serve). valore3 = terzo (quando serve). dichiarazione = solo Riquadro 10.1
                 setEnabled(valoreEl, tipo !== 'r10_1');
-                setEnabled(valore2El, ['r2', 'r4', 'r5_1', 'r6'].includes(tipo));
-                setEnabled(valore3El, ['r4', 'r5_1', 'r6'].includes(tipo));
-                setEnabled(dichiarazioneEl, tipo === 'r10_1');
+                setEnabled(valore2El, needsV2);
+                setEnabled(valore3El, needsV3);
+                setEnabled(dichiarazioneEl, !!(cfg && cfg.show && cfg.show.dichiarazione));
                 setEnabled(esitoNegativoEl, tipo === 'r9');
+                setEnabled(ruoloSindacoEl, tipo === 'r11');
+                setEnabled(riduzioneComma2El, tipo === 'r11');
+                setEnabled(aliquotaSc1El, !!(cfg && cfg.show && cfg.show.aliquotaSc1));
+                setEnabled(aliquotaSc2El, !!(cfg && cfg.show && cfg.show.aliquotaSc2));
+                setEnabled(intensitySc1El, !!(cfg && cfg.show && cfg.show.intensitySc1));
+                setEnabled(intensitySc2El, !!(cfg && cfg.show && cfg.show.intensitySc2));
+                setEnabled(aliquotaConsulenzaEl, !!(cfg && cfg.show && cfg.show.aliquotaConsulenza));
 
                 if (tipo === 'r10_1') {
                     valoreEl.required = false;
@@ -611,46 +841,48 @@
                     valore3El.required = false;
                 } else {
                     valoreEl.required = true;
-                    valore2El.required = ['r2', 'r4', 'r5_1', 'r6'].includes(tipo);
-                    valore3El.required = ['r4', 'r5_1', 'r6'].includes(tipo);
+                    valore2El.required = needsV2;
+                    valore3El.required = needsV3;
                 }
 
-                if (labelValore) labelValore.textContent = 'Valore di riferimento (€)';
-                if (labelValore2) labelValore2.textContent = 'Secondo valore (€)';
-                if (labelValore3) labelValore3.textContent = 'Terzo valore (€)';
+                if (!cfg) {
+                    if (labelValore) labelValore.textContent = 'Valore di riferimento (€)';
+                    if (labelValore2) labelValore2.textContent = 'Secondo valore (€)';
+                    if (labelValore3) labelValore3.textContent = 'Terzo valore (€)';
 
-                if (tipo === 'r2') {
-                    if (labelValore) labelValore.textContent = 'Attivo realizzato (€)';
-                    if (labelValore2) labelValore2.textContent = 'Passivo accertato (€)';
-                }
-                if (tipo === 'r4' || tipo === 'r5_1' || tipo === 'r6') {
-                    if (labelValore) labelValore.textContent = 'Componenti positivi di reddito lordi (€)';
-                    if (labelValore2) labelValore2.textContent = 'Totale attività (€)';
-                    if (labelValore3) labelValore3.textContent = 'Ammontare passività (€)';
-                }
-                if (tipo === 'r3') {
-                    if (labelValore) labelValore.textContent = 'Valore perizia / valutazione (€)';
-                }
-                if (tipo === 'r7_1') {
-                    if (labelValore) labelValore.textContent = 'Capitale sottoscritto (€)';
-                }
-                if (tipo === 'r7_2') {
-                    if (labelValore) labelValore.textContent = 'Totale attività (€)';
-                }
-                if (tipo === 'r8_1') {
-                    if (labelValore) labelValore.textContent = 'Corrispettivo pattuito (€)';
-                }
-                if (tipo === 'r8_2') {
-                    if (labelValore) labelValore.textContent = 'Capitale mutuato/erogato (€)';
-                }
-                if (tipo === 'r9') {
-                    if (labelValore) labelValore.textContent = 'Totale passività (€)';
-                }
-                if (tipo === 'r10_2' || tipo === 'r10_3') {
-                    if (labelValore) labelValore.textContent = 'Imposte/tasse/contributi/sanzioni/interessi dovuti (€)';
-                }
-                if (tipo === 'r11') {
-                    if (labelValore) labelValore.textContent = 'Redditi + attività (somma) (€)';
+                    if (tipo === 'r2') {
+                        if (labelValore) labelValore.textContent = 'Attivo realizzato (€)';
+                        if (labelValore2) labelValore2.textContent = 'Passivo accertato (€)';
+                    }
+                    if (tipo === 'r4' || tipo === 'r5_1' || tipo === 'r6') {
+                        if (labelValore) labelValore.textContent = 'Componenti positivi di reddito lordi (€)';
+                        if (labelValore2) labelValore2.textContent = 'Totale attività (€)';
+                        if (labelValore3) labelValore3.textContent = 'Ammontare passività (€)';
+                    }
+                    if (tipo === 'r3') {
+                        if (labelValore) labelValore.textContent = 'Valore perizia / valutazione (€)';
+                    }
+                    if (tipo === 'r7_1') {
+                        if (labelValore) labelValore.textContent = 'Capitale sottoscritto (€)';
+                    }
+                    if (tipo === 'r7_2') {
+                        if (labelValore) labelValore.textContent = 'Totale attività (€)';
+                    }
+                    if (tipo === 'r8_1') {
+                        if (labelValore) labelValore.textContent = 'Corrispettivo pattuito (€)';
+                    }
+                    if (tipo === 'r8_2') {
+                        if (labelValore) labelValore.textContent = 'Capitale mutuato/erogato (€)';
+                    }
+                    if (tipo === 'r9') {
+                        if (labelValore) labelValore.textContent = 'Totale passività (€)';
+                    }
+                    if (tipo === 'r10_2' || tipo === 'r10_3') {
+                        if (labelValore) labelValore.textContent = 'Imposte/tasse/contributi/sanzioni/interessi dovuti (€)';
+                    }
+                    if (tipo === 'r11') {
+                        if (labelValore) labelValore.textContent = 'Redditi + attività (somma) (€)';
+                    }
                 }
             }
 
@@ -792,6 +1024,8 @@
             }
 
             function buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }) {
+                const multi = document.querySelectorAll('input[name="dich_multi"]:checked');
+                const dichiarazioniMulti = Array.from(multi || []).map(el => String(el.value || '')).filter(Boolean);
                 const input = {
                     nome_pratica: nomePraticaEl ? String(nomePraticaEl.value || '') : '',
                     cliente_nome: clienteNomeEl ? String(clienteNomeEl.value || '') : '',
@@ -803,7 +1037,15 @@
                     valore2: Number(valore2El.value),
                     valore3: Number(valore3El.value),
                     dichiarazione: dichiarazioneEl ? dichiarazioneEl.value : null,
+                    dichiarazioniMulti,
                     esitoNegativo: esitoNegativoEl ? !!esitoNegativoEl.checked : false,
+                    ruoloSindaco: ruoloSindacoEl ? ruoloSindacoEl.value : null,
+                    riduzioneComma2: riduzioneComma2El ? !!riduzioneComma2El.checked : false,
+                    aliquota_scaglione_1: (aliquotaSc1El && String(aliquotaSc1El.value || '').trim() !== '') ? Number(aliquotaSc1El.value) : null,
+                    aliquota_scaglione_2: (aliquotaSc2El && String(aliquotaSc2El.value || '').trim() !== '') ? Number(aliquotaSc2El.value) : null,
+                    intensity_scaglione_1: intensitySc1El ? String(intensitySc1El.value || '') : null,
+                    intensity_scaglione_2: intensitySc2El ? String(intensitySc2El.value || '') : null,
+                    aliquota_consulenza: (aliquotaConsulenzaEl && String(aliquotaConsulenzaEl.value || '').trim() !== '') ? Number(aliquotaConsulenzaEl.value) : null,
                 };
 
                 const result = {
@@ -826,6 +1068,21 @@
             async function compute() {
                 clearFieldErrors();
 
+                const nomePratica = nomePraticaEl ? String(nomePraticaEl.value || '').trim() : '';
+                const clienteNome = clienteNomeEl ? String(clienteNomeEl.value || '').trim() : '';
+                if (!nomePratica) {
+                    showFieldError(nomePraticaEl, 'Inserisci il nome della pratica/compenso.');
+                    setStepper(1);
+                    renderDraftPreview();
+                    return;
+                }
+                if (!clienteNome) {
+                    showFieldError(clienteNomeEl, 'Inserisci il nominativo cliente / ragione sociale.');
+                    setStepper(1);
+                    renderDraftPreview();
+                    return;
+                }
+
                 const docType = documentTypeEl ? documentTypeEl.value : '';
                 if (!docType) {
                     showFieldError(documentTypeEl, 'Seleziona un documento.');
@@ -843,6 +1100,8 @@
                     return;
                 }
 
+                const cfg = docConfig[docType] || docConfig.default;
+
                 setStepper(2);
 
                 if (btn) {
@@ -854,34 +1113,45 @@
                 try {
                     // Riquadro 10.1: importi fissi
                     if (tipo === 'r10_1') {
-                        const d = dichiarazioneEl ? dichiarazioneEl.value : '';
                         const fixed = {
-                            pf: 150,
+                            pf_no_piva: 150,
                             pf_piva: 450,
-                            sp: 550,
-                            sc: 650,
+                            soc_persone: 550,
+                            soc_capitali: 650,
                             irap: 200,
                             iva: 250,
-                            '770': 150,
+                            sostituti: 150,
                             successione: 350,
                             altre: 100,
                             invio: 20,
                         };
-                        if (!d || !fixed[d]) {
-                            showFieldError(dichiarazioneEl, 'Seleziona il tipo di dichiarazione.');
-                            setResult('Errore: dichiarazione mancante.', true);
+
+                        const checked = document.querySelectorAll('input[name="dich_multi"]:checked');
+                        const selected = Array.from(checked || []).map(el => String(el.value || '')).filter(Boolean);
+                        if (!selected.length) {
+                            showFieldError(groupDichiarazioniMulti, 'Seleziona almeno una voce.');
+                            setResult('Errore: seleziona almeno una voce.', true);
                             renderDraftPreview();
                             return;
                         }
 
-                        const amount = fixed[d];
+                        let amount = 0;
+                        const lines = [];
+                        selected.forEach(id => {
+                            const fee = fixed[id];
+                            if (Number.isFinite(fee)) {
+                                amount += fee;
+                                lines.push(`${id}: ${euro(fee)}`);
+                            }
+                        });
+
                         const payload = buildPayloadFromForm({
                             tipo,
                             criterio,
                             min: amount,
                             max: amount,
                             chosen: amount,
-                            details: ['Importo fisso per dichiarazione.'],
+                            details: ['Somma tariffe fisse dichiarazioni.'].concat(lines),
                         });
                         btnDownloadPdf.disabled = false;
                         btnDownloadPdf.dataset.payload = JSON.stringify(payload);
@@ -894,6 +1164,8 @@
                     const v1 = Number(valoreEl && valoreEl.value ? valoreEl.value : 0);
                     const v2 = Number(valore2El && valore2El.value ? valore2El.value : 0);
                     const v3 = Number(valore3El && valore3El.value ? valore3El.value : 0);
+                    const v2Missing = !valore2El || String(valore2El.value || '').trim() === '';
+                    const v3Missing = !valore3El || String(valore3El.value || '').trim() === '';
 
                     if (!Number.isFinite(v1) || v1 < 0) {
                         showFieldError(valoreEl, 'Inserisci un valore valido.');
@@ -902,14 +1174,28 @@
                         return;
                     }
 
-                    if (tipo === 'r2' && (!Number.isFinite(v2) || v2 < 0)) {
+                    if (tipo === 'r2' && (v2Missing || !Number.isFinite(v2) || v2 < 0)) {
                         showFieldError(valore2El, 'Inserisci anche il secondo valore.');
                         setResult('Errore: secondo valore mancante.', true);
                         renderDraftPreview();
                         return;
                     }
 
-                    if (['r4', 'r5_1', 'r6'].includes(tipo) && (!Number.isFinite(v2) || v2 < 0 || !Number.isFinite(v3) || v3 < 0)) {
+                    if (tipo === 'r1' && cfg && cfg.show && cfg.show.v2 && (v2Missing || !Number.isFinite(v2) || v2 < 0)) {
+                        showFieldError(valore2El, 'Inserisci anche il totale attività.');
+                        setResult('Errore: secondo valore mancante.', true);
+                        renderDraftPreview();
+                        return;
+                    }
+
+                    if (tipo === 'r11' && cfg && cfg.show && cfg.show.v2 && (v2Missing || !Number.isFinite(v2) || v2 < 0)) {
+                        showFieldError(valore2El, 'Inserisci anche il totale attività.');
+                        setResult('Errore: secondo valore mancante.', true);
+                        renderDraftPreview();
+                        return;
+                    }
+
+                    if (['r4', 'r5_1', 'r6'].includes(tipo) && (v2Missing || v3Missing || !Number.isFinite(v2) || v2 < 0 || !Number.isFinite(v3) || v3 < 0)) {
                         showFieldError(valore2El, 'Valore 2 richiesto.');
                         showFieldError(valore3El, 'Valore 3 richiesto.');
                         setResult('Errore: valori aggiuntivi mancanti.', true);
@@ -922,7 +1208,8 @@
                     const details = [];
 
                     if (tipo === 'r1') {
-                        const base = sumModeR1 ? (v1 + (Number.isFinite(v2) ? v2 : 0)) : v1;
+                        const needsV2 = cfg && cfg.show && cfg.show.v2;
+                        const base = needsV2 ? (v1 + v2) : v1;
                         const t = tiered(base, [
                             { upto: 10000, ...rateRange(0.03, 0.04) },
                             { upto: 50000, ...rateRange(0.02, 0.03) },
@@ -930,7 +1217,7 @@
                         ]);
                         min = t.minTotal;
                         max = t.maxTotal;
-                        details.push(sumModeR1 ? 'Base: redditi lordi + attività (somma).' : 'Base: valore di riferimento.');
+                        details.push(needsV2 ? 'Base: reddito lordo + totale attività (somma).' : 'Base: valore di riferimento.');
                     } else if (tipo === 'r2') {
                         const attivo = tiered(v1, [
                             { upto: 400000, ...rateRange(0.04, 0.06) },
@@ -938,8 +1225,8 @@
                             { upto: Infinity, ...rateRange(0.0075, 0.01) },
                         ]);
                         const passivo = {
-                            minTotal: v2 * 0.005,
-                            maxTotal: v2 * 0.0075,
+                            minTotal: v2 * 0.0075,
+                            maxTotal: v2 * 0.01,
                         };
                         min = attivo.minTotal + passivo.minTotal;
                         max = attivo.maxTotal + passivo.maxTotal;
@@ -1019,21 +1306,84 @@
                         max = t.maxTotal;
                         details.push('Base: totale attività.');
                     } else if (tipo === 'r8_1') {
-                        const t = tiered(v1, [
-                            { upto: 2000000, ...rateRange(0.0075, 0.02) },
-                            { upto: Infinity, ...rateRange(0.005, 0.0075) },
-                        ]);
-                        min = t.minTotal;
-                        max = t.maxTotal;
-                        details.push('Base: corrispettivo pattuito.');
+                        const hasCustomRates = !!(cfg && cfg.show && cfg.show.aliquotaSc1);
+                        if (hasCustomRates) {
+                            const a1 = aliquotaSc1El && aliquotaSc1El.value !== '' ? Number(aliquotaSc1El.value) : 0.0075;
+                            const a2 = aliquotaSc2El && aliquotaSc2El.value !== '' ? Number(aliquotaSc2El.value) : 0.005;
+
+                            if (!Number.isFinite(a1) || a1 < 0.0075 || a1 > 0.02) {
+                                showFieldError(aliquotaSc1El, 'Aliquota non valida (0,0075 - 0,02).');
+                                setResult('Errore: aliquota fascia 1 non valida.', true);
+                                renderDraftPreview();
+                                return;
+                            }
+                            if (!Number.isFinite(a2) || a2 < 0.005 || a2 > 0.0075) {
+                                showFieldError(aliquotaSc2El, 'Aliquota non valida (0,005 - 0,0075).');
+                                setResult('Errore: aliquota fascia 2 non valida.', true);
+                                renderDraftPreview();
+                                return;
+                            }
+
+                            const s1 = Math.min(v1, 2000000);
+                            const s2 = Math.max(0, v1 - 2000000);
+                            min = (s1 * a1) + (s2 * a2);
+                            max = min;
+                            details.push('Base: corrispettivo pattuito.');
+                            details.push(`Aliquota fascia 1 applicata: ${(a1 * 100).toFixed(2)}%.`);
+                            details.push(`Aliquota fascia 2 applicata: ${(a2 * 100).toFixed(2)}%.`);
+                        } else {
+                            const t = tiered(v1, [
+                                { upto: 2000000, ...rateRange(0.0075, 0.02) },
+                                { upto: Infinity, ...rateRange(0.005, 0.0075) },
+                            ]);
+                            min = t.minTotal;
+                            max = t.maxTotal;
+                            details.push('Base: corrispettivo pattuito.');
+                        }
                     } else if (tipo === 'r8_2') {
-                        const t = tiered(v1, [
-                            { upto: 2000000, ...rateRange(0.0075, 0.01) },
-                            { upto: Infinity, ...rateRange(0.005, 0.0075) },
-                        ]);
-                        min = t.minTotal;
-                        max = t.maxTotal;
-                        details.push('Base: capitale mutuato/erogato.');
+                        const hasIntensity = !!(cfg && cfg.show && cfg.show.intensitySc1);
+                        if (hasIntensity) {
+                            function rateFromIntensity(minRate, maxRate, intensity) {
+                                if (intensity === 'min') return minRate;
+                                if (intensity === 'max') return maxRate;
+                                return (minRate + maxRate) / 2;
+                            }
+
+                            const i1 = intensitySc1El ? String(intensitySc1El.value || 'min') : 'min';
+                            const i2 = intensitySc2El ? String(intensitySc2El.value || 'min') : 'min';
+                            const valid = ['min', 'medio', 'max'];
+                            if (!valid.includes(i1)) {
+                                showFieldError(intensitySc1El, 'Seleziona Minimo, Medio o Massimo.');
+                                setResult('Errore: intensità fascia 1 non valida.', true);
+                                renderDraftPreview();
+                                return;
+                            }
+                            if (!valid.includes(i2)) {
+                                showFieldError(intensitySc2El, 'Seleziona Minimo, Medio o Massimo.');
+                                setResult('Errore: intensità fascia 2 non valida.', true);
+                                renderDraftPreview();
+                                return;
+                            }
+
+                            const s1 = Math.min(v1, 2000000);
+                            const s2 = Math.max(0, v1 - 2000000);
+                            const r1 = rateFromIntensity(0.0075, 0.01, i1);
+                            const r2 = rateFromIntensity(0.005, 0.0075, i2);
+                            const total = (s1 * r1) + (s2 * r2);
+                            min = total;
+                            max = total;
+                            details.push('Base: capitale mutuato/finanziato/contributi.');
+                            details.push(`Intensità fascia 1: ${i1.toUpperCase()} (aliquota ${(r1 * 100).toFixed(2)}%).`);
+                            details.push(`Intensità fascia 2: ${i2.toUpperCase()} (aliquota ${(r2 * 100).toFixed(2)}%).`);
+                        } else {
+                            const t = tiered(v1, [
+                                { upto: 2000000, ...rateRange(0.0075, 0.01) },
+                                { upto: Infinity, ...rateRange(0.005, 0.0075) },
+                            ]);
+                            min = t.minTotal;
+                            max = t.maxTotal;
+                            details.push('Base: capitale mutuato/erogato.');
+                        }
                     } else if (tipo === 'r9') {
                         const t = tiered(v1, [
                             { upto: 1000000, ...rateRange(0.01, 0.02) },
@@ -1050,11 +1400,64 @@
                     } else if (tipo === 'r10_2' || tipo === 'r10_3') {
                         min = v1 * 0.01;
                         max = v1 * 0.05;
+
+                        if (tipo === 'r10_3' && cfg && cfg.show && cfg.show.aliquotaConsulenza) {
+                            const a = aliquotaConsulenzaEl && aliquotaConsulenzaEl.value !== '' ? Number(aliquotaConsulenzaEl.value) : 0.01;
+                            if (!Number.isFinite(a) || a < 0.01 || a > 0.05) {
+                                showFieldError(aliquotaConsulenzaEl, 'Aliquota non valida (0,01 - 0,05).');
+                                setResult('Errore: aliquota non valida.', true);
+                                renderDraftPreview();
+                                return;
+                            }
+
+                            const custom = v1 * a;
+                            min = v1 * 0.01;
+                            max = v1 * 0.05;
+                            details.push('Base: imposte/sanzioni/interessi in contestazione.');
+                            details.push(`Aliquota selezionata: ${(a * 100).toFixed(2)}%.`);
+                            // Usiamo il valore personalizzato come riferimento (chosen)
+                            const chosenCustom = custom;
+                            const chosen = chosenCustom;
+                            const pct = percentualeEl && percentualeEl.value !== '' ? Number(percentualeEl.value) : NaN;
+                            const factor = Number.isFinite(pct) && pct > 0 ? (pct / 100) : 1;
+                            const chosenAdj = chosen * factor;
+
+                            if (factor !== 1) {
+                                details.push(`Adeguamento percentuale: ${pct}%.`);
+                            }
+
+                            const pattuitoNum = pattuitoEl && pattuitoEl.value !== '' ? Number(pattuitoEl.value) : NaN;
+                            const compensoPattuito = Number.isFinite(pattuitoNum) && pattuitoNum >= 0 ? pattuitoNum : chosenAdj;
+
+                            const payload = buildPayloadFromForm({ tipo, criterio, min, max, chosen, details });
+                            payload.result.chosen = euro(chosenAdj);
+                            payload.result.mid = euro(((min + max) / 2) * factor);
+                            payload.result.min = euro(min * factor);
+                            payload.result.max = euro(max * factor);
+                            payload.result.compenso_pattuito = euro(compensoPattuito);
+
+                            btnDownloadPdf.disabled = false;
+                            btnDownloadPdf.dataset.payload = JSON.stringify(payload);
+
+                            setResult(`Risultato: Compenso di riferimento ${euro(chosenAdj)} | Compenso pattuito ${euro(compensoPattuito)}`, false);
+
+                            const detailHtml = details.length
+                                ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${escapeHtml(d)}`).join('<br>')}</div>`
+                                : '';
+                            setPreview([
+                                `<div><strong>Valore personalizzato:</strong> ${euro(chosenAdj)}</div>`,
+                                `<div><strong>Range ministeriale:</strong> ${euro(min * factor)} - ${euro(max * factor)}</div>`,
+                                detailHtml,
+                            ].join(''));
+                            return;
+                        }
+
                         details.push('Base: importi dovuti.');
                     } else if (tipo === 'r11') {
                         const baseMin = 6000;
                         const baseMax = 8000;
-                        const x = v1;
+                        const needsV2 = cfg && cfg.show && cfg.show.v2;
+                        const x = needsV2 ? (v1 + v2) : v1;
                         let extraMin = 0;
                         let extraMax = 0;
                         const cap1 = 5000000;
@@ -1090,7 +1493,25 @@
                         }
                         min = baseMin + extraMin;
                         max = baseMax + extraMax;
-                        details.push('Base: sommatoria redditi + attività (somma).');
+                        details.push(needsV2 ? 'Base: sommatoria reddito lordo + attività (somma).' : 'Base: valore di riferimento.');
+
+                        const ruolo = ruoloSindacoEl ? String(ruoloSindacoEl.value || '') : '';
+                        let roleFactor = 1;
+                        if (ruolo === 'presidente') roleFactor = 1.5;
+                        if (ruolo === 'sindaco_unico') roleFactor = 2;
+                        if (roleFactor !== 1) {
+                            min = min * roleFactor;
+                            max = max * roleFactor;
+                            details.push(ruolo === 'presidente'
+                                ? 'Aumento applicato: Presidente Collegio Sindacale (+50%).'
+                                : 'Aumento applicato: Sindaco Unico (+100%).');
+                        }
+
+                        if (riduzioneComma2El && riduzioneComma2El.checked) {
+                            min = min / 2;
+                            max = max / 2;
+                            details.push('Riduzione applicata: società di sola amministrazione/godimento o liquidazione (fino alla metà).');
+                        }
                     } else {
                         setResult('Errore: tipologia non gestita.', true);
                         renderDraftPreview();
