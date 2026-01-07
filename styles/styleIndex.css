@@ -797,18 +797,44 @@ main{
 }
 
 .user-btn {
-    background: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 15px;
+    background: transparent;
     border: none;
-    color: #1C4D8D;
-    font-size: 16px;
+    border-radius: 0px;
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s ease;
 }
 
 .user-btn:hover {
-    background-color: rgba(28, 77, 141, 0.1);
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: #1A535C;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 40px;
+}
+
+.user-avatar i {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.user-welcome-text {
+    font-family: Montserrat, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333333;
+    text-transform: capitalize;
+    white-space: nowrap;
 }
 
 .user-dropdown-menu {
