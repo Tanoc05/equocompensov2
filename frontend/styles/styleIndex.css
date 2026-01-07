@@ -1003,7 +1003,7 @@ footer {
 }
 
 body.account-page {
-    background: #F4F7F6;
+    background: #FFFFFF;
 }
 
 .account-main-wrap {
@@ -1031,7 +1031,7 @@ body.account-page {
 .account-sidebar-title {
     font-size: 14px;
     font-weight: 700;
-    color: #1A535C;
+    color: #1C4D8D;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 12px;
@@ -1056,15 +1056,15 @@ body.account-page {
 .account-nav-item i {
     width: 18px;
     text-align: center;
-    color: #1A535C;
+    color: #1C4D8D;
 }
 
 .account-nav-item:hover {
-    background: #F4F7F6;
+    background: #f3f6fb;
 }
 
 .account-nav-item.active {
-    background: #1A535C;
+    background: #1C4D8D;
     color: #FFFFFF;
 }
 
@@ -1092,7 +1092,7 @@ body.account-page {
     margin: 0;
     font-size: 20px;
     font-weight: 800;
-    color: #1A535C;
+    color: #1C4D8D;
 }
 
 .account-profile-head p {
@@ -1112,7 +1112,7 @@ body.account-page {
     width: 56px;
     height: 56px;
     border-radius: 999px;
-    background: #1A535C;
+    background: #1C4D8D;
     color: #FFFFFF;
     display: inline-flex;
     align-items: center;
@@ -1130,11 +1130,11 @@ body.account-page {
     gap: 8px;
     font-size: 14px;
     font-weight: 700;
-    color: #1A535C;
+    color: #1C4D8D;
 }
 
 .account-avatar-action:hover {
-    background: #F4F7F6;
+    background: #f3f6fb;
 }
 
 .account-grid {
@@ -1155,7 +1155,7 @@ body.account-page {
 .account-card-title {
     font-size: 14px;
     font-weight: 800;
-    color: #1A535C;
+    color: #1C4D8D;
     margin-bottom: 12px;
 }
 
@@ -1185,8 +1185,8 @@ body.account-page {
 .account-field input:focus,
 .account-field select:focus {
     outline: none;
-    border-color: #1A535C;
-    box-shadow: 0 0 0 3px rgba(26, 83, 92, 0.15);
+    border-color: #1C4D8D;
+    box-shadow: 0 0 0 3px rgba(28, 77, 141, 0.15);
 }
 
 .account-inline {
@@ -1196,9 +1196,9 @@ body.account-page {
 }
 
 .account-badge {
-    background: rgba(26, 83, 92, 0.12);
-    color: #1A535C;
-    border: 1px solid rgba(26, 83, 92, 0.2);
+    background: rgba(28, 77, 141, 0.12);
+    color: #1C4D8D;
+    border: 1px solid rgba(28, 77, 141, 0.2);
     border-radius: 0px;
     padding: 6px 10px;
     font-size: 12px;
@@ -1212,12 +1212,12 @@ body.account-page {
     border-radius: 0px;
     padding: 10px 12px;
     cursor: pointer;
-    color: #1A535C;
+    color: #1C4D8D;
     font-weight: 800;
 }
 
 .account-link-btn:hover {
-    background: #F4F7F6;
+    background: #f3f6fb;
 }
 
 .account-muted {
@@ -1234,7 +1234,7 @@ body.account-page {
 }
 
 .account-save-btn {
-    background: #1A535C;
+    background: #1C4D8D;
     color: #FFFFFF;
     border: none;
     border-radius: 0px;
@@ -1246,7 +1246,7 @@ body.account-page {
 }
 
 .account-save-btn:hover {
-    background: #163f46;
+    background: #153a6b;
 }
 
 .account-doc-list {
@@ -1269,7 +1269,7 @@ body.account-page {
 .account-doc-title {
     font-size: 14px;
     font-weight: 800;
-    color: #1A535C;
+    color: #1C4D8D;
 }
 
 .account-doc-meta {
