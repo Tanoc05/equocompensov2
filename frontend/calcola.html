@@ -12,7 +12,7 @@
 
     <header>
         <section class="header-img">
-            <img src="img/logo2.png" alt="logo">
+            <img id="main-site-logo" src="img/logo2.png" alt="logo">
         </section>
 
         <div class="ls">
@@ -1732,7 +1732,7 @@
                     userLi.innerHTML = `
                         <div class="user-dropdown">
                             <button class="user-btn" onclick="toggleUserDropdown(event)">
-                                <span class="user-avatar"><img id="nav-user-photo" class="nav-user-photo" alt="Foto profilo"><span class="nav-user-initials"></span></span>
+                                <span class="user-avatar navbar-avatar-circle"><img id="nav-user-photo" class="nav-user-photo" alt="Foto profilo"><span class="nav-user-initials"></span></span>
                                 <span class="user-welcome-text">Ciao, ${user.nome || user.email || ''}</span>
                             </button>
                             <div id="userDropdownMenu" class="user-dropdown-menu">
