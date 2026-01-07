@@ -33,98 +33,142 @@
         <div class="calc-page-wrap">
             <section class="calc-card" aria-label="Calcolo Equo Compenso">
                 <div class="calc-card-inner">
-                    <form id="calcForm" class="calc-form">
-                        <input type="hidden" id="professione" name="professione" value="commercialista">
-                        <input type="hidden" id="prestazione" name="prestazione" value="">
+                    <div class="calc-stepper" aria-label="Progress">
+                        <div class="calc-step is-active" data-step="1"><span class="calc-step-index">1</span><span class="calc-step-label">Dati Pratica</span></div>
+                        <div class="calc-step" data-step="2"><span class="calc-step-index">2</span><span class="calc-step-label">Calcolo</span></div>
+                        <div class="calc-step" data-step="3"><span class="calc-step-index">3</span><span class="calc-step-label">Download</span></div>
+                    </div>
+
+                    <div class="calc-split">
+                        <aside class="calc-presets" aria-label="Valori predefiniti">
+                            <div class="calc-presets-title">Valori predefiniti</div>
+                            <button class="calc-preset-btn" type="button" data-preset="commercialisti">Parametri Commercialisti</button>
+                            <button class="calc-preset-btn" type="button" data-preset="forensi">Parametri Forensi</button>
+                        </aside>
+
+                        <div class="calc-left">
+                            <form id="calcForm" class="calc-form">
+                                <input type="hidden" id="professione" name="professione" value="commercialista">
+                                <input type="hidden" id="prestazione" name="prestazione" value="">
 
                         <div class="form-group">
                             <label for="documentType">Nome del documento <span aria-hidden="true" style="color:#b00020">*</span></label>
-                            <select id="documentType" name="documentType" required>
-                                <option value="" disabled selected>Seleziona</option>
-                                <option value="amministrazione_custodia">Amministrazione e custodia</option>
-                                <option value="procedure_concorsuali">Assistenza in procedure concorsuali</option>
-                                <option value="consulente_finanziamento">Consulente finanziamento</option>
-                                <option value="consulente_economico_finanziaria">Consulente economico-finanziaria</option>
-                                <option value="consulenza_contrattuale">Consulenza contrattuale</option>
-                                <option value="consulenza_tributaria">Consulenza tributaria</option>
-                                <option value="contabilita_ordinaria">Contabilità ordinaria</option>
-                                <option value="contabilita_semplicata">Contabilità semplificata</option>
-                                <option value="dichiarazione">Dichiarazione</option>
-                                <option value="perizie_valutazioni">Perizie e valutazioni</option>
-                                <option value="formazione_bilancio">Formazione del Bilancio</option>
-                                <option value="liquidazione">Liquidazione</option>
-                                <option value="operazioni_societarie_1">Operazioni societarie 1</option>
-                                <option value="operazioni_societarie_2">Operazioni societarie 2</option>
-                                <option value="consulenza_finanziamenti">Consulenza su finanziamenti</option>
-                                <option value="revisioni_contabili">Revisioni Contabili</option>
-                                <option value="rappresentanza_tributaria">Rappresentanza Tributaria</option>
-                            </select>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-file-lines"></i></span>
+                                <select id="documentType" name="documentType" required>
+                                    <option value="" disabled selected>Seleziona</option>
+                                    <option value="amministrazione_custodia">Amministrazione e custodia</option>
+                                    <option value="procedure_concorsuali">Assistenza in procedure concorsuali</option>
+                                    <option value="consulente_finanziamento">Consulente finanziamento</option>
+                                    <option value="consulente_economico_finanziaria">Consulente economico-finanziaria</option>
+                                    <option value="consulenza_contrattuale">Consulenza contrattuale</option>
+                                    <option value="consulenza_tributaria">Consulenza tributaria</option>
+                                    <option value="contabilita_ordinaria">Contabilità ordinaria</option>
+                                    <option value="contabilita_semplicata">Contabilità semplificata</option>
+                                    <option value="dichiarazione">Dichiarazione</option>
+                                    <option value="perizie_valutazioni">Perizie e valutazioni</option>
+                                    <option value="formazione_bilancio">Formazione del Bilancio</option>
+                                    <option value="liquidazione">Liquidazione</option>
+                                    <option value="operazioni_societarie_1">Operazioni societarie 1</option>
+                                    <option value="operazioni_societarie_2">Operazioni societarie 2</option>
+                                    <option value="consulenza_finanziamenti">Consulenza su finanziamenti</option>
+                                    <option value="revisioni_contabili">Revisioni Contabili</option>
+                                    <option value="rappresentanza_tributaria">Rappresentanza Tributaria</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group" id="groupCategory">
                             <label for="documentCategory">Categoria / Prestazione</label>
-                            <select id="documentCategory" name="documentCategory">
-                                <option value="" selected>Seleziona</option>
-                            </select>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></span>
+                                <select id="documentCategory" name="documentCategory">
+                                    <option value="" selected>Seleziona</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group" id="groupPattuito">
                             <label for="corrispettivoPattuito">Corrispettivo pattuito (€)</label>
-                            <input id="corrispettivoPattuito" name="corrispettivoPattuito" type="number" min="0" step="0.01" placeholder="0,00">
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-euro-sign"></i></span>
+                                <input id="corrispettivoPattuito" name="corrispettivoPattuito" type="number" min="0" step="0.01" placeholder="0,00">
+                            </div>
                         </div>
 
                         <div class="form-group" id="groupPercentuale">
                             <label for="percentuale">Percentuale (%)</label>
-                            <input id="percentuale" name="percentuale" type="number" min="0" max="100" step="0.01" placeholder="0,00">
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-percent"></i></span>
+                                <input id="percentuale" name="percentuale" type="number" min="0" max="100" step="0.01" placeholder="0,00">
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="criterio">Criterio calcolo</label>
-                            <select id="criterio" name="criterio" required>
-                                <option value="min">Minimo</option>
-                                <option value="medio" selected>Medio</option>
-                                <option value="max">Massimo</option>
-                            </select>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-sliders"></i></span>
+                                <select id="criterio" name="criterio" required>
+                                    <option value="min">Minimo</option>
+                                    <option value="medio" selected>Medio</option>
+                                    <option value="max">Massimo</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group" id="groupConteggiare">
                             <label for="conteggiare">Conteggiare?</label>
-                            <select id="conteggiare" name="conteggiare">
-                                <option value="no" selected>No</option>
-                                <option value="si">Sì</option>
-                            </select>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-calculator"></i></span>
+                                <select id="conteggiare" name="conteggiare">
+                                    <option value="no" selected>No</option>
+                                    <option value="si">Sì</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label id="labelValore" for="valore">Valore</label>
-                            <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-scale-balanced"></i></span>
+                                <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label id="labelValore2" for="valore2">Secondo valore</label>
-                            <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-scale-unbalanced"></i></span>
+                                <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label id="labelValore3" for="valore3">Terzo valore</label>
-                            <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></span>
+                                <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="dichiarazione">Dichiarazione (solo sezione "Dichiarazione")</label>
-                            <select id="dichiarazione" name="dichiarazione">
-                                <option value="" selected>N/A</option>
-                                <option value="pf">Dichiarazione redditi persone fisiche</option>
-                                <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
-                                <option value="sp">Dichiarazione redditi società di persone</option>
-                                <option value="sc">Dichiarazione redditi società di capitali</option>
-                                <option value="irap">Dichiarazione IRAP</option>
-                                <option value="iva">Dichiarazione IVA</option>
-                                <option value="770">Dichiarazione sostituti d'imposta</option>
-                                <option value="invio">Invio telematico</option>
-                                <option value="successione">Dichiarazione di successione</option>
-                                <option value="altre">Altre dichiarazioni e comunicazioni</option>
-                            </select>
+                            <div class="calc-input">
+                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-file-signature"></i></span>
+                                <select id="dichiarazione" name="dichiarazione">
+                                    <option value="" selected>N/A</option>
+                                    <option value="pf">Dichiarazione redditi persone fisiche</option>
+                                    <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
+                                    <option value="sp">Dichiarazione redditi società di persone</option>
+                                    <option value="sc">Dichiarazione redditi società di capitali</option>
+                                    <option value="irap">Dichiarazione IRAP</option>
+                                    <option value="iva">Dichiarazione IVA</option>
+                                    <option value="770">Dichiarazione sostituti d'imposta</option>
+                                    <option value="invio">Invio telematico</option>
+                                    <option value="successione">Dichiarazione di successione</option>
+                                    <option value="altre">Altre dichiarazioni e comunicazioni</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group" id="groupEsitoNegativo">
@@ -136,18 +180,26 @@
                         </div>
 
                         <div class="calc-action-bar">
-                            <button id="btn_calcola" class="calc-btn calc-btn-primary" type="button">ESSEGUI CALCOLO</button>
+                            <button id="btn_calcola" class="calc-btn calc-btn-primary" type="button">
+                                <span class="calc-btn-text">ELABORA COMPENSO</span>
+                                <span class="calc-btn-progress" aria-hidden="true"><span class="calc-btn-progress-bar"></span></span>
+                            </button>
                             <button id="btn_pdf" class="calc-btn calc-btn-outline" type="button" disabled>GENERA E SCARICA PDF</button>
                             <button id="btn_reset" class="calc-btn calc-btn-link" type="reset">RESET CAMPI</button>
                         </div>
 
                         <div id="calcolaResult" class="calcola-result">Risultato: in attesa di calcolo.</div>
 
-                        <div class="calc-preview">
-                            <div class="calc-preview-title">Anteprima Istanza</div>
-                            <div id="documentPreview" class="calc-preview-body">Seleziona una sezione e inserisci i dati per vedere l'anteprima.</div>
+                            </form>
                         </div>
-                    </form>
+
+                        <div class="calc-right" aria-label="Anteprima">
+                            <div class="calc-preview">
+                                <div class="calc-preview-title">Anteprima Istanza</div>
+                                <div id="documentPreview" class="calc-preview-body">Seleziona una sezione e inserisci i dati per vedere l'anteprima.</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -198,6 +250,50 @@
             const previewEl = document.getElementById('documentPreview');
             const welcomeEl = null;
 
+            const presetButtons = document.querySelectorAll('[data-preset]');
+
+            function setStepper(step) {
+                document.querySelectorAll('.calc-stepper .calc-step').forEach(el => {
+                    const n = Number(el.getAttribute('data-step'));
+                    el.classList.toggle('is-active', n === step);
+                    el.classList.toggle('is-done', n < step);
+                });
+            }
+
+            if (presetButtons && presetButtons.length) {
+                presetButtons.forEach(b => {
+                    b.addEventListener('click', () => {
+                        const id = b.getAttribute('data-preset') || '';
+                        applyPreset(id);
+                    });
+                });
+            }
+
+            function setResult(message, isError) {
+                if (!resultEl) return;
+                resultEl.textContent = message;
+                resultEl.classList.toggle('is-error', !!isError);
+            }
+
+            function clearFieldErrors() {
+                document.querySelectorAll('.calc-field-error').forEach(el => el.remove());
+                document.querySelectorAll('.calc-input-error').forEach(el => el.classList.remove('calc-input-error'));
+            }
+
+            function showFieldError(inputEl, message) {
+                if (!inputEl) return;
+                const group = inputEl.closest('.form-group');
+                if (!group) return;
+                const wrap = inputEl.closest('.calc-input');
+                if (wrap) wrap.classList.add('calc-input-error');
+                const existing = group.querySelector('.calc-field-error');
+                if (existing) existing.remove();
+                const err = document.createElement('div');
+                err.className = 'calc-field-error';
+                err.textContent = message;
+                group.appendChild(err);
+            }
+
             const labelValore = document.getElementById('labelValore');
             const labelValore2 = document.getElementById('labelValore2');
             const labelValore3 = document.getElementById('labelValore3');
@@ -207,6 +303,66 @@
             function setPreview(html) {
                 if (!previewEl) return;
                 previewEl.innerHTML = html;
+            }
+
+            function applyPreset(presetId) {
+                const presets = {
+                    commercialisti: {
+                        label: 'Parametri Commercialisti',
+                        documentType: 'amministrazione_custodia',
+                        documentCategory: 'amm_custodia_base',
+                        criterio: 'medio',
+                        percentuale: 100,
+                        valore: 50000,
+                        valore2: 250000,
+                        valore3: '',
+                        corrispettivoPattuito: '',
+                        dichiarazione: '',
+                        conteggiare: 'no',
+                        esitoNegativo: false,
+                    },
+                    forensi: {
+                        label: 'Parametri Forensi',
+                        documentType: 'perizie_valutazioni',
+                        documentCategory: 'perizia',
+                        criterio: 'medio',
+                        percentuale: 100,
+                        valore: 150000,
+                        valore2: '',
+                        valore3: '',
+                        corrispettivoPattuito: '',
+                        dichiarazione: '',
+                        conteggiare: 'no',
+                        esitoNegativo: false,
+                    },
+                };
+
+                const p = presets[presetId];
+                if (!p) return;
+
+                clearFieldErrors();
+
+                if (documentTypeEl) documentTypeEl.value = p.documentType;
+                applyDocType();
+
+                if (documentCategoryEl && p.documentCategory) {
+                    documentCategoryEl.value = p.documentCategory;
+                    applyCategory();
+                }
+
+                if (criterioEl && p.criterio) criterioEl.value = p.criterio;
+                if (percentualeEl != null && p.percentuale !== undefined) percentualeEl.value = String(p.percentuale);
+                if (valoreEl != null && p.valore !== undefined) valoreEl.value = String(p.valore);
+                if (valore2El != null) valore2El.value = p.valore2 === '' ? '' : String(p.valore2);
+                if (valore3El != null) valore3El.value = p.valore3 === '' ? '' : String(p.valore3);
+                if (pattuitoEl != null) pattuitoEl.value = p.corrispettivoPattuito === '' ? '' : String(p.corrispettivoPattuito);
+                if (dichiarazioneEl != null) dichiarazioneEl.value = p.dichiarazione || '';
+                if (conteggiareEl != null && p.conteggiare) conteggiareEl.value = p.conteggiare;
+                if (esitoNegativoEl != null) esitoNegativoEl.checked = !!p.esitoNegativo;
+
+                setStepper(1);
+                setResult(`Preset applicato: ${p.label}.`, false);
+                renderDraftPreview();
             }
 
             function setBlockVisible(el, visible) {
@@ -570,6 +726,44 @@
                 URL.revokeObjectURL(url);
             }
 
+            function escapeHtml(str) {
+                return String(str || '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
+            function renderDraftPreview() {
+                const docText = documentTypeEl && documentTypeEl.selectedIndex > -1
+                    ? (documentTypeEl.options[documentTypeEl.selectedIndex].textContent || '')
+                    : '';
+                const catText = documentCategoryEl && documentCategoryEl.selectedIndex > -1
+                    ? (documentCategoryEl.options[documentCategoryEl.selectedIndex].textContent || '')
+                    : '';
+
+                const tipo = prestazioneEl ? prestazioneEl.value : '';
+                const parts = [];
+                if (docText) parts.push(`<div><strong>Documento:</strong> ${escapeHtml(docText)}</div>`);
+                if (catText && (documentCategoryEl && documentCategoryEl.value)) parts.push(`<div><strong>Categoria:</strong> ${escapeHtml(catText)}</div>`);
+                if (tipo) parts.push(`<div><strong>Riquadro:</strong> ${escapeHtml(tipo)}</div>`);
+                if (criterioEl && criterioEl.value) parts.push(`<div><strong>Criterio:</strong> ${escapeHtml(criterioEl.value)}</div>`);
+
+                const v1 = valoreEl && valoreEl.value ? Number(valoreEl.value) : null;
+                const v2 = valore2El && valore2El.value ? Number(valore2El.value) : null;
+                const v3 = valore3El && valore3El.value ? Number(valore3El.value) : null;
+                if (Number.isFinite(v1)) parts.push(`<div><strong>Valore:</strong> ${escapeHtml(v1)}</div>`);
+                if (Number.isFinite(v2)) parts.push(`<div><strong>Valore 2:</strong> ${escapeHtml(v2)}</div>`);
+                if (Number.isFinite(v3)) parts.push(`<div><strong>Valore 3:</strong> ${escapeHtml(v3)}</div>`);
+
+                if (!parts.length) {
+                    setPreview('Seleziona una sezione e inserisci i dati per vedere l\'anteprima.');
+                    return;
+                }
+                setPreview(parts.join(''));
+            }
+
             function buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }) {
                 const input = {
                     documentType: documentTypeEl ? documentTypeEl.value : null,
@@ -600,294 +794,336 @@
                 };
             }
 
-            function compute() {
-                const tipo = prestazioneEl.value;
-                const criterio = criterioEl.value;
+            async function compute() {
+                clearFieldErrors();
 
-                if (!tipo) {
-                    resultEl.textContent = 'Seleziona una tipologia.';
+                const docType = documentTypeEl ? documentTypeEl.value : '';
+                if (!docType) {
+                    showFieldError(documentTypeEl, 'Seleziona un documento.');
+                    setStepper(1);
+                    renderDraftPreview();
                     return;
                 }
 
-                // Riquadro 10.1: importi fissi
-                if (tipo === 'r10_1') {
-                    const d = dichiarazioneEl.value;
-                    const fixed = {
-                        pf: 150,
-                        pf_piva: 450,
-                        sp: 550,
-                        sc: 650,
-                        irap: 200,
-                        iva: 250,
-                        '770': 150,
-                        successione: 350,
-                        altre: 100,
-                        invio: 20,
-                    };
-                    if (!d || !fixed[d]) {
-                        resultEl.textContent = 'Seleziona il tipo di dichiarazione (Riquadro 10.1).';
+                const tipo = prestazioneEl ? prestazioneEl.value : '';
+                const criterio = criterioEl ? criterioEl.value : 'medio';
+                if (!tipo) {
+                    setResult('Errore: tipologia non valida.', true);
+                    setStepper(1);
+                    renderDraftPreview();
+                    return;
+                }
+
+                setStepper(2);
+
+                if (btn) {
+                    btn.classList.add('is-loading');
+                    btn.disabled = true;
+                }
+                setResult('Risultato: calcolo in corso...', false);
+
+                try {
+                    // Riquadro 10.1: importi fissi
+                    if (tipo === 'r10_1') {
+                        const d = dichiarazioneEl ? dichiarazioneEl.value : '';
+                        const fixed = {
+                            pf: 150,
+                            pf_piva: 450,
+                            sp: 550,
+                            sc: 650,
+                            irap: 200,
+                            iva: 250,
+                            '770': 150,
+                            successione: 350,
+                            altre: 100,
+                            invio: 20,
+                        };
+                        if (!d || !fixed[d]) {
+                            showFieldError(dichiarazioneEl, 'Seleziona il tipo di dichiarazione.');
+                            setResult('Errore: dichiarazione mancante.', true);
+                            renderDraftPreview();
+                            return;
+                        }
+
+                        const amount = fixed[d];
+                        const payload = buildPayloadFromForm({
+                            tipo,
+                            criterio,
+                            min: amount,
+                            max: amount,
+                            chosen: amount,
+                            details: ['Importo fisso per dichiarazione.'],
+                        });
+                        btnDownloadPdf.disabled = false;
+                        btnDownloadPdf.dataset.payload = JSON.stringify(payload);
+
+                        setResult(`Risultato: Compenso di riferimento ${euro(amount)} | Compenso pattuito ${euro(amount)}`, false);
+                        setPreview(`<div><strong>Compenso (${escapeHtml(criterio)}):</strong> ${euro(amount)}</div>`);
                         return;
                     }
 
-                    const amount = fixed[d];
-                    resultEl.innerHTML = `Compenso (${criterio}): <strong>${euro(amount)}</strong>`;
-                    if (btnDownloadPdf) {
-                        btnDownloadPdf.disabled = false;
-                        btnDownloadPdf.dataset.payload = JSON.stringify({
-                            professione: (professioneEl && professioneEl.value) || 'commercialista',
-                            riquadro: tipo,
-                            criterio,
-                            input: { dichiarazione: d },
-                            result: { min: euro(amount), max: euro(amount), mid: euro(amount), chosen: euro(amount), details: [] }
-                        });
+                    const v1 = Number(valoreEl && valoreEl.value ? valoreEl.value : 0);
+                    const v2 = Number(valore2El && valore2El.value ? valore2El.value : 0);
+                    const v3 = Number(valore3El && valore3El.value ? valore3El.value : 0);
+
+                    if (!Number.isFinite(v1) || v1 < 0) {
+                        showFieldError(valoreEl, 'Inserisci un valore valido.');
+                        setResult('Errore: valore non valido.', true);
+                        renderDraftPreview();
+                        return;
                     }
-                    return;
-                }
 
-                const v1 = Number(valoreEl.value);
-                const v2 = Number(valore2El.value);
-                const v3 = Number(valore3El.value);
-
-                if (!Number.isFinite(v1) || v1 < 0) {
-                    resultEl.textContent = 'Inserisci un valore principale valido.';
-                    return;
-                }
-                if (tipo === 'r2' && (!Number.isFinite(v2) || v2 < 0)) {
-                    resultEl.textContent = 'Inserisci anche il secondo valore (Passivo accertato) per Riquadro 2.';
-                    return;
-                }
-                if (['r4', 'r5_1', 'r6'].includes(tipo) && (!Number.isFinite(v2) || v2 < 0 || !Number.isFinite(v3) || v3 < 0)) {
-                    resultEl.textContent = 'Per questa tipologia servono anche Totale attività e Ammontare passività.';
-                    return;
-                }
-
-                let min = 0;
-                let max = 0;
-                let details = [];
-
-                // Percentuali in forma decimale (es. 3% = 0.03)
-                if (tipo === 'r1') {
-                    const base = sumModeR1 ? (Number.isFinite(v2) ? (v1 + v2) : v1) : v1;
-                    const t = tiered(base, [
-                        { upto: 10000, ...rateRange(0.03, 0.04) },
-                        { upto: 50000, ...rateRange(0.02, 0.03) },
-                        { upto: Infinity, ...rateRange(0.01, 0.02) },
-                    ]);
-                    min = t.minTotal;
-                    max = t.maxTotal;
-                    details.push('Base: sommatoria componenti positivi di reddito lordi e attività.');
-                    if (sumModeR1) {
-                        details.push(`Somma utilizzata: ${euro(v1)} + ${euro(v2)} = ${euro(base)}`);
+                    if (tipo === 'r2' && (!Number.isFinite(v2) || v2 < 0)) {
+                        showFieldError(valore2El, 'Inserisci anche il secondo valore.');
+                        setResult('Errore: secondo valore mancante.', true);
+                        renderDraftPreview();
+                        return;
                     }
-                } else if (tipo === 'r2') {
-                    const attivo = tiered(v1, [
-                        { upto: 400000, ...rateRange(0.04, 0.06) },
-                        { upto: 4000000, ...rateRange(0.02, 0.03) },
-                        { upto: Infinity, ...rateRange(0.0075, 0.01) },
-                    ]);
-                    const passivo = {
-                        minTotal: v2 * 0.005,
-                        maxTotal: v2 * 0.0075,
-                    };
-                    min = attivo.minTotal + passivo.minTotal;
-                    max = attivo.maxTotal + passivo.maxTotal;
-                    details.push('Valore 1: totale attivo realizzato.');
-                    details.push('Valore 2: passivo accertato.');
-                } else if (tipo === 'r3') {
-                    const t = tiered(v1, [
-                        { upto: 1000000, ...rateRange(0.008, 0.01) },
-                        { upto: 3000000, ...rateRange(0.005, 0.007) },
-                        { upto: Infinity, ...rateRange(0.00025, 0.0005) },
-                    ]);
-                    min = t.minTotal;
-                    max = t.maxTotal;
-                    details.push('Base: valore della perizia o valutazione.');
-                } else if (tipo === 'r4') {
-                    const redditiMin = v1 * 0.001;
-                    const redditiMax = v1 * 0.0015;
-                    const attivitaMin = v2 * 0.0005;
-                    const attivitaMax = v2 * 0.00075;
-                    const passivitaMin = v3 * 0.0005;
-                    const passivitaMax = v3 * 0.00075;
-                    min = redditiMin + attivitaMin + passivitaMin;
-                    max = redditiMax + attivitaMax + passivitaMax;
-                    details.push('Base 1: componenti positivi di reddito lordi.');
-                    details.push('Base 2: totale attività.');
-                    details.push('Base 3: ammontare passività.');
-                } else if (tipo === 'r5_1') {
-                    const redditiMin = v1 * 0.003;
-                    const redditiMax = v1 * 0.005;
-                    const attivitaMin = v2 * 0.0002;
-                    const attivitaMax = v2 * 0.0006;
-                    const passivitaMin = v3 * 0.0002;
-                    const passivitaMax = v3 * 0.00065;
-                    min = redditiMin + attivitaMin + passivitaMin;
-                    max = redditiMax + attivitaMax + passivitaMax;
-                    details.push('Base 1: componenti positivi di reddito lordi.');
-                    details.push('Base 2: totale attività.');
-                    details.push('Base 3: totale passività di fine esercizio.');
-                } else if (tipo === 'r5_2') {
-                    const t = tiered(v1, [
-                        { upto: 50000, ...rateRange(0.03, 0.04) },
-                        { upto: 100000, ...rateRange(0.01, 0.02) },
-                        { upto: Infinity, ...rateRange(0.005, 0.01) },
-                    ]);
-                    min = t.minTotal;
-                    max = t.maxTotal;
-                    details.push('Base: sommatoria componenti positivi di reddito lordi.');
-                } else if (tipo === 'r6') {
-                    const redditi = tiered(v1, [
-                        { upto: 20000000, ...rateRange(0.0002, 0.0003) },
-                        { upto: Infinity, ...rateRange(0.00005, 0.0001) },
-                    ]);
-                    const attivitaMin = v2 * 0.0005;
-                    const attivitaMax = v2 * 0.0006;
-                    const passivitaMin = v3 * 0.0002;
-                    const passivitaMax = v3 * 0.0003;
-                    min = redditi.minTotal + attivitaMin + passivitaMin;
-                    max = redditi.maxTotal + attivitaMax + passivitaMax;
-                    details.push('Base 1: totale componenti positivi di reddito lordi (scaglioni).');
-                    details.push('Base 2: totale attività.');
-                    details.push('Base 3: ammontare passività.');
-                } else if (tipo === 'r7_1') {
-                    const t = tiered(v1, [
-                        { upto: 1000000, ...rateRange(0.0075, 0.015) },
-                        { upto: 15000000, ...rateRange(0.005, 0.0075) },
-                        { upto: Infinity, ...rateRange(0.0025, 0.005) },
-                    ]);
-                    min = t.minTotal;
-                    max = t.maxTotal;
-                    details.push('Base: capitale sottoscritto.');
-                } else if (tipo === 'r7_2') {
-                    const t = tiered(v1, [
-                        { upto: 4000000, ...rateRange(0.01, 0.015) },
-                        { upto: Infinity, ...rateRange(0.005, 0.01) },
-                    ]);
-                    min = t.minTotal;
-                    max = t.maxTotal;
-                    details.push('Base: totale attività delle situazioni patrimoniali utilizzate.');
-                } else if (tipo === 'r8_1') {
-                    const t = tiered(v1, [
-                        { upto: 2000000, ...rateRange(0.0075, 0.02) },
-                        { upto: Infinity, ...rateRange(0.005, 0.0075) },
-                    ]);
-                    min = t.minTotal;
-                    max = t.maxTotal;
-                    details.push('Base: corrispettivo pattuito.');
-                } else if (tipo === 'r8_2') {
-                    const t = tiered(v1, [
-                        { upto: 2000000, ...rateRange(0.0075, 0.01) },
-                        { upto: Infinity, ...rateRange(0.005, 0.0075) },
-                    ]);
-                    min = t.minTotal;
-                    max = t.maxTotal;
-                    details.push('Base: capitale mutuato/erogato (o capitali/valori oggetto della prestazione).');
-                } else if (tipo === 'r9') {
-                    const t = tiered(v1, [
-                        { upto: 1000000, ...rateRange(0.01, 0.02) },
-                        { upto: Infinity, ...rateRange(0.007, 0.009) },
-                    ]);
-                    min = t.minTotal;
-                    max = t.maxTotal;
-                    if (esitoNegativoEl && esitoNegativoEl.checked) {
-                        min = min / 2;
-                        max = max / 2;
-                        details.push('Riduzione applicata: procedure concluse con esito negativo (fino alla metà).');
+
+                    if (['r4', 'r5_1', 'r6'].includes(tipo) && (!Number.isFinite(v2) || v2 < 0 || !Number.isFinite(v3) || v3 < 0)) {
+                        showFieldError(valore2El, 'Valore 2 richiesto.');
+                        showFieldError(valore3El, 'Valore 3 richiesto.');
+                        setResult('Errore: valori aggiuntivi mancanti.', true);
+                        renderDraftPreview();
+                        return;
                     }
-                    details.push('Base: totale passività.');
-                } else if (tipo === 'r10_2' || tipo === 'r10_3') {
-                    min = v1 * 0.01;
-                    max = v1 * 0.05;
-                    details.push('Base: importo complessivo di imposte/tasse/contributi/sanzioni/interessi dovuti.');
-                } else if (tipo === 'r11') {
-                    // fino a 5.000.000: range fisso 6.000 - 8.000
-                    // oltre: aliquote sul "per di piu'" in scaglioni + maggiorazione ogni 100M oltre 800M
-                    const baseMin = 6000;
-                    const baseMax = 8000;
-                    const x = v1;
 
-                    let extraMin = 0;
-                    let extraMax = 0;
+                    let min = 0;
+                    let max = 0;
+                    const details = [];
 
-                    const cap1 = 5000000;
-                    const cap2 = 100000000;
-                    const cap3 = 300000000;
-                    const cap4 = 800000000;
-
-                    if (x > cap1) {
-                        const s1 = Math.min(x, cap2) - cap1;
-                        if (s1 > 0) {
-                            extraMin += s1 * 0.00009;
-                            extraMax += s1 * 0.00010;
+                    if (tipo === 'r1') {
+                        const base = sumModeR1 ? (v1 + (Number.isFinite(v2) ? v2 : 0)) : v1;
+                        const t = tiered(base, [
+                            { upto: 10000, ...rateRange(0.03, 0.04) },
+                            { upto: 50000, ...rateRange(0.02, 0.03) },
+                            { upto: Infinity, ...rateRange(0.01, 0.02) },
+                        ]);
+                        min = t.minTotal;
+                        max = t.maxTotal;
+                        details.push(sumModeR1 ? 'Base: redditi lordi + attività (somma).' : 'Base: valore di riferimento.');
+                    } else if (tipo === 'r2') {
+                        const attivo = tiered(v1, [
+                            { upto: 400000, ...rateRange(0.04, 0.06) },
+                            { upto: 4000000, ...rateRange(0.02, 0.03) },
+                            { upto: Infinity, ...rateRange(0.0075, 0.01) },
+                        ]);
+                        const passivo = {
+                            minTotal: v2 * 0.005,
+                            maxTotal: v2 * 0.0075,
+                        };
+                        min = attivo.minTotal + passivo.minTotal;
+                        max = attivo.maxTotal + passivo.maxTotal;
+                        details.push('Valore 1: attivo realizzato.');
+                        details.push('Valore 2: passivo accertato.');
+                    } else if (tipo === 'r3') {
+                        const t = tiered(v1, [
+                            { upto: 1000000, ...rateRange(0.008, 0.01) },
+                            { upto: 3000000, ...rateRange(0.005, 0.007) },
+                            { upto: Infinity, ...rateRange(0.00025, 0.0005) },
+                        ]);
+                        min = t.minTotal;
+                        max = t.maxTotal;
+                        details.push('Base: valore della perizia o valutazione.');
+                    } else if (tipo === 'r4') {
+                        const redditiMin = v1 * 0.001;
+                        const redditiMax = v1 * 0.0015;
+                        const attivitaMin = v2 * 0.0005;
+                        const attivitaMax = v2 * 0.00075;
+                        const passivitaMin = v3 * 0.0005;
+                        const passivitaMax = v3 * 0.00075;
+                        min = redditiMin + attivitaMin + passivitaMin;
+                        max = redditiMax + attivitaMax + passivitaMax;
+                        details.push('Base 1: redditi lordi.');
+                        details.push('Base 2: totale attività.');
+                        details.push('Base 3: ammontare passività.');
+                    } else if (tipo === 'r5_1') {
+                        const redditiMin = v1 * 0.003;
+                        const redditiMax = v1 * 0.005;
+                        const attivitaMin = v2 * 0.0002;
+                        const attivitaMax = v2 * 0.0006;
+                        const passivitaMin = v3 * 0.0002;
+                        const passivitaMax = v3 * 0.00065;
+                        min = redditiMin + attivitaMin + passivitaMin;
+                        max = redditiMax + attivitaMax + passivitaMax;
+                        details.push('Base 1: redditi lordi.');
+                        details.push('Base 2: totale attività.');
+                        details.push('Base 3: totale passività.');
+                    } else if (tipo === 'r5_2') {
+                        const t = tiered(v1, [
+                            { upto: 50000, ...rateRange(0.03, 0.04) },
+                            { upto: 100000, ...rateRange(0.01, 0.02) },
+                            { upto: Infinity, ...rateRange(0.005, 0.01) },
+                        ]);
+                        min = t.minTotal;
+                        max = t.maxTotal;
+                        details.push('Base: redditi lordi (scaglioni).');
+                    } else if (tipo === 'r6') {
+                        const redditi = tiered(v1, [
+                            { upto: 20000000, ...rateRange(0.0002, 0.0003) },
+                            { upto: Infinity, ...rateRange(0.00005, 0.0001) },
+                        ]);
+                        const attivitaMin = v2 * 0.0005;
+                        const attivitaMax = v2 * 0.0006;
+                        const passivitaMin = v3 * 0.0002;
+                        const passivitaMax = v3 * 0.0003;
+                        min = redditi.minTotal + attivitaMin + passivitaMin;
+                        max = redditi.maxTotal + attivitaMax + passivitaMax;
+                        details.push('Base 1: redditi lordi (scaglioni).');
+                        details.push('Base 2: totale attività.');
+                        details.push('Base 3: ammontare passività.');
+                    } else if (tipo === 'r7_1') {
+                        const t = tiered(v1, [
+                            { upto: 1000000, ...rateRange(0.0075, 0.015) },
+                            { upto: 15000000, ...rateRange(0.005, 0.0075) },
+                            { upto: Infinity, ...rateRange(0.0025, 0.005) },
+                        ]);
+                        min = t.minTotal;
+                        max = t.maxTotal;
+                        details.push('Base: capitale sottoscritto.');
+                    } else if (tipo === 'r7_2') {
+                        const t = tiered(v1, [
+                            { upto: 4000000, ...rateRange(0.01, 0.015) },
+                            { upto: Infinity, ...rateRange(0.005, 0.01) },
+                        ]);
+                        min = t.minTotal;
+                        max = t.maxTotal;
+                        details.push('Base: totale attività.');
+                    } else if (tipo === 'r8_1') {
+                        const t = tiered(v1, [
+                            { upto: 2000000, ...rateRange(0.0075, 0.02) },
+                            { upto: Infinity, ...rateRange(0.005, 0.0075) },
+                        ]);
+                        min = t.minTotal;
+                        max = t.maxTotal;
+                        details.push('Base: corrispettivo pattuito.');
+                    } else if (tipo === 'r8_2') {
+                        const t = tiered(v1, [
+                            { upto: 2000000, ...rateRange(0.0075, 0.01) },
+                            { upto: Infinity, ...rateRange(0.005, 0.0075) },
+                        ]);
+                        min = t.minTotal;
+                        max = t.maxTotal;
+                        details.push('Base: capitale mutuato/erogato.');
+                    } else if (tipo === 'r9') {
+                        const t = tiered(v1, [
+                            { upto: 1000000, ...rateRange(0.01, 0.02) },
+                            { upto: Infinity, ...rateRange(0.007, 0.009) },
+                        ]);
+                        min = t.minTotal;
+                        max = t.maxTotal;
+                        if (esitoNegativoEl && esitoNegativoEl.checked) {
+                            min = min / 2;
+                            max = max / 2;
+                            details.push('Riduzione applicata: esito negativo (fino alla metà).');
                         }
-                    }
-                    if (x > cap2) {
-                        const s2 = Math.min(x, cap3) - cap2;
-                        if (s2 > 0) {
-                            extraMin += s2 * 0.00006;
-                            extraMax += s2 * 0.00009;
+                        details.push('Base: totale passività.');
+                    } else if (tipo === 'r10_2' || tipo === 'r10_3') {
+                        min = v1 * 0.01;
+                        max = v1 * 0.05;
+                        details.push('Base: importi dovuti.');
+                    } else if (tipo === 'r11') {
+                        const baseMin = 6000;
+                        const baseMax = 8000;
+                        const x = v1;
+                        let extraMin = 0;
+                        let extraMax = 0;
+                        const cap1 = 5000000;
+                        const cap2 = 100000000;
+                        const cap3 = 300000000;
+                        const cap4 = 800000000;
+                        if (x > cap1) {
+                            const s1 = Math.min(x, cap2) - cap1;
+                            if (s1 > 0) {
+                                extraMin += s1 * 0.00009;
+                                extraMax += s1 * 0.00010;
+                            }
                         }
-                    }
-                    if (x > cap3) {
-                        const s3 = Math.min(x, cap4) - cap3;
-                        if (s3 > 0) {
-                            extraMin += s3 * 0.00005;
-                            extraMax += s3 * 0.00006;
+                        if (x > cap2) {
+                            const s2 = Math.min(x, cap3) - cap2;
+                            if (s2 > 0) {
+                                extraMin += s2 * 0.00006;
+                                extraMax += s2 * 0.00009;
+                            }
                         }
+                        if (x > cap3) {
+                            const s3 = Math.min(x, cap4) - cap3;
+                            if (s3 > 0) {
+                                extraMin += s3 * 0.00005;
+                                extraMax += s3 * 0.00006;
+                            }
+                        }
+                        if (x > cap4) {
+                            const over = x - cap4;
+                            const steps = Math.ceil(over / 100000000);
+                            extraMin += steps * 7500;
+                            extraMax += steps * 10000;
+                        }
+                        min = baseMin + extraMin;
+                        max = baseMax + extraMax;
+                        details.push('Base: sommatoria redditi + attività (somma).');
+                    } else {
+                        setResult('Errore: tipologia non gestita.', true);
+                        renderDraftPreview();
+                        return;
                     }
-                    if (x > cap4) {
-                        const over = x - cap4;
-                        const steps = Math.ceil(over / 100000000);
-                        extraMin += steps * 7500;
-                        extraMax += steps * 10000;
+
+                    const chosen = pickRate(min, max, criterio);
+                    const pct = percentualeEl && percentualeEl.value !== '' ? Number(percentualeEl.value) : NaN;
+                    const factor = Number.isFinite(pct) && pct > 0 ? (pct / 100) : 1;
+                    const chosenAdj = chosen * factor;
+
+                    if (factor !== 1) {
+                        details.push(`Adeguamento percentuale: ${pct}%.`);
                     }
 
-                    min = baseMin + extraMin;
-                    max = baseMax + extraMax;
-                    details.push('Base: sommatoria componenti positivi di reddito lordi e attività.');
-                } else {
-                    resultEl.textContent = 'Tipologia non gestita.';
-                    return;
-                }
+                    const pattuitoNum = pattuitoEl && pattuitoEl.value !== '' ? Number(pattuitoEl.value) : NaN;
+                    const compensoPattuito = Number.isFinite(pattuitoNum) && pattuitoNum >= 0 ? pattuitoNum : chosenAdj;
 
-                const chosen = pickRate(min, max, criterio);
+                    const payload = buildPayloadFromForm({ tipo, criterio, min, max, chosen, details });
+                    payload.result.chosen = euro(chosenAdj);
+                    payload.result.mid = euro(((min + max) / 2) * factor);
+                    payload.result.min = euro(min * factor);
+                    payload.result.max = euro(max * factor);
+                    payload.result.compenso_pattuito = euro(compensoPattuito);
 
-                const pattuito = pattuitoEl && pattuitoEl.value !== '' ? Number(pattuitoEl.value) : null;
-                const percentuale = percentualeEl && percentualeEl.value !== '' ? Number(percentualeEl.value) : null;
-                const isPattuitoValid = pattuito !== null && Number.isFinite(pattuito) && pattuito >= 0;
-                const diff = isPattuitoValid ? (pattuito - chosen) : null;
-                const adeguamento = isPattuitoValid ? Math.max(0, chosen - pattuito) : null;
-                const ratio = isPattuitoValid && chosen > 0 ? (pattuito / chosen) * 100 : null;
-                resultEl.innerHTML = `
-                    Compenso (${criterio}): <strong>${euro(chosen)}</strong><br>
-                    Range: ${euro(min)} - ${euro(max)}<br>
-                    ${isPattuitoValid ? `Corrispettivo pattuito: <strong>${euro(pattuito)}</strong><br>` : ''}
-                    ${isPattuitoValid ? `Differenza (pattuito - equo): <strong>${euro(diff)}</strong><br>` : ''}
-                    ${isPattuitoValid ? `Adeguamento minimo per equità: <strong>${euro(adeguamento)}</strong><br>` : ''}
-                    ${isPattuitoValid && ratio !== null ? `Percentuale rispetto all'equo: <strong>${ratio.toFixed(2)}%</strong><br>` : ''}
-                    ${details.length ? `<br><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}` : ''}
-                `;
-
-                setPreview(`
-                    <div><strong>Sezione:</strong> ${(documentTypeEl && documentTypeEl.options[documentTypeEl.selectedIndex]?.textContent) || ''}</div>
-                    ${documentCategoryEl && documentCategoryEl.value ? `<div><strong>Categoria:</strong> ${documentCategoryEl.options[documentCategoryEl.selectedIndex]?.textContent || ''}</div>` : ''}
-                    <div style="margin-top:10px;"><strong>Compenso (${criterio}):</strong> ${euro(chosen)}</div>
-                    <div><strong>Range:</strong> ${euro(min)} - ${euro(max)}</div>
-                    ${isPattuitoValid ? `<div style="margin-top:10px;"><strong>Corrispettivo pattuito:</strong> ${euro(pattuito)}</div>` : ''}
-                    ${isPattuitoValid ? `<div><strong>Adeguamento minimo:</strong> ${euro(adeguamento)}</div>` : ''}
-                    ${Number.isFinite(percentuale) ? `<div><strong>Percentuale:</strong> ${percentuale.toFixed(2)}%</div>` : ''}
-                    ${details.length ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}</div>` : ''}
-                `);
-
-                if (btnDownloadPdf) {
                     btnDownloadPdf.disabled = false;
-                    btnDownloadPdf.dataset.payload = JSON.stringify(buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }));
+                    btnDownloadPdf.dataset.payload = JSON.stringify(payload);
+
+                    setResult(`Risultato: Compenso di riferimento ${euro(chosenAdj)} | Compenso pattuito ${euro(compensoPattuito)}`, false);
+
+                    const detailHtml = details.length
+                        ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${escapeHtml(d)}`).join('<br>')}</div>`
+                        : '';
+                    setPreview([
+                        `<div><strong>Compenso (${escapeHtml(criterio)}):</strong> ${euro(chosenAdj)}</div>`,
+                        `<div><strong>Range:</strong> ${euro(min * factor)} - ${euro(max * factor)}</div>`,
+                        detailHtml,
+                    ].join(''));
+                } finally {
+                    if (btn) {
+                        btn.classList.remove('is-loading');
+                        btn.disabled = false;
+                    }
                 }
             }
 
-            if (prestazioneEl) {
-                prestazioneEl.addEventListener('change', updateFieldVisibility);
+            if (documentTypeEl) {
+                documentTypeEl.addEventListener('change', () => {
+                    applyDocType();
+                    setStepper(1);
+                    renderDraftPreview();
+                });
             }
+
+            if (documentCategoryEl) {
+                documentCategoryEl.addEventListener('change', () => {
+                    applyCategory();
+                    setStepper(1);
+                    renderDraftPreview();
+                });
+            }
+
             if (btn) {
                 btn.addEventListener('click', compute);
             }
@@ -897,7 +1133,7 @@
                     try {
                         const raw = btnDownloadPdf.dataset.payload;
                         if (!raw) {
-                            alert('Esegui prima il calcolo.');
+                            setResult('Errore: esegui prima il calcolo.', true);
                             return;
                         }
 
@@ -905,17 +1141,19 @@
                         btnDownloadPdf.textContent = 'GENERAZIONE PDF...';
 
                         const payload = JSON.parse(raw);
-                        if (conteggiareEl && conteggiareEl.value === 'si' && esitoNegativoEl) {
-                            esitoNegativoEl.checked = true;
-                        }
                         const data = await apiRequest('/api/calculations', {
                             method: 'POST',
                             body: JSON.stringify(payload)
                         });
 
-                        await downloadDocumentPdf(data.documentId);
+                        if (!data || !data.document_id) {
+                            throw new Error('Risposta non valida dal server');
+                        }
+
+                        await downloadDocumentPdf(data.document_id);
+                        setStepper(3);
                     } catch (e) {
-                        alert(e.message || 'Errore');
+                        setResult((e && e.message) ? e.message : 'Errore', true);
                     } finally {
                         btnDownloadPdf.textContent = 'GENERA E SCARICA PDF';
                         btnDownloadPdf.disabled = false;
@@ -923,27 +1161,12 @@
                 });
             }
 
-            updateFieldVisibility();
-            if (typeof updateHeaderUser === 'function') {
-                updateHeaderUser();
-            }
-
-            if (documentTypeEl) {
-                documentTypeEl.addEventListener('change', () => {
-                    applyDocType();
-                });
-            }
-
-            if (documentCategoryEl) {
-                documentCategoryEl.addEventListener('change', () => {
-                    applyCategory();
-                });
-            }
-
             setBlockVisible(groupPattuito, true);
             setBlockVisible(groupPercentuale, true);
 
             applyDocType();
+            setStepper(1);
+            renderDraftPreview();
         })();
 
         function parseJwt(token) {
@@ -957,12 +1180,49 @@
             }
         }
 
-        function updateHeaderUser() {
+        async function updateHeaderUser() {
             const token = localStorage.getItem('authToken');
             const user = parseJwt(token);
             const headerUl = document.querySelector('.ls ul');
             if (!headerUl) return;
             const isLogged = !!token && (!!user.sub || !!user.id || !!user.email);
+
+            function initialsFrom(u) {
+                const nome = (u && u.nome ? String(u.nome) : '').trim();
+                const cognome = (u && u.cognome ? String(u.cognome) : '').trim();
+                if (nome || cognome) {
+                    return `${nome.charAt(0)}${cognome.charAt(0)}`.toUpperCase();
+                }
+                const email = (u && u.email ? String(u.email) : '').trim();
+                if (email) return email.charAt(0).toUpperCase();
+                return 'U';
+            }
+
+            async function syncNavAvatar() {
+                const img = document.getElementById('nav-user-photo');
+                const initials = document.querySelector('.nav-user-initials');
+                if (!img || !initials) return;
+
+                let u = user || {};
+                try {
+                    const me = await apiRequest('/api/me', { method: 'GET' });
+                    if (me && me.user) u = me.user;
+                } catch {
+                    u = user || {};
+                }
+
+                const avatarUrl = u && u.avatar_url ? String(u.avatar_url) : '';
+                if (avatarUrl) {
+                    img.src = avatarUrl;
+                    img.style.display = '';
+                    initials.style.display = 'none';
+                } else {
+                    img.removeAttribute('src');
+                    img.style.display = 'none';
+                    initials.textContent = initialsFrom(u);
+                    initials.style.display = '';
+                }
+            }
 
             function isAuthLi(li) {
                 const txt = (li.textContent || '').trim().toLowerCase();
@@ -990,7 +1250,7 @@
                     userLi.innerHTML = `
                         <div class="user-dropdown">
                             <button class="user-btn" onclick="toggleUserDropdown(event)">
-                                <span class="user-avatar"><i class="fas fa-user"></i></span>
+                                <span class="user-avatar"><img id="nav-user-photo" class="nav-user-photo" alt="Foto profilo"><span class="nav-user-initials"></span></span>
                                 <span class="user-welcome-text">Ciao, ${user.nome || user.email || ''}</span>
                             </button>
                             <div id="userDropdownMenu" class="user-dropdown-menu">
@@ -1014,6 +1274,7 @@
                     `;
                     headerUl.appendChild(userLi);
                 }
+                await syncNavAvatar();
             } else {
                 headerUl.querySelectorAll('li').forEach(li => {
                     if (isAuthLi(li)) li.style.display = '';

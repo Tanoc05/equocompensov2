@@ -205,12 +205,49 @@
             return data;
         }
 
-        function updateHeaderUser() {
+        async function updateHeaderUser() {
             const token = localStorage.getItem('authToken');
             const user = parseJwt(token);
             const headerUl = document.querySelector('.ls ul');
             if (!headerUl) return;
             const isLogged = !!token && (!!user.sub || !!user.id || !!user.email);
+
+            function initialsFrom(u) {
+                const nome = (u && u.nome ? String(u.nome) : '').trim();
+                const cognome = (u && u.cognome ? String(u.cognome) : '').trim();
+                if (nome || cognome) {
+                    return `${nome.charAt(0)}${cognome.charAt(0)}`.toUpperCase();
+                }
+                const email = (u && u.email ? String(u.email) : '').trim();
+                if (email) return email.charAt(0).toUpperCase();
+                return 'U';
+            }
+
+            async function syncNavAvatar() {
+                const img = document.getElementById('nav-user-photo');
+                const initials = document.querySelector('.nav-user-initials');
+                if (!img || !initials) return;
+
+                let u = user || {};
+                try {
+                    const me = await apiRequest('/api/me', { method: 'GET' });
+                    if (me && me.user) u = me.user;
+                } catch {
+                    u = user || {};
+                }
+
+                const avatarUrl = u && u.avatar_url ? String(u.avatar_url) : '';
+                if (avatarUrl) {
+                    img.src = avatarUrl;
+                    img.style.display = '';
+                    initials.style.display = 'none';
+                } else {
+                    img.removeAttribute('src');
+                    img.style.display = 'none';
+                    initials.textContent = initialsFrom(u);
+                    initials.style.display = '';
+                }
+            }
 
             function isAuthLi(li) {
                 const txt = (li.textContent || '').trim().toLowerCase();
@@ -238,7 +275,7 @@
                     userLi.innerHTML = `
                         <div class="user-dropdown">
                             <button class="user-btn" onclick="toggleUserDropdown(event)">
-                                <span class="user-avatar"><i class="fas fa-user"></i></span>
+                                <span class="user-avatar"><img id="nav-user-photo" class="nav-user-photo" alt="Foto profilo"><span class="nav-user-initials"></span></span>
                                 <span class="user-welcome-text">Ciao, ${user.nome || user.email || ''}</span>
                             </button>
                             <div id="userDropdownMenu" class="user-dropdown-menu">
@@ -262,6 +299,7 @@
                     `;
                     headerUl.appendChild(userLi);
                 }
+                await syncNavAvatar();
             } else {
                 headerUl.querySelectorAll('li').forEach(li => {
                     if (isAuthLi(li)) li.style.display = '';
