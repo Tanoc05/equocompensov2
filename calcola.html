@@ -21,7 +21,7 @@
                 <li><a href="chi-siamo.html">chi siamo</a></li>
                 <li><a href="calcola.html">calcola</a></li>
                 <li><a href="norme.html">norme</a></li>
-                <li><button>login</button></li>
+                <li><button onclick="window.location.href='index.html?login=1'">login</button></li>
                 <li><button>registrati</button></li>
             </ul>
         </div>
@@ -32,12 +32,113 @@
 
         <div class="container">
             <div class="hero">
-                <h1>Calcola i Tuoi Compensi</h1>
+                <h2>Calcola i Tuoi Compensi</h2>
                 <p>Strumento per il calcolo dei compensi professionali secondo la Legge 49/2023.</p>
             </div>
         </div>
 
         <div class="section-divider"></div>
+
+        <div class="container">
+            <section class="calcola-section">
+                <h2 class="calcola-title">Inserisci i dati</h2>
+                <p class="calcola-subtitle">Compila i campi per preparare il calcolo. La logica di calcolo verrà collegata nella fase successiva.</p>
+
+                <div class="calcola-card">
+                    <form>
+                        <div class="calcola-grid">
+                            <div class="form-group">
+                                <label for="professione">Professione</label>
+                                <select id="professione" name="professione" required>
+                                    <option value="commercialista" selected>Commercialista</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="prestazione">Tipologia (DM 140/2012 - Tabella C)</label>
+                                <select id="prestazione" name="prestazione" required>
+                                    <option value="" disabled selected>Seleziona</option>
+                                    <option value="r1">Riquadro 1 (Art. 19) - Redditi + Attività</option>
+                                    <option value="r2">Riquadro 2 (Art. 20) - Attivo realizzato + Passivo accertato</option>
+                                    <option value="r3">Riquadro 3 (Art. 21) - Perizia / Valutazione</option>
+                                    <option value="r4">Riquadro 4 (Art. 22) - Redditi + Attività + Passività</option>
+                                    <option value="r5_1">Riquadro 5.1 (Art. 23 c.1) - Redditi + Attività + Passività</option>
+                                    <option value="r5_2">Riquadro 5.2 (Art. 23 c.2) - Redditi (scaglioni)</option>
+                                    <option value="r6">Riquadro 6 (Art. 24) - Redditi + Attività + Passività</option>
+                                    <option value="r7_1">Riquadro 7.1 (Art. 25 c.1) - Capitale sottoscritto</option>
+                                    <option value="r7_2">Riquadro 7.2 (Art. 25 c.2) - Totale attività</option>
+                                    <option value="r8_1">Riquadro 8.1 (Art. 26 c.1) - Corrispettivo pattuito</option>
+                                    <option value="r8_2">Riquadro 8.2 (Art. 26 c.2-3) - Capitale mutuato/erogato</option>
+                                    <option value="r9">Riquadro 9 (Art. 27) - Totale passività</option>
+                                    <option value="r10_1">Riquadro 10.1 (Art. 28 c.1) - Dichiarazioni (importi fissi)</option>
+                                    <option value="r10_2">Riquadro 10.2 (Art. 28 c.2) - Imposte/tasse/contributi (percentuale)</option>
+                                    <option value="r10_3">Riquadro 10.3 (Art. 28 c.3) - Imposte/tasse/contributi (percentuale)</option>
+                                    <option value="r11">Riquadro 11 (Art. 29) - Redditi + Attività (range + scaglioni)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="criterio">Criterio calcolo</label>
+                                <select id="criterio" name="criterio" required>
+                                    <option value="min">Minimo</option>
+                                    <option value="medio" selected>Medio</option>
+                                    <option value="max">Massimo</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label id="labelValore" for="valore">Valore di riferimento (€)</label>
+                                <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label id="labelValore2" for="valore2">Secondo valore (€)</label>
+                                <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
+                            </div>
+
+                            <div class="form-group">
+                                <label id="labelValore3" for="valore3">Terzo valore (€)</label>
+                                <input id="valore3" name="valore3" type="number" min="0" step="0.01" placeholder="0,00">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dichiarazione">Dichiarazione (solo Riquadro 10.1)</label>
+                                <select id="dichiarazione" name="dichiarazione">
+                                    <option value="" selected>N/A</option>
+                                    <option value="pf">Dichiarazione redditi persone fisiche</option>
+                                    <option value="pf_piva">Dichiarazione redditi PF con partita IVA</option>
+                                    <option value="sp">Dichiarazione redditi società di persone</option>
+                                    <option value="sc">Dichiarazione redditi società di capitali</option>
+                                    <option value="irap">Dichiarazione IRAP</option>
+                                    <option value="iva">Dichiarazione IVA</option>
+                                    <option value="770">Dichiarazione sostituti d'imposta</option>
+                                    <option value="invio">Invio telematico</option>
+                                    <option value="successione">Dichiarazione di successione</option>
+                                    <option value="altre">Altre dichiarazioni e comunicazioni</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="esitoNegativo">Procedure concorsuali (solo Riquadro 9)</label>
+                                <div>
+                                    <input id="esitoNegativo" name="esitoNegativo" type="checkbox">
+                                    <label for="esitoNegativo">Esito negativo (riduzione fino alla metà)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="calcola-actions">
+                            <button id="btnCalcola" class="btn-primary" type="button">Calcola</button>
+                            <button class="btn-secondary" type="reset">Reset</button>
+                        </div>
+
+                        <div id="calcolaResult" class="calcola-result">
+                            Risultato: in attesa di calcolo.
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
 
     </main>
     
@@ -46,6 +147,413 @@
             <p>&copy; 2025 equocompenso. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        (function() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                localStorage.setItem('postLoginRedirect', 'calcola.html');
+                window.location.replace('index.html?login=1');
+            }
+        })();
+
+        (function() {
+            const prestazioneEl = document.getElementById('prestazione');
+            const criterioEl = document.getElementById('criterio');
+            const valoreEl = document.getElementById('valore');
+            const valore2El = document.getElementById('valore2');
+            const valore3El = document.getElementById('valore3');
+            const dichiarazioneEl = document.getElementById('dichiarazione');
+            const esitoNegativoEl = document.getElementById('esitoNegativo');
+            const btn = document.getElementById('btnCalcola');
+            const resultEl = document.getElementById('calcolaResult');
+
+            const labelValore = document.getElementById('labelValore');
+            const labelValore2 = document.getElementById('labelValore2');
+            const labelValore3 = document.getElementById('labelValore3');
+
+            function setEnabled(el, enabled) {
+                if (!el) return;
+                el.disabled = !enabled;
+                if (!enabled) {
+                    if (el.tagName === 'SELECT') el.value = '';
+                    if (el.tagName === 'INPUT') {
+                        if (el.type === 'checkbox') el.checked = false;
+                        else el.value = '';
+                    }
+                }
+            }
+
+            function setGroupVisible(el, visible) {
+                if (!el) return;
+                const group = el.closest('.form-group');
+                if (!group) return;
+                group.style.display = visible ? '' : 'none';
+            }
+
+            function updateFieldVisibility() {
+                const tipo = prestazioneEl ? prestazioneEl.value : '';
+
+                // valore = principale. valore2 = secondario (quando serve). valore3 = terzo (quando serve). dichiarazione = solo Riquadro 10.1
+                setEnabled(valoreEl, tipo !== 'r10_1');
+                setEnabled(valore2El, ['r2', 'r4', 'r5_1', 'r6'].includes(tipo));
+                setEnabled(valore3El, ['r4', 'r5_1', 'r6'].includes(tipo));
+                setEnabled(dichiarazioneEl, tipo === 'r10_1');
+                setEnabled(esitoNegativoEl, tipo === 'r9');
+
+                setGroupVisible(dichiarazioneEl, tipo === 'r10_1');
+                setGroupVisible(esitoNegativoEl, tipo === 'r9');
+
+                if (tipo === 'r10_1') {
+                    valoreEl.required = false;
+                    valore2El.required = false;
+                    valore3El.required = false;
+                } else {
+                    valoreEl.required = true;
+                    valore2El.required = ['r2', 'r4', 'r5_1', 'r6'].includes(tipo);
+                    valore3El.required = ['r4', 'r5_1', 'r6'].includes(tipo);
+                }
+
+                if (labelValore) labelValore.textContent = 'Valore di riferimento (€)';
+                if (labelValore2) labelValore2.textContent = 'Secondo valore (€)';
+                if (labelValore3) labelValore3.textContent = 'Terzo valore (€)';
+
+                if (tipo === 'r2') {
+                    if (labelValore) labelValore.textContent = 'Attivo realizzato (€)';
+                    if (labelValore2) labelValore2.textContent = 'Passivo accertato (€)';
+                }
+                if (tipo === 'r4' || tipo === 'r5_1' || tipo === 'r6') {
+                    if (labelValore) labelValore.textContent = 'Componenti positivi di reddito lordi (€)';
+                    if (labelValore2) labelValore2.textContent = 'Totale attività (€)';
+                    if (labelValore3) labelValore3.textContent = 'Ammontare passività (€)';
+                }
+                if (tipo === 'r3') {
+                    if (labelValore) labelValore.textContent = 'Valore perizia / valutazione (€)';
+                }
+                if (tipo === 'r7_1') {
+                    if (labelValore) labelValore.textContent = 'Capitale sottoscritto (€)';
+                }
+                if (tipo === 'r7_2') {
+                    if (labelValore) labelValore.textContent = 'Totale attività (€)';
+                }
+                if (tipo === 'r8_1') {
+                    if (labelValore) labelValore.textContent = 'Corrispettivo pattuito (€)';
+                }
+                if (tipo === 'r8_2') {
+                    if (labelValore) labelValore.textContent = 'Capitale mutuato/erogato (€)';
+                }
+                if (tipo === 'r9') {
+                    if (labelValore) labelValore.textContent = 'Totale passività (€)';
+                }
+                if (tipo === 'r10_2' || tipo === 'r10_3') {
+                    if (labelValore) labelValore.textContent = 'Imposte/tasse/contributi/sanzioni/interessi dovuti (€)';
+                }
+                if (tipo === 'r11') {
+                    if (labelValore) labelValore.textContent = 'Redditi + attività (somma) (€)';
+                }
+            }
+
+            function pickRate(min, max, criterio) {
+                if (criterio === 'min') return min;
+                if (criterio === 'max') return max;
+                return (min + max) / 2;
+            }
+
+            function rateRange(a, b) {
+                const minRate = Math.min(a, b);
+                const maxRate = Math.max(a, b);
+                return { minRate, maxRate };
+            }
+
+            function tiered(value, tiers) {
+                // tiers: [{ upto, minRate, maxRate }] with progressive application
+                let remaining = value;
+                let lastCap = 0;
+                let minTotal = 0;
+                let maxTotal = 0;
+
+                for (const t of tiers) {
+                    if (remaining <= 0) break;
+                    const cap = t.upto;
+                    const span = Math.max(0, Math.min(value, cap) - lastCap);
+                    if (span > 0) {
+                        minTotal += span * t.minRate;
+                        maxTotal += span * t.maxRate;
+                    }
+                    lastCap = cap;
+                }
+
+                // last tier with upto: Infinity
+                const last = tiers[tiers.length - 1];
+                if (last && last.upto === Infinity) {
+                    const span = Math.max(0, value - lastCap);
+                    if (span > 0) {
+                        minTotal += span * last.minRate;
+                        maxTotal += span * last.maxRate;
+                    }
+                }
+
+                return { minTotal, maxTotal };
+            }
+
+            function euro(n) {
+                return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(n);
+            }
+
+            function compute() {
+                const tipo = prestazioneEl.value;
+                const criterio = criterioEl.value;
+
+                if (!tipo) {
+                    resultEl.textContent = 'Seleziona una tipologia.';
+                    return;
+                }
+
+                // Riquadro 10.1: importi fissi
+                if (tipo === 'r10_1') {
+                    const d = dichiarazioneEl.value;
+                    const fixed = {
+                        pf: 150,
+                        pf_piva: 450,
+                        sp: 550,
+                        sc: 650,
+                        irap: 200,
+                        iva: 250,
+                        '770': 150,
+                        successione: 350,
+                        altre: 100,
+                        invio: 20,
+                    };
+                    if (!d || !fixed[d]) {
+                        resultEl.textContent = 'Seleziona il tipo di dichiarazione (Riquadro 10.1).';
+                        return;
+                    }
+
+                    const amount = fixed[d];
+                    resultEl.innerHTML = `Compenso (${criterio}): <strong>${euro(amount)}</strong>`;
+                    return;
+                }
+
+                const v1 = Number(valoreEl.value);
+                const v2 = Number(valore2El.value);
+                const v3 = Number(valore3El.value);
+
+                if (!Number.isFinite(v1) || v1 < 0) {
+                    resultEl.textContent = 'Inserisci un valore principale valido.';
+                    return;
+                }
+                if (tipo === 'r2' && (!Number.isFinite(v2) || v2 < 0)) {
+                    resultEl.textContent = 'Inserisci anche il secondo valore (Passivo accertato) per Riquadro 2.';
+                    return;
+                }
+                if (['r4', 'r5_1', 'r6'].includes(tipo) && (!Number.isFinite(v2) || v2 < 0 || !Number.isFinite(v3) || v3 < 0)) {
+                    resultEl.textContent = 'Per questa tipologia servono anche Totale attività e Ammontare passività.';
+                    return;
+                }
+
+                let min = 0;
+                let max = 0;
+                let details = [];
+
+                // Percentuali in forma decimale (es. 3% = 0.03)
+                if (tipo === 'r1') {
+                    const t = tiered(v1, [
+                        { upto: 10000, ...rateRange(0.03, 0.04) },
+                        { upto: 50000, ...rateRange(0.02, 0.03) },
+                        { upto: Infinity, ...rateRange(0.01, 0.02) },
+                    ]);
+                    min = t.minTotal;
+                    max = t.maxTotal;
+                    details.push('Base: sommatoria componenti positivi di reddito lordi e attività.');
+                } else if (tipo === 'r2') {
+                    const attivo = tiered(v1, [
+                        { upto: 400000, ...rateRange(0.04, 0.06) },
+                        { upto: 4000000, ...rateRange(0.02, 0.03) },
+                        { upto: Infinity, ...rateRange(0.0075, 0.01) },
+                    ]);
+                    const passivo = {
+                        minTotal: v2 * 0.005,
+                        maxTotal: v2 * 0.0075,
+                    };
+                    min = attivo.minTotal + passivo.minTotal;
+                    max = attivo.maxTotal + passivo.maxTotal;
+                    details.push('Valore 1: totale attivo realizzato.');
+                    details.push('Valore 2: passivo accertato.');
+                } else if (tipo === 'r3') {
+                    const t = tiered(v1, [
+                        { upto: 1000000, ...rateRange(0.008, 0.01) },
+                        { upto: 3000000, ...rateRange(0.005, 0.007) },
+                        { upto: Infinity, ...rateRange(0.00025, 0.0005) },
+                    ]);
+                    min = t.minTotal;
+                    max = t.maxTotal;
+                    details.push('Base: valore della perizia o valutazione.');
+                } else if (tipo === 'r4') {
+                    const redditiMin = v1 * 0.001;
+                    const redditiMax = v1 * 0.0015;
+                    const attivitaMin = v2 * 0.0005;
+                    const attivitaMax = v2 * 0.00075;
+                    const passivitaMin = v3 * 0.0005;
+                    const passivitaMax = v3 * 0.00075;
+                    min = redditiMin + attivitaMin + passivitaMin;
+                    max = redditiMax + attivitaMax + passivitaMax;
+                    details.push('Base 1: componenti positivi di reddito lordi.');
+                    details.push('Base 2: totale attività.');
+                    details.push('Base 3: ammontare passività.');
+                } else if (tipo === 'r5_1') {
+                    const redditiMin = v1 * 0.003;
+                    const redditiMax = v1 * 0.005;
+                    const attivitaMin = v2 * 0.0002;
+                    const attivitaMax = v2 * 0.0006;
+                    const passivitaMin = v3 * 0.0002;
+                    const passivitaMax = v3 * 0.00065;
+                    min = redditiMin + attivitaMin + passivitaMin;
+                    max = redditiMax + attivitaMax + passivitaMax;
+                    details.push('Base 1: componenti positivi di reddito lordi.');
+                    details.push('Base 2: totale attività.');
+                    details.push('Base 3: totale passività di fine esercizio.');
+                } else if (tipo === 'r5_2') {
+                    const t = tiered(v1, [
+                        { upto: 50000, ...rateRange(0.03, 0.04) },
+                        { upto: 100000, ...rateRange(0.01, 0.02) },
+                        { upto: Infinity, ...rateRange(0.005, 0.01) },
+                    ]);
+                    min = t.minTotal;
+                    max = t.maxTotal;
+                    details.push('Base: sommatoria componenti positivi di reddito lordi.');
+                } else if (tipo === 'r6') {
+                    const redditi = tiered(v1, [
+                        { upto: 20000000, ...rateRange(0.0002, 0.0003) },
+                        { upto: Infinity, ...rateRange(0.00005, 0.0001) },
+                    ]);
+                    const attivitaMin = v2 * 0.0005;
+                    const attivitaMax = v2 * 0.0006;
+                    const passivitaMin = v3 * 0.0002;
+                    const passivitaMax = v3 * 0.0003;
+                    min = redditi.minTotal + attivitaMin + passivitaMin;
+                    max = redditi.maxTotal + attivitaMax + passivitaMax;
+                    details.push('Base 1: totale componenti positivi di reddito lordi (scaglioni).');
+                    details.push('Base 2: totale attività.');
+                    details.push('Base 3: ammontare passività.');
+                } else if (tipo === 'r7_1') {
+                    const t = tiered(v1, [
+                        { upto: 1000000, ...rateRange(0.0075, 0.015) },
+                        { upto: 15000000, ...rateRange(0.005, 0.0075) },
+                        { upto: Infinity, ...rateRange(0.0025, 0.005) },
+                    ]);
+                    min = t.minTotal;
+                    max = t.maxTotal;
+                    details.push('Base: capitale sottoscritto.');
+                } else if (tipo === 'r7_2') {
+                    const t = tiered(v1, [
+                        { upto: 4000000, ...rateRange(0.01, 0.015) },
+                        { upto: Infinity, ...rateRange(0.005, 0.01) },
+                    ]);
+                    min = t.minTotal;
+                    max = t.maxTotal;
+                    details.push('Base: totale attività delle situazioni patrimoniali utilizzate.');
+                } else if (tipo === 'r8_1') {
+                    const t = tiered(v1, [
+                        { upto: 2000000, ...rateRange(0.0075, 0.02) },
+                        { upto: Infinity, ...rateRange(0.005, 0.0075) },
+                    ]);
+                    min = t.minTotal;
+                    max = t.maxTotal;
+                    details.push('Base: corrispettivo pattuito.');
+                } else if (tipo === 'r8_2') {
+                    const t = tiered(v1, [
+                        { upto: 2000000, ...rateRange(0.0075, 0.01) },
+                        { upto: Infinity, ...rateRange(0.005, 0.0075) },
+                    ]);
+                    min = t.minTotal;
+                    max = t.maxTotal;
+                    details.push('Base: capitale mutuato/erogato (o capitali/valori oggetto della prestazione).');
+                } else if (tipo === 'r9') {
+                    const t = tiered(v1, [
+                        { upto: 1000000, ...rateRange(0.01, 0.02) },
+                        { upto: Infinity, ...rateRange(0.007, 0.009) },
+                    ]);
+                    min = t.minTotal;
+                    max = t.maxTotal;
+                    if (esitoNegativoEl && esitoNegativoEl.checked) {
+                        min = min / 2;
+                        max = max / 2;
+                        details.push('Riduzione applicata: procedure concluse con esito negativo (fino alla metà).');
+                    }
+                    details.push('Base: totale passività.');
+                } else if (tipo === 'r10_2' || tipo === 'r10_3') {
+                    min = v1 * 0.01;
+                    max = v1 * 0.05;
+                    details.push('Base: importo complessivo di imposte/tasse/contributi/sanzioni/interessi dovuti.');
+                } else if (tipo === 'r11') {
+                    // fino a 5.000.000: range fisso 6.000 - 8.000
+                    // oltre: aliquote sul "per di piu'" in scaglioni + maggiorazione ogni 100M oltre 800M
+                    const baseMin = 6000;
+                    const baseMax = 8000;
+                    const x = v1;
+
+                    let extraMin = 0;
+                    let extraMax = 0;
+
+                    const cap1 = 5000000;
+                    const cap2 = 100000000;
+                    const cap3 = 300000000;
+                    const cap4 = 800000000;
+
+                    if (x > cap1) {
+                        const s1 = Math.min(x, cap2) - cap1;
+                        if (s1 > 0) {
+                            extraMin += s1 * 0.00009;
+                            extraMax += s1 * 0.00010;
+                        }
+                    }
+                    if (x > cap2) {
+                        const s2 = Math.min(x, cap3) - cap2;
+                        if (s2 > 0) {
+                            extraMin += s2 * 0.00006;
+                            extraMax += s2 * 0.00009;
+                        }
+                    }
+                    if (x > cap3) {
+                        const s3 = Math.min(x, cap4) - cap3;
+                        if (s3 > 0) {
+                            extraMin += s3 * 0.00005;
+                            extraMax += s3 * 0.00006;
+                        }
+                    }
+                    if (x > cap4) {
+                        const over = x - cap4;
+                        const steps = Math.ceil(over / 100000000);
+                        extraMin += steps * 7500;
+                        extraMax += steps * 10000;
+                    }
+
+                    min = baseMin + extraMin;
+                    max = baseMax + extraMax;
+                    details.push('Base: sommatoria componenti positivi di reddito lordi e attività.');
+                } else {
+                    resultEl.textContent = 'Tipologia non gestita.';
+                    return;
+                }
+
+                const chosen = pickRate(min, max, criterio);
+                resultEl.innerHTML = `
+                    Compenso (${criterio}): <strong>${euro(chosen)}</strong><br>
+                    Range: ${euro(min)} - ${euro(max)}<br>
+                    ${details.length ? `<br><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}` : ''}
+                `;
+            }
+
+            if (prestazioneEl) {
+                prestazioneEl.addEventListener('change', updateFieldVisibility);
+            }
+            if (btn) {
+                btn.addEventListener('click', compute);
+            }
+
+            updateFieldVisibility();
+        })();
+    </script>
 
 </body>
 </html>
