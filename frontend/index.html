@@ -234,7 +234,7 @@
                         </div>
                         <div class="form-group">
                             <label for="profEmail">Email</label>
-                            <input type="email" id="profEmail" name="profEmail" required>
+                            <input type="email" id="profEmail" name="profEmail" required readonly>
                         </div>
                         <button type="submit" class="login-btn">Salva modifiche</button>
                     </form>
@@ -327,22 +327,6 @@
             el.style.display = 'none';
         }
 
-        function base64UrlEncode(str) {
-            return btoa(str)
-                .replace(/\+/g, '-')
-                .replace(/\//g, '_')
-                .replace(/=+$/g, '');
-        }
-
-        function createFakeJwt(email) {
-            const users = JSON.parse(localStorage.getItem('users') || '{}');
-            const user = users[email] || {};
-            const header = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-            const payload = base64UrlEncode(JSON.stringify({ sub: email, iat: Math.floor(Date.now() / 1000), nome: user.nome, cognome: user.cognome }));
-            const signature = base64UrlEncode('demo-signature');
-            return `${header}.${payload}.${signature}`;
-        }
-
         function parseJwt(token) {
             const parts = token.split('.');
             if (parts.length !== 3) return {};
@@ -351,6 +335,25 @@
             } catch {
                 return {};
             }
+        }
+
+        async function apiRequest(path, options = {}) {
+            const token = localStorage.getItem('authToken');
+            const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
+            if (token) headers.Authorization = `Bearer ${token}`;
+
+            const res = await fetch(path, Object.assign({}, options, { headers }));
+            let data = null;
+            try {
+                data = await res.json();
+            } catch {
+                data = null;
+            }
+            if (!res.ok) {
+                const msg = data && data.error ? data.error : 'Errore server';
+                throw new Error(msg);
+            }
+            return data;
         }
 
         function updateHeaderUser() {
@@ -418,18 +421,23 @@
                 alert('Utente non loggato.');
                 return;
             }
-            // Pre-compila i campi
-            const users = JSON.parse(localStorage.getItem('users') || '{}');
-            const u = users[user.sub];
-            if (u) {
-                document.getElementById('profNome').value = u.nome || '';
-                document.getElementById('profCognome').value = u.cognome || '';
-                document.getElementById('profDataNascita').value = u.dataNascita || '';
-                document.getElementById('profProfessione').value = u.professione || '';
-                document.getElementById('profEmail').value = user.sub || '';
-            }
-            document.getElementById('profileModal').style.display = 'flex';
-            hideProfileError();
+
+            (async () => {
+                try {
+                    const me = await apiRequest('/api/me', { method: 'GET' });
+                    const u = me.user;
+                    document.getElementById('profNome').value = u.nome || '';
+                    document.getElementById('profCognome').value = u.cognome || '';
+                    document.getElementById('profDataNascita').value = (u.data_nascita || '').slice(0, 10);
+                    document.getElementById('profProfessione').value = u.professione || '';
+                    document.getElementById('profEmail').value = u.email || '';
+
+                    document.getElementById('profileModal').style.display = 'flex';
+                    hideProfileError();
+                } catch (e) {
+                    alert(e.message || 'Errore');
+                }
+            })();
         }
 
         function closeProfileModal() {
@@ -476,24 +484,23 @@
                 return;
             }
 
-            const users = JSON.parse(localStorage.getItem('users') || '{}');
-            // Se cambia email, sposta l'utente
-            if (email !== user.sub) {
-                if (users[email]) {
-                    showProfileError('Email già utilizzata.');
-                    return;
-                }
-                delete users[user.sub];
-            }
-            users[email] = { password: users[user.sub]?.password || '', nome, cognome, dataNascita, professione };
-            localStorage.setItem('users', JSON.stringify(users));
+            (async () => {
+                try {
+                    // MVP: aggiorniamo solo i campi editabili. L'email resta visibile ma non la cambiamo lato server.
+                    const data = await apiRequest('/api/me', {
+                        method: 'PUT',
+                        body: JSON.stringify({ nome, cognome, dataNascita, professione })
+                    });
 
-            // Ricrea token con nuova email/nome
-            const newToken = createFakeJwt(email);
-            localStorage.setItem('authToken', newToken);
-            updateHeaderUser();
-            closeProfileModal();
-            alert('Profilo aggiornato!');
+                    if (data && data.token) {
+                        localStorage.setItem('authToken', data.token);
+                    }
+                    updateHeaderUser();
+                    closeProfileModal();
+                } catch (e) {
+                    showProfileError(e.message || 'Errore');
+                }
+            })();
         }
 
         // Chiudi modale profilo se si clicca fuori
@@ -527,12 +534,21 @@
                 return;
             }
 
-            const token = createFakeJwt(email);
-            localStorage.setItem('authToken', token);
-            updateHeaderUser();
-            const redirectTo = localStorage.getItem('postLoginRedirect') || 'calcola.html';
-            localStorage.removeItem('postLoginRedirect');
-            window.location.href = redirectTo;
+            (async () => {
+                try {
+                    const data = await apiRequest('/api/auth/login', {
+                        method: 'POST',
+                        body: JSON.stringify({ email, password })
+                    });
+                    localStorage.setItem('authToken', data.token);
+                    updateHeaderUser();
+                    const redirectTo = localStorage.getItem('postLoginRedirect') || 'calcola.html';
+                    localStorage.removeItem('postLoginRedirect');
+                    window.location.href = redirectTo;
+                } catch (e) {
+                    showLoginError(e.message || 'Errore');
+                }
+            })();
         }
 
         // Register Modal Functions
@@ -591,20 +607,21 @@
                 return;
             }
 
-            const users = JSON.parse(localStorage.getItem('users') || '{}');
-            if (users[email]) {
-                showRegisterError('Utente già registrato.');
-                return;
-            }
-            users[email] = { password, nome, cognome, dataNascita, professione };
-            localStorage.setItem('users', JSON.stringify(users));
-
-            const token = createFakeJwt(email);
-            localStorage.setItem('authToken', token);
-            updateHeaderUser();
-            const redirectTo = localStorage.getItem('postLoginRedirect') || 'calcola.html';
-            localStorage.removeItem('postLoginRedirect');
-            window.location.href = redirectTo;
+            (async () => {
+                try {
+                    const data = await apiRequest('/api/auth/register', {
+                        method: 'POST',
+                        body: JSON.stringify({ email, password, nome, cognome, dataNascita, professione })
+                    });
+                    localStorage.setItem('authToken', data.token);
+                    updateHeaderUser();
+                    const redirectTo = localStorage.getItem('postLoginRedirect') || 'calcola.html';
+                    localStorage.removeItem('postLoginRedirect');
+                    window.location.href = redirectTo;
+                } catch (e) {
+                    showRegisterError(e.message || 'Errore');
+                }
+            })();
         }
 
         // Chiudi dropdown se si clicca fuori

@@ -128,6 +128,7 @@
 
                         <div class="calcola-actions">
                             <button id="btnCalcola" class="btn-primary" type="button">Calcola</button>
+                            <button id="btnDownloadPdf" class="btn-secondary" type="button" disabled>Scarica documento (PDF)</button>
                             <button class="btn-secondary" type="reset">Reset</button>
                         </div>
 
@@ -250,7 +251,9 @@
             const dichiarazioneEl = document.getElementById('dichiarazione');
             const esitoNegativoEl = document.getElementById('esitoNegativo');
             const btn = document.getElementById('btnCalcola');
+            const btnDownloadPdf = document.getElementById('btnDownloadPdf');
             const resultEl = document.getElementById('calcolaResult');
+            const professioneEl = document.getElementById('professione');
 
             const labelValore = document.getElementById('labelValore');
             const labelValore2 = document.getElementById('labelValore2');
@@ -384,6 +387,78 @@
                 return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(n);
             }
 
+            async function apiRequest(path, options = {}) {
+                const token = localStorage.getItem('authToken');
+                const headers = Object.assign({ 'Content-Type': 'application/json' }, options.headers || {});
+                if (token) headers.Authorization = `Bearer ${token}`;
+
+                const res = await fetch(path, Object.assign({}, options, { headers }));
+                let data = null;
+                try {
+                    data = await res.json();
+                } catch {
+                    data = null;
+                }
+                if (!res.ok) {
+                    const msg = data && data.error ? data.error : 'Errore server';
+                    throw new Error(msg);
+                }
+                return data;
+            }
+
+            async function downloadDocumentPdf(documentId) {
+                const token = localStorage.getItem('authToken');
+                const res = await fetch(`/api/documents/${documentId}/download`, {
+                    method: 'GET',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (!res.ok) {
+                    let msg = 'Errore download';
+                    try {
+                        const data = await res.json();
+                        if (data && data.error) msg = data.error;
+                    } catch {}
+                    throw new Error(msg);
+                }
+
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `documento-compenso-${documentId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+            }
+
+            function buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }) {
+                const input = {
+                    valore: Number(valoreEl.value),
+                    valore2: Number(valore2El.value),
+                    valore3: Number(valore3El.value),
+                    dichiarazione: dichiarazioneEl ? dichiarazioneEl.value : null,
+                    esitoNegativo: esitoNegativoEl ? !!esitoNegativoEl.checked : false,
+                };
+
+                const result = {
+                    min: euro(min),
+                    max: euro(max),
+                    mid: euro((min + max) / 2),
+                    chosen: euro(chosen),
+                    details,
+                };
+
+                return {
+                    professione: (professioneEl && professioneEl.value) || 'commercialista',
+                    riquadro: tipo,
+                    criterio,
+                    input,
+                    result,
+                };
+            }
+
             function compute() {
                 const tipo = prestazioneEl.value;
                 const criterio = criterioEl.value;
@@ -415,6 +490,16 @@
 
                     const amount = fixed[d];
                     resultEl.innerHTML = `Compenso (${criterio}): <strong>${euro(amount)}</strong>`;
+                    if (btnDownloadPdf) {
+                        btnDownloadPdf.disabled = false;
+                        btnDownloadPdf.dataset.payload = JSON.stringify({
+                            professione: (professioneEl && professioneEl.value) || 'commercialista',
+                            riquadro: tipo,
+                            criterio,
+                            input: { dichiarazione: d },
+                            result: { min: euro(amount), max: euro(amount), mid: euro(amount), chosen: euro(amount), details: [] }
+                        });
+                    }
                     return;
                 }
 
@@ -626,6 +711,11 @@
                     Range: ${euro(min)} - ${euro(max)}<br>
                     ${details.length ? `<br><strong>Dettagli</strong><br>${details.map(d => `- ${d}`).join('<br>')}` : ''}
                 `;
+
+                if (btnDownloadPdf) {
+                    btnDownloadPdf.disabled = false;
+                    btnDownloadPdf.dataset.payload = JSON.stringify(buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }));
+                }
             }
 
             if (prestazioneEl) {
@@ -633,6 +723,34 @@
             }
             if (btn) {
                 btn.addEventListener('click', compute);
+            }
+
+            if (btnDownloadPdf) {
+                btnDownloadPdf.addEventListener('click', async () => {
+                    try {
+                        const raw = btnDownloadPdf.dataset.payload;
+                        if (!raw) {
+                            alert('Esegui prima il calcolo.');
+                            return;
+                        }
+
+                        btnDownloadPdf.disabled = true;
+                        btnDownloadPdf.textContent = 'Generazione PDF...';
+
+                        const payload = JSON.parse(raw);
+                        const data = await apiRequest('/api/calculations', {
+                            method: 'POST',
+                            body: JSON.stringify(payload)
+                        });
+
+                        await downloadDocumentPdf(data.documentId);
+                    } catch (e) {
+                        alert(e.message || 'Errore');
+                    } finally {
+                        btnDownloadPdf.textContent = 'Scarica documento (PDF)';
+                        btnDownloadPdf.disabled = false;
+                    }
+                });
             }
 
             updateFieldVisibility();
