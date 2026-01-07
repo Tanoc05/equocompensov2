@@ -122,7 +122,7 @@
                                 <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-percent"></i></span>
                                 <input id="percentuale" name="percentuale" type="number" min="0" max="100" step="0.01" placeholder="0,00">
                             </div>
-                            <div class="calc-help">Calibra il compenso nel range ministeriale: 0% = minimo, 50% = medio, 100% = massimo. Se vuota, vale il criterio Min/Medio/Massimo.</div>
+                            <div class="calc-help" id="helpPercentuale">Definisce lo scostamento tra minimo e massimo dei parametri ministeriali: 0% = minimo, 50% = medio, 100% = massimo (es. 90% tende verso il limite superiore). Se vuota, vale il criterio Min/Medio/Massimo.</div>
                         </div>
 
                         <div class="form-group">
@@ -135,7 +135,7 @@
                                     <option value="max">Massimo</option>
                                 </select>
                             </div>
-                            <div class="calc-help">Seleziona il livello in base a importanza, difficoltà e complessità della pratica (parametri generali).</div>
+                            <div class="calc-help">Parametro generale che valuta importanza e difficoltà della pratica (Minimo, Medio, Massimo).</div>
                         </div>
 
                         <div class="form-group" id="groupAliquotaSc1">
@@ -203,7 +203,7 @@
                                 <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-scale-balanced"></i></span>
                                 <input id="valore" name="valore" type="number" min="0" step="0.01" placeholder="0,00" required>
                             </div>
-                            <div class="calc-help">Importo in euro che costituisce il parametro di base (es. reddito, attivo, passivo, capitale, ecc.).</div>
+                            <div class="calc-help" id="helpValore">Rappresenta il parametro di base espresso in euro (es. capitale, passività, attivo, reddito).</div>
                         </div>
 
                         <div class="form-group">
@@ -212,6 +212,7 @@
                                 <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-scale-unbalanced"></i></span>
                                 <input id="valore2" name="valore2" type="number" min="0" step="0.01" placeholder="0,00">
                             </div>
+                            <div class="calc-help" id="helpValore2" style="display:none;"></div>
                         </div>
 
                         <div class="form-group">
@@ -269,15 +270,16 @@
                             <div class="calc-input">
                                 <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-user-tie"></i></span>
                                 <select id="ruoloSindaco" name="ruoloSindaco">
-                                    <option value="membro" selected>Sindaco (Membro)</option>
-                                    <option value="presidente">Presidente Collegio Sindacale</option>
+                                    <option value="membro" selected>Membro</option>
+                                    <option value="presidente">Presidente</option>
                                     <option value="sindaco_unico">Sindaco Unico</option>
                                 </select>
                             </div>
+                            <div class="calc-help">Applica aumenti automatici: +50% per il Presidente o +100% per il Sindaco Unico.</div>
                         </div>
 
                         <div class="form-group" id="groupRiduzioneComma2">
-                            <label>Collegio Sindacale (solo sezione "Collegio Sindacale")</label>
+                            <label>Collegio Sindacale (riduzioni)</label>
                             <div class="calc-checkbox">
                                 <input id="riduzioneComma2" name="riduzioneComma2" type="checkbox">
                                 <label for="riduzioneComma2">Società di sola amministrazione/godimento o liquidazione (riduzione fino alla metà)</label>
@@ -363,6 +365,8 @@
             const groupIntensitySc1 = document.getElementById('groupIntensitySc1');
             const groupIntensitySc2 = document.getElementById('groupIntensitySc2');
             const groupAliquotaConsulenza = document.getElementById('groupAliquotaConsulenza');
+            const helpValoreEl = document.getElementById('helpValore');
+            const helpValore2El = document.getElementById('helpValore2');
             const btn = document.getElementById('btn_calcola');
             const btnDownloadPdf = document.getElementById('btn_scarica');
             const resultEl = document.getElementById('calcolaResult');
@@ -736,6 +740,25 @@
                 if (labelValore) labelValore.textContent = cfg.labels.v1 || 'Valore (€)';
                 if (labelValore2) labelValore2.textContent = cfg.labels.v2 || 'Secondo valore (€)';
                 if (labelValore3) labelValore3.textContent = cfg.labels.v3 || 'Terzo valore (€)';
+
+                if (helpValoreEl) {
+                    const l1 = labelValore ? String(labelValore.textContent || '') : '';
+                    if (/reddito|componenti positivi/i.test(l1)) {
+                        helpValoreEl.textContent = 'Sommatoria dei ricavi e proventi (componenti positivi).';
+                    } else {
+                        helpValoreEl.textContent = 'Rappresenta il parametro di base espresso in euro (es. capitale, passività, attivo, reddito).';
+                    }
+                }
+                if (helpValore2El) {
+                    const l2 = labelValore2 ? String(labelValore2.textContent || '') : '';
+                    if (/attivit/i.test(l2)) {
+                        helpValore2El.textContent = 'Valore complessivo dello Stato Patrimoniale (Totale Attivo).';
+                        helpValore2El.style.display = '';
+                    } else {
+                        helpValore2El.textContent = '';
+                        helpValore2El.style.display = 'none';
+                    }
+                }
 
                 setInputGroupVisible(valore2El, !!cfg.show.v2);
                 setInputGroupVisible(valore3El, !!cfg.show.v3);

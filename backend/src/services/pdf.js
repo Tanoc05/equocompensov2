@@ -16,6 +16,7 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     doc.pipe(stream);
 
     const primary = '#1A535C';
+    const secondary = '#1C4D8D';
     const brandName = 'equo compenso';
 
     const input = (calculation && calculation.input_json) ? calculation.input_json : {};
@@ -56,7 +57,7 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     }
 
     function drawHeader() {
-      const y = doc.y;
+      const y = doc.page.margins.top;
       const logoPath = path.resolve(__dirname, '../../../frontend/img/logo2.png');
       try {
         if (fs.existsSync(logoPath)) {
@@ -66,22 +67,27 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
         // ignore
       }
 
+      const startX = doc.page.margins.left;
+      const endX = doc.page.width - doc.page.margins.right;
+      const headerW = endX - startX;
+
       fontBold();
-      doc.fontSize(14).fillColor('#111');
-      doc.text(brandName, doc.page.margins.left, y + 8, {
-        width: doc.page.width - doc.page.margins.left - doc.page.margins.right,
-        align: 'right',
-      });
+      doc.fontSize(10).fillColor(secondary);
+      doc.text('Giardini Naxos', startX, y + 2, { width: headerW, align: 'right' });
+      doc.text('info@equocompenso.eu', startX, y + 16, { width: headerW, align: 'right' });
+      doc.text('0942 550660', startX, y + 30, { width: headerW, align: 'right' });
 
       const lineY = y + 44;
       doc.save();
       doc.moveTo(doc.page.margins.left, lineY)
         .lineTo(doc.page.width - doc.page.margins.right, lineY)
         .lineWidth(2)
-        .strokeColor(primary)
+        .strokeColor(secondary)
         .stroke();
       doc.restore();
-      doc.moveDown(2);
+
+      doc.y = lineY + 10;
+      doc.moveDown(0.5);
     }
 
     function sectionTitle(title) {
