@@ -328,6 +328,7 @@
         }
 
         function parseJwt(token) {
+            if (!token || typeof token !== 'string') return {};
             const parts = token.split('.');
             if (parts.length !== 3) return {};
             try {
@@ -361,24 +362,37 @@
             const user = parseJwt(token);
             const headerUl = document.querySelector('.ls ul');
             if (!headerUl) return;
-            if (user.sub) {
-                // Nascondi login/registrati per compatibilità
-                const buttons = headerUl.querySelectorAll('button');
-                buttons.forEach(btn => {
-                    if (btn.onclick && btn.onclick.toString().includes('login')) {
-                        btn.parentElement.style.display = 'none';
-                    }
-                    if (btn.onclick && btn.onclick.toString().includes('register')) {
-                        btn.parentElement.style.display = 'none';
-                    }
+            const isLogged = !!token && (!!user.sub || !!user.id || !!user.email);
+
+            function isAuthLi(li) {
+                const txt = (li.textContent || '').trim().toLowerCase();
+                if (txt === 'login' || txt === 'registrati') return true;
+                const btn = li.querySelector('button');
+                if (btn && btn.onclick) {
+                    const fn = btn.onclick.toString();
+                    if (fn.includes('login') || fn.includes('openRegisterModal') || fn.includes('register')) return true;
+                }
+                const a = li.querySelector('a');
+                if (a) {
+                    const href = (a.getAttribute('href') || '').toLowerCase();
+                    if (href.includes('login') || href.includes('register')) return true;
+                }
+                return false;
+            }
+
+            if (isLogged) {
+                headerUl.querySelectorAll('li').forEach(li => {
+                    if (isAuthLi(li)) li.style.display = 'none';
                 });
-                // Aggiungi utente se non presente
                 if (!headerUl.querySelector('.user-item')) {
                     const userLi = document.createElement('li');
                     userLi.className = 'user-item';
                     userLi.innerHTML = `
                         <div class="user-dropdown">
-                            <button class="user-btn" onclick="toggleUserDropdown()"><i class="fas fa-user"></i> Ciao ${user.nome || ''}</button>
+                            <button class="user-btn" onclick="toggleUserDropdown()">
+                                <span class="user-avatar"><i class="fas fa-user"></i></span>
+                                <span class="user-welcome-text">Ciao, ${user.nome || user.email || ''}</span>
+                            </button>
                             <div id="userDropdownMenu" class="user-dropdown-menu" style="display:none;">
                                 <button onclick="openProfileModal()">Profilo</button>
                                 <button onclick="handleLogout()">Logout</button>
@@ -388,15 +402,8 @@
                     headerUl.appendChild(userLi);
                 }
             } else {
-                // Mostra login/registrati, nascondi utente
-                const buttons = headerUl.querySelectorAll('button');
-                buttons.forEach(btn => {
-                    if (btn.onclick && btn.onclick.toString().includes('login')) {
-                        btn.parentElement.style.display = '';
-                    }
-                    if (btn.onclick && btn.onclick.toString().includes('register')) {
-                        btn.parentElement.style.display = '';
-                    }
+                headerUl.querySelectorAll('li').forEach(li => {
+                    if (isAuthLi(li)) li.style.display = '';
                 });
                 const userLi = headerUl.querySelector('.user-item');
                 if (userLi) userLi.remove();
