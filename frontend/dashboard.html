@@ -108,6 +108,10 @@
                         <div class="account-card">
                             <div class="account-card-title">Professione</div>
                             <div class="account-field">
+                                <label>Nome Studio / Azienda</label>
+                                <input id="accStudioNome" type="text" value="" placeholder="Es. Studio Rossi & Partners">
+                            </div>
+                            <div class="account-field">
                                 <label>Ruolo Professionale</label>
                                 <select id="accProfessione">
                                     <option value="commercialista">Commercialista</option>
@@ -123,6 +127,26 @@
                             <div class="account-field">
                                 <label>Ordine di Appartenenza</label>
                                 <input id="accOrdine" type="text" value="" placeholder="(non disponibile)" readonly>
+                            </div>
+                        </div>
+
+                        <div class="account-card">
+                            <div class="account-card-title">Sede Ufficio</div>
+                            <div class="account-field">
+                                <label>Indirizzo</label>
+                                <input id="accSedeIndirizzo" type="text" value="" placeholder="Via / Piazza, numero">
+                            </div>
+                            <div class="account-field">
+                                <label>Città</label>
+                                <input id="accSedeCitta" type="text" value="" placeholder="Comune">
+                            </div>
+                            <div class="account-field">
+                                <label>CAP</label>
+                                <input id="accSedeCap" type="text" value="" placeholder="00000">
+                            </div>
+                            <div class="account-field">
+                                <label>Provincia</label>
+                                <input id="accSedeProvincia" type="text" value="" placeholder="Es. ME">
                             </div>
                         </div>
                     </div>
@@ -729,6 +753,16 @@
                 document.getElementById('accCognome').value = u.cognome || '';
                 document.getElementById('accDataNascita').value = (u.data_nascita || '').slice(0, 10);
                 document.getElementById('accProfessione').value = u.professione || 'commercialista';
+                const studioNomeEl = document.getElementById('accStudioNome');
+                if (studioNomeEl) studioNomeEl.value = u.studio_nome || '';
+                const sedeIndirizzoEl = document.getElementById('accSedeIndirizzo');
+                if (sedeIndirizzoEl) sedeIndirizzoEl.value = u.sede_indirizzo || '';
+                const sedeCittaEl = document.getElementById('accSedeCitta');
+                if (sedeCittaEl) sedeCittaEl.value = u.sede_citta || '';
+                const sedeCapEl = document.getElementById('accSedeCap');
+                if (sedeCapEl) sedeCapEl.value = u.sede_cap || '';
+                const sedeProvinciaEl = document.getElementById('accSedeProvincia');
+                if (sedeProvinciaEl) sedeProvinciaEl.value = u.sede_provincia || '';
                 document.getElementById('accEmail').value = u.email || '';
                 const badge = document.getElementById('accEmailBadge');
                 if (badge) badge.style.display = u.email ? '' : 'none';
@@ -815,6 +849,11 @@
             const cognome = document.getElementById('accCognome').value;
             const dataNascita = document.getElementById('accDataNascita').value;
             const professione = document.getElementById('accProfessione').value;
+            const studioNome = (document.getElementById('accStudioNome') || {}).value;
+            const sedeIndirizzo = (document.getElementById('accSedeIndirizzo') || {}).value;
+            const sedeCitta = (document.getElementById('accSedeCitta') || {}).value;
+            const sedeCap = (document.getElementById('accSedeCap') || {}).value;
+            const sedeProvincia = (document.getElementById('accSedeProvincia') || {}).value;
 
             if (!nome || !cognome || !dataNascita || !professione) {
                 alert('Compila tutti i campi.');
@@ -824,7 +863,7 @@
             try {
                 const data = await apiRequest('/api/me', {
                     method: 'PUT',
-                    body: JSON.stringify({ nome, cognome, dataNascita, professione })
+                    body: JSON.stringify({ nome, cognome, dataNascita, professione, studioNome, sedeIndirizzo, sedeCitta, sedeCap, sedeProvincia })
                 });
                 if (data && data.token) {
                     localStorage.setItem('authToken', data.token);

@@ -50,6 +50,21 @@ async function ensureSchema() {
 
     ALTER TABLE users
       ADD COLUMN IF NOT EXISTS avatar_url TEXT;
+
+    ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS studio_nome TEXT;
+
+    ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS sede_indirizzo TEXT;
+
+    ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS sede_citta TEXT;
+
+    ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS sede_cap TEXT;
+
+    ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS sede_provincia TEXT;
   `);
 }
 
