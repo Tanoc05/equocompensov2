@@ -50,6 +50,12 @@
         <div class="account-layout">
             <div id="accountSidebarBackdrop" class="account-sidebar-backdrop" style="display:none;"></div>
             <aside class="account-sidebar">
+                <div class="account-sidebar-title">Menu</div>
+                <a class="account-nav-item" href="index.html"><i class="fas fa-house"></i><span>Home</span></a>
+                <a class="account-nav-item" href="chi-siamo.html"><i class="fas fa-users"></i><span>Chi siamo</span></a>
+                <a class="account-nav-item" href="calcola.html"><i class="fas fa-calculator"></i><span>Calcola</span></a>
+                <a class="account-nav-item" href="norme.html"><i class="fas fa-book"></i><span>Norme</span></a>
+
                 <div class="account-sidebar-title">Gestione Account</div>
                 <button class="account-nav-item active" data-view="profile"><i class="fas fa-id-card"></i><span>Informazioni Personali</span></button>
                 <button class="account-nav-item" data-view="professional"><i class="fas fa-briefcase"></i><span>Dati Professionali</span></button>
@@ -450,7 +456,7 @@
         });
 
         function setActiveView(view) {
-            document.querySelectorAll('.account-nav-item').forEach(btn => {
+            document.querySelectorAll('.account-nav-item[data-view]').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-view') === view);
             });
             document.querySelectorAll('.account-view').forEach(v => {
@@ -961,6 +967,7 @@
             }
 
             document.querySelectorAll('.account-nav-item').forEach(btn => {
+                if (!btn.matches('[data-view]')) return;
                 btn.addEventListener('click', () => setActiveView(btn.getAttribute('data-view')));
             });
 

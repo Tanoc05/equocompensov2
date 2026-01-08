@@ -1251,6 +1251,7 @@ body.account-page {
     font-size: 14px;
     font-weight: 600;
     text-align: left;
+    text-decoration: none;
 }
 
 .account-nav-item i {
@@ -1750,6 +1751,18 @@ body.account-page {
 }
 
 @media (max-width: 768px) {
+    body.account-page header {
+        display: none;
+    }
+
+    body.account-page .account-main-wrap {
+        padding: 0 12px 70px 12px;
+    }
+
+    body.account-page .account-layout {
+        gap: 16px;
+    }
+
     .account-mobile-bar {
         display: flex;
         align-items: center;
@@ -1759,7 +1772,7 @@ body.account-page {
         padding: 10px 12px;
         position: sticky;
         top: 0;
-        z-index: 1600;
+        z-index: 2000;
         border: 1px solid rgba(255,255,255,0.2);
         box-sizing: border-box;
     }
@@ -1840,12 +1853,12 @@ body.account-page {
 
     body.account-page .account-sidebar {
         position: fixed;
-        top: 0;
+        top: 64px;
         left: 0;
-        height: 100vh;
+        height: calc(100vh - 64px);
         width: min(320px, 90vw);
         max-width: 90vw;
-        z-index: 1700;
+        z-index: 1950;
         transform: translateX(-110%);
         transition: transform 220ms ease;
         overflow-y: auto;
@@ -1864,7 +1877,7 @@ body.account-page {
         position: fixed;
         inset: 0;
         background: rgba(0,0,0,0.35);
-        z-index: 1650;
+        z-index: 1900;
     }
 
     .account-sidebar-backdrop.open {
