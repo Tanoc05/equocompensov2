@@ -1869,15 +1869,17 @@ body.calc-page .calc-btn {
 body.calc-page .calc-btn-primary {
     position: relative;
     overflow: hidden;
-    background: #1A535C;
-    border: 1px solid #1A535C;
-    color: #FFFFFF;
+    background: #1C4D8D;
+    border: 1px solid #1C4D8D;
+    color: #fff;
+    font-weight: 800;
+    text-transform: uppercase;
     box-shadow: 2px 2px 0 rgba(0,0,0,0.18);
 }
 
 body.calc-page .calc-btn-primary:hover {
-    background: #143f46;
-    border-color: #143f46;
+    background: #163c6e;
+    border-color: #163c6e;
 }
 
 body.calc-page .calc-btn-primary:active {
