@@ -7,6 +7,13 @@ body {
     font-family: sans-serif;
 }
 
+input,
+select,
+textarea,
+button {
+    border-radius: 0px !important;
+}
+
 body.calc-page {
     font-family: Montserrat, sans-serif;
     background: #FFFFFF;
@@ -32,15 +39,15 @@ header {
 
 
 header .header-img {
-    width: 160px;
+    width: 120px;
     height: auto;
     transition: transform 0.3s ease;
 }
 
-#main-site-logo {
-    max-height: 45px;
-    width: auto;
-    transition: all 0.3s ease;
+header .header-img img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 header .header-img:hover {
@@ -695,10 +702,6 @@ header .ls li.user-item .user-avatar {
     justify-content: center;
     flex: 0 0 40px;
     overflow: hidden;
-}
-
-header .ls li.user-item .navbar-avatar-circle {
-    background: #1A535C;
 }
 
 header .ls li.user-item .user-avatar .nav-user-photo {
@@ -1819,7 +1822,6 @@ body.calc-page .calc-action-bar {
     align-items: center;
     gap: 20px;
     flex-wrap: nowrap;
-    padding: 25px 0;
     margin-top: 30px;
 }
 
