@@ -1768,12 +1768,12 @@ body.account-page {
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        background: #1C4D8D;
+        background: #FFFFFF;
         padding: 10px 12px;
         position: sticky;
         top: 0;
         z-index: 2000;
-        border: 1px solid rgba(255,255,255,0.2);
+        border-bottom: 1px solid #E0E0E0;
         box-sizing: border-box;
     }
 
@@ -1792,8 +1792,8 @@ body.account-page {
     .account-mobile-hamburger {
         width: 42px;
         height: 42px;
-        border: 1px solid rgba(255,255,255,0.25);
-        background: transparent;
+        border: 1px solid #E0E0E0;
+        background: #FFFFFF;
         padding: 8px;
         display: inline-flex;
         flex-direction: column;
@@ -1806,7 +1806,7 @@ body.account-page {
     .account-mobile-hamburger span {
         height: 2px;
         width: 100%;
-        background: #FFFFFF;
+        background: #2D4A8A;
         display: block;
     }
 
@@ -1819,9 +1819,9 @@ body.account-page {
         width: 40px;
         height: 40px;
         border-radius: 999px;
-        background: #FFFFFF;
-        color: #1C4D8D;
-        border: 1px solid rgba(255,255,255,0.4);
+        background: #2D4A8A;
+        color: #FFFFFF;
+        border: 1px solid #2D4A8A;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1840,7 +1840,7 @@ body.account-page {
         font-weight: 900;
         letter-spacing: 0.06em;
         font-size: 14px;
-        color: #1C4D8D;
+        color: #FFFFFF;
     }
 
     body.account-page .account-layout {
@@ -1863,10 +1863,14 @@ body.account-page {
         transition: transform 220ms ease;
         overflow-y: auto;
         box-sizing: border-box;
+        visibility: hidden;
+        pointer-events: none;
     }
 
     body.account-page .account-sidebar.is-open {
         transform: translateX(0);
+        visibility: visible;
+        pointer-events: auto;
     }
 
     body.account-page.account-menu-open {
