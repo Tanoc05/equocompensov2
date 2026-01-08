@@ -73,6 +73,55 @@ header .ls ul {
     gap: 20px;
 }
 
+header .ls li.project-owner {
+    display: flex;
+    align-items: center;
+}
+
+header .ls .project-owner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border: 1px solid rgba(28, 77, 141, 0.35);
+    background: #FFFFFF;
+    color: #1C4D8D;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+}
+
+header .ls .project-owner-avatar {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #1C4D8D;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: #FFFFFF;
+}
+
+header .ls .project-owner-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+header .ls .project-owner-initials {
+    font-weight: 900;
+    font-size: 12px;
+    color: #1C4D8D;
+}
+
+header .ls .project-owner-name {
+    color: #1C4D8D;
+}
+
 header .ls li {
     list-style-type: none;
     display: flex;
@@ -855,6 +904,32 @@ footer {
     margin: 0;
 }
 
+.footer-contacts-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 14px 16px;
+    max-width: 520px;
+    margin: 0 auto 12px auto;
+    text-align: left;
+}
+
+.footer-contacts-title {
+    color: #1C4D8D;
+    font-weight: 900;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.footer-contacts-row {
+    color: #1C4D8D;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.footer-contacts-row strong {
+    font-weight: 900;
+}
+
 /* Norme Page Styles */
 .container {
     max-width: 1200px;
@@ -892,10 +967,15 @@ footer {
     font-weight: 600;
     color: #2c3e50;
     margin: 0;
+    width: 100%;
     text-transform: capitalize;
     text-align: center;
 }
 
+.chi-siamo-values h2,
+.chi-siamo-values h3 {
+    color: #1C4D8D;
+}
 
 .card-norme .divider {
     width: 100%;
