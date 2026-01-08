@@ -30,7 +30,25 @@
     </header>
 
     <main class="account-main-wrap">
+        <div class="account-mobile-bar" aria-label="Menu account mobile">
+            <button id="accountMenuToggle" class="account-mobile-hamburger" type="button" aria-label="Apri menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="account-mobile-brand" onclick="window.location.href='index.html'" role="button" tabindex="0">
+                <img src="img/logo2.png" alt="equo compenso" class="account-mobile-logo">
+            </div>
+            <div class="account-mobile-user" aria-label="Utente">
+                <span class="account-mobile-avatar">
+                    <img id="mobile-user-photo" class="nav-user-photo" alt="Foto profilo" style="display:none;">
+                    <span class="mobile-user-initials">?</span>
+                </span>
+            </div>
+        </div>
+
         <div class="account-layout">
+            <div id="accountSidebarBackdrop" class="account-sidebar-backdrop" style="display:none;"></div>
             <aside class="account-sidebar">
                 <div class="account-sidebar-title">Gestione Account</div>
                 <button class="account-nav-item active" data-view="profile"><i class="fas fa-id-card"></i><span>Informazioni Personali</span></button>
@@ -214,7 +232,7 @@
                 <div class="account-view" id="view-subscription" style="display:none;">
                     <div class="account-card">
                         <div class="account-card-title">Abbonamento</div>
-                        <div class="account-muted">Sezione in arrivo.</div>
+                        <div class="account-muted">al momento non ci sono abbonamenti disponibili.</div>
                     </div>
                 </div>
 
@@ -278,6 +296,8 @@
             async function syncNavAvatar() {
                 const img = document.getElementById('nav-user-photo');
                 const initials = document.querySelector('.nav-user-initials');
+                const mobileImg = document.getElementById('mobile-user-photo');
+                const mobileInitials = document.querySelector('.mobile-user-initials');
                 if (!img || !initials) return;
 
                 let u = user || {};
@@ -293,11 +313,24 @@
                     img.src = avatarUrl;
                     img.style.display = '';
                     initials.style.display = 'none';
+
+                    if (mobileImg && mobileInitials) {
+                        mobileImg.src = avatarUrl;
+                        mobileImg.style.display = '';
+                        mobileInitials.style.display = 'none';
+                    }
                 } else {
                     img.removeAttribute('src');
                     img.style.display = 'none';
                     initials.textContent = initialsFrom(u);
                     initials.style.display = '';
+
+                    if (mobileImg && mobileInitials) {
+                        mobileImg.removeAttribute('src');
+                        mobileImg.style.display = 'none';
+                        mobileInitials.textContent = initialsFrom(u);
+                        mobileInitials.style.display = '';
+                    }
                 }
             }
 
@@ -374,6 +407,31 @@
             window.location.href = 'index.html';
         }
 
+        function setAccountMenuOpen(open) {
+            const sidebar = document.querySelector('.account-sidebar');
+            const backdrop = document.getElementById('accountSidebarBackdrop');
+            const toggle = document.getElementById('accountMenuToggle');
+            if (!sidebar || !backdrop || !toggle) return;
+
+            if (open) {
+                sidebar.classList.add('is-open');
+                backdrop.style.display = '';
+                backdrop.classList.add('open');
+                document.body.classList.add('account-menu-open');
+                toggle.setAttribute('aria-expanded', 'true');
+            } else {
+                sidebar.classList.remove('is-open');
+                backdrop.classList.remove('open');
+                backdrop.style.display = 'none';
+                document.body.classList.remove('account-menu-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        function isMobileAccount() {
+            return window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+        }
+
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.user-dropdown')) {
                 const menu = document.getElementById('userDropdownMenu');
@@ -385,6 +443,9 @@
             if (event.key === 'Escape') {
                 const menu = document.getElementById('userDropdownMenu');
                 if (menu) menu.classList.remove('open');
+                if (isMobileAccount()) {
+                    setAccountMenuOpen(false);
+                }
             }
         });
 
@@ -398,6 +459,10 @@
 
             const saveWrap = document.querySelector('.account-save-wrap');
             if (saveWrap) saveWrap.style.display = (view === 'profile' || view === 'professional') ? '' : 'none';
+
+            if (isMobileAccount()) {
+                setAccountMenuOpen(false);
+            }
 
             if (view === 'calculations') {
                 loadCalculations();
@@ -881,6 +946,19 @@
             const params = new URLSearchParams(window.location.search);
             const view = params.get('view') || 'profile';
             setActiveView(view);
+
+            const menuToggle = document.getElementById('accountMenuToggle');
+            const backdrop = document.getElementById('accountSidebarBackdrop');
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    const sidebar = document.querySelector('.account-sidebar');
+                    const isOpen = !!(sidebar && sidebar.classList.contains('is-open'));
+                    setAccountMenuOpen(!isOpen);
+                });
+            }
+            if (backdrop) {
+                backdrop.addEventListener('click', () => setAccountMenuOpen(false));
+            }
 
             document.querySelectorAll('.account-nav-item').forEach(btn => {
                 btn.addEventListener('click', () => setActiveView(btn.getAttribute('data-view')));
