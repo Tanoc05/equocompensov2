@@ -127,7 +127,30 @@
                 <div class="account-view" id="view-security" style="display:none;">
                     <div class="account-card">
                         <div class="account-card-title">Sicurezza e Password</div>
-                        <div class="account-muted">Per ora puoi gestire l’account dal tuo profilo. La modifica password verrà aggiunta a breve.</div>
+                        <div class="account-muted">Aggiorna la password del tuo account. Per motivi di sicurezza è richiesta la password attuale.</div>
+                    </div>
+
+                    <div class="account-card">
+                        <div class="account-card-title">Modifica Password</div>
+                        <div class="account-grid">
+                            <div class="account-field">
+                                <label>Password attuale</label>
+                                <input id="securityCurrentPassword" type="password" value="" autocomplete="current-password">
+                            </div>
+                            <div class="account-field">
+                                <label>Nuova password</label>
+                                <input id="securityNewPassword" type="password" value="" autocomplete="new-password">
+                            </div>
+                            <div class="account-field">
+                                <label>Conferma nuova password</label>
+                                <input id="securityConfirmPassword" type="password" value="" autocomplete="new-password">
+                            </div>
+                            <div class="account-field">
+                                <label>&nbsp;</label>
+                                <button id="securityChangePasswordBtn" class="account-save-btn" type="button" onclick="handleChangePassword()">Aggiorna Password</button>
+                            </div>
+                        </div>
+                        <div id="securityMessage" class="account-muted" style="display:none;"></div>
                     </div>
                 </div>
 
@@ -344,6 +367,9 @@
                 v.style.display = v.id === `view-${view}` ? '' : 'none';
             });
 
+            const saveWrap = document.querySelector('.account-save-wrap');
+            if (saveWrap) saveWrap.style.display = view === 'profile' ? '' : 'none';
+
             if (view === 'calculations') {
                 loadCalculations();
             }
@@ -351,6 +377,74 @@
             const url = new URL(window.location.href);
             url.searchParams.set('view', view);
             window.history.replaceState({}, '', url);
+        }
+
+        function setSecurityMessage(message, isError) {
+            const el = document.getElementById('securityMessage');
+            if (!el) return;
+            el.textContent = String(message || '');
+            el.style.display = message ? '' : 'none';
+            el.style.color = isError ? '#b00020' : '#1A535C';
+            el.style.fontWeight = '700';
+        }
+
+        function setSecurityBusy(isBusy) {
+            const btn = document.getElementById('securityChangePasswordBtn');
+            const cur = document.getElementById('securityCurrentPassword');
+            const nw = document.getElementById('securityNewPassword');
+            const conf = document.getElementById('securityConfirmPassword');
+            if (btn) btn.disabled = !!isBusy;
+            if (cur) cur.disabled = !!isBusy;
+            if (nw) nw.disabled = !!isBusy;
+            if (conf) conf.disabled = !!isBusy;
+        }
+
+        async function handleChangePassword() {
+            const cur = document.getElementById('securityCurrentPassword');
+            const nw = document.getElementById('securityNewPassword');
+            const conf = document.getElementById('securityConfirmPassword');
+            if (!cur || !nw || !conf) return;
+
+            setSecurityMessage('', false);
+
+            const currentPassword = String(cur.value || '').trim();
+            const newPassword = String(nw.value || '').trim();
+            const confirmPassword = String(conf.value || '').trim();
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                setSecurityMessage('Compila tutti i campi.', true);
+                return;
+            }
+            if (newPassword.length < 6) {
+                setSecurityMessage('La nuova password deve contenere almeno 6 caratteri.', true);
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                setSecurityMessage('La conferma della password non coincide.', true);
+                return;
+            }
+            if (newPassword === currentPassword) {
+                setSecurityMessage('La nuova password deve essere diversa da quella attuale.', true);
+                return;
+            }
+
+            setSecurityBusy(true);
+            try {
+                await apiRequest('/api/me/password', {
+                    method: 'PATCH',
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                cur.value = '';
+                nw.value = '';
+                conf.value = '';
+                setSecurityMessage('Password aggiornata correttamente.', false);
+                showToast('Password aggiornata');
+            } catch (e) {
+                setSecurityMessage(e && e.message ? e.message : 'Errore nella modifica password.', true);
+            } finally {
+                setSecurityBusy(false);
+            }
         }
 
         function formatDateTime(value) {

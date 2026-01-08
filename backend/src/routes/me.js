@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const { pool } = require('../db/pool');
 const { requireAuth } = require('../middleware/auth');
@@ -82,6 +83,32 @@ router.put('/', requireAuth, async (req, res) => {
   const user = rows[0];
   const token = signToken(user);
   return res.json({ user, token });
+});
+
+router.patch('/password', requireAuth, async (req, res) => {
+  const userId = req.user.sub;
+  const { currentPassword, newPassword } = req.body || {};
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+
+  if (String(newPassword).length < 6) {
+    return res.status(400).json({ error: 'Password too short' });
+  }
+
+  const { rows } = await pool.query('SELECT password_hash FROM users WHERE id = $1', [userId]);
+  const user = rows[0];
+  if (!user) return res.status(404).json({ error: 'Not found' });
+
+  const ok = await bcrypt.compare(String(currentPassword), user.password_hash);
+  if (!ok) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+
+  const passwordHash = await bcrypt.hash(String(newPassword), 10);
+  await pool.query('UPDATE users SET password_hash = $2 WHERE id = $1', [userId, passwordHash]);
+  return res.json({ ok: true });
 });
 
 router.post('/avatar', requireAuth, (req, res) => {
