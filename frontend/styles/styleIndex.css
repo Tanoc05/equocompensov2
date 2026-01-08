@@ -1206,6 +1206,18 @@ body.account-page {
     display: none;
 }
 
+.site-mobile-bar {
+    display: none;
+}
+
+.site-mobile-backdrop {
+    display: none;
+}
+
+.site-mobile-drawer {
+    display: none;
+}
+
 .account-main-wrap {
     padding: 26px 70px 90px 70px;
     box-sizing: border-box;
@@ -1751,6 +1763,175 @@ body.account-page {
 }
 
 @media (max-width: 768px) {
+    body.has-site-mobile-bar header {
+        display: none;
+    }
+
+    .site-mobile-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        background: #FFFFFF;
+        padding: 10px 12px;
+        position: sticky;
+        top: 0;
+        z-index: 2000;
+        border-bottom: 1px solid #E0E0E0;
+        box-sizing: border-box;
+    }
+
+    .site-mobile-brand {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .site-mobile-logo {
+        height: 28px;
+        width: auto;
+        display: block;
+    }
+
+    .site-mobile-hamburger {
+        width: 42px;
+        height: 42px;
+        border: 1px solid #E0E0E0;
+        background: #FFFFFF;
+        padding: 8px;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    .site-mobile-hamburger span {
+        height: 2px;
+        width: 100%;
+        background: #2D4A8A;
+        display: block;
+    }
+
+    .site-mobile-user {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .site-mobile-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        background: #2D4A8A;
+        color: #FFFFFF;
+        border: 1px solid #2D4A8A;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .site-mobile-initials {
+        font-family: Montserrat, sans-serif;
+        font-weight: 800;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        color: #FFFFFF;
+    }
+
+    body.site-mobile-menu-open {
+        overflow: hidden;
+    }
+
+    .site-mobile-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+        z-index: 1900;
+    }
+
+    .site-mobile-backdrop.open {
+        display: block;
+    }
+
+    .site-mobile-drawer {
+        display: block;
+        position: fixed;
+        top: 64px;
+        left: 0;
+        height: calc(100vh - 64px);
+        width: min(320px, 90vw);
+        max-width: 90vw;
+        background: #FFFFFF;
+        border-right: 1px solid #E0E0E0;
+        z-index: 1950;
+        transform: translateX(-110%);
+        transition: transform 220ms ease;
+        overflow-y: auto;
+        box-sizing: border-box;
+        padding: 14px 12px;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .site-mobile-drawer.open {
+        transform: translateX(0);
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .site-mobile-menu-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2D4A8A;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 10px 6px 10px 6px;
+    }
+
+    .site-mobile-menu-item {
+        width: 100%;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 0px;
+        padding: 12px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        color: #2c3e50;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: left;
+        text-decoration: none;
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+
+    .site-mobile-menu-item i {
+        width: 18px;
+        text-align: center;
+        color: #2D4A8A;
+    }
+
+    .site-mobile-menu-item:hover {
+        background: #f3f6fb;
+    }
+
+    .site-mobile-menu-item.danger {
+        color: #FF6B6B;
+    }
+
+    .site-mobile-menu-item.danger i {
+        color: #FF6B6B;
+    }
+
+    .site-mobile-menu-item.danger:hover {
+        background: #FFF5F5;
+    }
+
     body.account-page header {
         display: none;
     }
