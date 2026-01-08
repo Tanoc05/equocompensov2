@@ -7,6 +7,11 @@ body {
     font-family: sans-serif;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 input,
 select,
 textarea,
@@ -142,7 +147,7 @@ main{
 
 .hero p{
     color: #6c757d;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.6;
     margin-bottom: 30px;
     font-weight: normal;
@@ -455,7 +460,7 @@ main{
 .card-container-slogan {
     width: 100%;
     text-align: center;
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 700;
     color: #2c3e50;
     margin-bottom: 40px;
@@ -515,7 +520,7 @@ main{
 }
 
 .card h3 {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     color: #2c3e50;
     margin: 0;
@@ -531,7 +536,7 @@ main{
 }
 
 .card p {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: #6c757d;
     line-height: 1.5;
     margin: 0;
@@ -542,7 +547,7 @@ main{
 .card-link {
     color: #1C4D8D;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 500;
     transition: color 0.3s ease;
     margin-top: 20px;
@@ -560,7 +565,7 @@ main{
 
 .contattaci h2 {
     text-align: center;
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 700;
     color: #2c3e50;
     margin-bottom: 40px;
@@ -601,7 +606,7 @@ main{
     padding: 15px;
     border: 1px solid #e9ecef;
     background: white;
-    font-size: 16px;
+    font-size: 1rem;
     color: #2c3e50;
     outline: none;
     transition: border-color 0.3s ease;
@@ -618,7 +623,7 @@ main{
     color: white;
     border: none;
     padding: 15px 30px;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -655,7 +660,7 @@ main{
 }
 
 .info-item p {
-    font-size: 16px;
+    font-size: 1rem;
     color: #2c3e50;
     margin: 0;
 }
@@ -851,8 +856,135 @@ footer {
 
 .footer-content p {
     color: white;
-    font-size: 14px;
+    font-size: 0.875rem;
     margin: 0;
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 24px;
+        padding-right: 24px;
+        gap: 12px;
+    }
+
+    header .ls ul {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .cointener {
+        flex-direction: column;
+        padding-left: 24px;
+        padding-right: 24px;
+        box-sizing: border-box;
+    }
+
+    .hero,
+    .hero-img {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 48px;
+        padding-bottom: 48px;
+    }
+
+    .section-divider {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .card-container-wrapper {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .carousel-nav {
+        display: none;
+    }
+
+    .card-container {
+        overflow-x: auto;
+    }
+
+    .card {
+        min-width: 280px;
+        height: auto;
+    }
+
+    .contattaci {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .contact-content {
+        flex-direction: column;
+        gap: 30px;
+        max-width: 100%;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .footer-content {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
+    .container {
+        padding-left: 24px;
+        padding-right: 24px;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    header .ls ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cointener {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero h2 {
+        font-size: 1.6rem;
+    }
+
+    .card-container-slogan {
+        font-size: 1.5rem;
+    }
+
+    .card-container-wrapper {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .contattaci {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .footer-content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
 }
 
 /* Norme Page Styles */
