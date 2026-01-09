@@ -182,7 +182,7 @@ main{
 }
 
 .tariffario-commercialisti{
-    width: calc(140px * 2 + 15px);
+    width: calc(140px * 2 + 20px);
     display: block;
     margin-top: 12px;
 }
@@ -199,7 +199,7 @@ main{
     justify-content: center;
 }
 
-.hero .scopri:hover {
+.hero .scopri .tariffario-commercialisti:hover {
     border-color: #1C4D8D;
 }
 
