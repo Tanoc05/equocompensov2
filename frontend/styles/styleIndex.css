@@ -169,7 +169,8 @@ main{
     background-color: #153a6b;
 }
 
-.hero .scopri{
+.hero .scopri,
+.tariffario-commercialisti{
     cursor: pointer;
     color: black;
     background-color: #ffffff;
