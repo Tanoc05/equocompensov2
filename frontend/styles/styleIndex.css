@@ -199,7 +199,8 @@ main{
     justify-content: center;
 }
 
-.hero .scopri .tariffario-commercialisti:hover {
+.hero .scopri:hover,
+.hero .tariffario-commercialisti:hover {
     border-color: #1C4D8D;
 }
 
