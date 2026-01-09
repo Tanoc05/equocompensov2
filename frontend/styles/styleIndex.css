@@ -181,6 +181,11 @@ main{
     transition: border-color 0.3s ease;
 }
 
+.tariffario-commercialisti{
+    display: block;
+    margin-top: 12px;
+}
+
 .hero .inizia a,
 .hero .scopri a {
     color: inherit;
