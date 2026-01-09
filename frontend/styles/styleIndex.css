@@ -182,7 +182,7 @@ main{
 }
 
 .tariffario-commercialisti{
-    width: 280px;
+    width: calc(140px * 2 + 15px);
     display: block;
     margin-top: 12px;
 }
