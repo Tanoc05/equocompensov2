@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/styleIndex.css">
+    <link rel="stylesheet" href="/styles/styleIndex.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="icon" type="image/png" href="/img/favicon.png">
     <title>Dashboard Account - equo compenso</title>
 </head>
 <body class="account-page">
@@ -13,17 +13,17 @@
     <header>
 
         <section class="header-img">
-            <img src="img/logo2.png" alt="logo">
+            <img src="/img/logo2.png" alt="logo">
         </section>
 
         <div class="ls">
             <ul>
-                <li><a href="index.html">home</a></li>
-                <li><a href="chi-siamo.html">chi siamo</a></li>
-                <li><a href="calcola.html">calcola</a></li>
-                <li><a href="norme.html">norme</a></li>
-                <li><button onclick="window.location.href='index.html?login=1'">login</button></li>
-                <li><button onclick="window.location.href='index.html?register=1'">registrati</button></li>
+                <li><a href="/">home</a></li>
+                <li><a href="/chi-siamo">chi siamo</a></li>
+                <li><a href="/calcola">calcola</a></li>
+                <li><a href="/norme">norme</a></li>
+                <li><button onclick="window.location.href='/?login=1'">login</button></li>
+                <li><button onclick="window.location.href='/?register=1'">registrati</button></li>
             </ul>
         </div>
 
@@ -36,8 +36,8 @@
                 <span></span>
                 <span></span>
             </button>
-            <div class="account-mobile-brand" onclick="window.location.href='index.html'" role="button" tabindex="0">
-                <img src="img/logo2.png" alt="equo compenso" class="account-mobile-logo">
+            <div class="account-mobile-brand" onclick="window.location.href='/'" role="button" tabindex="0">
+                <img src="/img/logo2.png" alt="equo compenso" class="account-mobile-logo">
             </div>
             <div class="account-mobile-user" aria-label="Utente">
                 <span class="account-mobile-avatar">
@@ -51,10 +51,10 @@
             <div id="accountSidebarBackdrop" class="account-sidebar-backdrop" style="display:none;"></div>
             <aside class="account-sidebar">
                 <div class="account-sidebar-title">Menu</div>
-                <a class="account-nav-item" href="index.html"><i class="fas fa-house"></i><span>Home</span></a>
-                <a class="account-nav-item" href="chi-siamo.html"><i class="fas fa-users"></i><span>Chi siamo</span></a>
-                <a class="account-nav-item" href="calcola.html"><i class="fas fa-calculator"></i><span>Calcola</span></a>
-                <a class="account-nav-item" href="norme.html"><i class="fas fa-book"></i><span>Norme</span></a>
+                <a class="account-nav-item" href="/"><i class="fas fa-house"></i><span>Home</span></a>
+                <a class="account-nav-item" href="/chi-siamo"><i class="fas fa-users"></i><span>Chi siamo</span></a>
+                <a class="account-nav-item" href="/calcola"><i class="fas fa-calculator"></i><span>Calcola</span></a>
+                <a class="account-nav-item" href="/norme"><i class="fas fa-book"></i><span>Norme</span></a>
 
                 <div class="account-sidebar-title">Gestione Account</div>
                 <button class="account-nav-item active" data-view="profile"><i class="fas fa-id-card"></i><span>Informazioni Personali</span></button>
@@ -378,9 +378,9 @@
                                     </div>
                                 </div>
                                 <div class="user-menu-items">
-                                    <button class="user-menu-item" onclick="window.location.href='dashboard.html?view=profile'"><i class="fas fa-user"></i><span>Il mio Profilo</span></button>
-                                    <button class="user-menu-item" onclick="window.location.href='dashboard.html?view=calculations'"><i class="fas fa-history"></i><span>I miei Calcoli</span></button>
-                                    <button class="user-menu-item" onclick="window.location.href='dashboard.html?view=security'"><i class="fas fa-gear"></i><span>Impostazioni</span></button>
+                                    <button class="user-menu-item" onclick="window.location.href='/dashboard?view=profile'"><i class="fas fa-user"></i><span>Il mio Profilo</span></button>
+                                    <button class="user-menu-item" onclick="window.location.href='/dashboard?view=calculations'"><i class="fas fa-history"></i><span>I miei Calcoli</span></button>
+                                    <button class="user-menu-item" onclick="window.location.href='/dashboard?view=security'"><i class="fas fa-gear"></i><span>Impostazioni</span></button>
                                 </div>
                                 <div class="user-menu-footer">
                                     <button class="user-menu-item danger" onclick="handleLogout()"><i class="fas fa-right-from-bracket"></i><span>Esci / Logout</span></button>
@@ -410,7 +410,7 @@
         function handleLogout() {
             localStorage.removeItem('authToken');
             updateHeaderUser();
-            window.location.href = 'index.html';
+            window.location.href = '/';
         }
 
         function setAccountMenuOpen(open) {
@@ -811,8 +811,8 @@
             const token = localStorage.getItem('authToken');
             const user = parseJwt(token);
             if (!token || (!user.sub && !user.id && !user.email)) {
-                localStorage.setItem('postLoginRedirect', 'dashboard.html');
-                window.location.href = 'index.html?login=1';
+                localStorage.setItem('postLoginRedirect', '/dashboard');
+                window.location.href = '/?login=1';
                 return;
             }
 
@@ -1048,7 +1048,7 @@
 
     <div id="toast" class="account-toast" role="status" aria-live="polite"></div>
 
-    <script src="mobileTopbar.js"></script>
+    <script src="/mobileTopbar.js"></script>
 
 </body>
 </html>

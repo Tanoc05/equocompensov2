@@ -29,10 +29,10 @@
         const primary = `
             <div class="site-mobile-menu-section">
                 <div class="site-mobile-menu-title">Menu</div>
-                <a class="site-mobile-menu-item" href="index.html"><i class="fas fa-house"></i><span>Home</span></a>
-                <a class="site-mobile-menu-item" href="chi-siamo.html"><i class="fas fa-users"></i><span>Chi siamo</span></a>
-                <a class="site-mobile-menu-item" href="calcola.html"><i class="fas fa-calculator"></i><span>Calcola</span></a>
-                <a class="site-mobile-menu-item" href="norme.html"><i class="fas fa-book"></i><span>Norme</span></a>
+                <a class="site-mobile-menu-item" href="/"><i class="fas fa-house"></i><span>Home</span></a>
+                <a class="site-mobile-menu-item" href="/chi-siamo"><i class="fas fa-users"></i><span>Chi siamo</span></a>
+                <a class="site-mobile-menu-item" href="/calcola"><i class="fas fa-calculator"></i><span>Calcola</span></a>
+                <a class="site-mobile-menu-item" href="/norme"><i class="fas fa-book"></i><span>Norme</span></a>
             </div>
         `;
 
@@ -40,19 +40,19 @@
             ? `
             <div class="site-mobile-menu-section">
                 <div class="site-mobile-menu-title">Gestione Account</div>
-                <a class="site-mobile-menu-item" href="dashboard.html?view=profile"><i class="fas fa-id-card"></i><span>Informazioni Personali</span></a>
-                <a class="site-mobile-menu-item" href="dashboard.html?view=professional"><i class="fas fa-briefcase"></i><span>Dati Professionali</span></a>
-                <a class="site-mobile-menu-item" href="dashboard.html?view=security"><i class="fas fa-shield-halved"></i><span>Sicurezza</span></a>
-                <a class="site-mobile-menu-item" href="dashboard.html?view=calculations"><i class="fas fa-clock-rotate-left"></i><span>I miei Calcoli</span></a>
-                <a class="site-mobile-menu-item" href="dashboard.html?view=subscription"><i class="fas fa-credit-card"></i><span>Abbonamento</span></a>
+                <a class="site-mobile-menu-item" href="/dashboard?view=profile"><i class="fas fa-id-card"></i><span>Informazioni Personali</span></a>
+                <a class="site-mobile-menu-item" href="/dashboard?view=professional"><i class="fas fa-briefcase"></i><span>Dati Professionali</span></a>
+                <a class="site-mobile-menu-item" href="/dashboard?view=security"><i class="fas fa-shield-halved"></i><span>Sicurezza</span></a>
+                <a class="site-mobile-menu-item" href="/dashboard?view=calculations"><i class="fas fa-clock-rotate-left"></i><span>I miei Calcoli</span></a>
+                <a class="site-mobile-menu-item" href="/dashboard?view=subscription"><i class="fas fa-credit-card"></i><span>Abbonamento</span></a>
                 <button class="site-mobile-menu-item danger" type="button" data-action="logout"><i class="fas fa-right-from-bracket"></i><span>Esci / Logout</span></button>
             </div>
             `
             : `
             <div class="site-mobile-menu-section">
                 <div class="site-mobile-menu-title">Account</div>
-                <a class="site-mobile-menu-item" href="index.html?login=1"><i class="fas fa-right-to-bracket"></i><span>Login</span></a>
-                <a class="site-mobile-menu-item" href="index.html?register=1"><i class="fas fa-user-plus"></i><span>Registrati</span></a>
+                <a class="site-mobile-menu-item" href="/?login=1"><i class="fas fa-right-to-bracket"></i><span>Login</span></a>
+                <a class="site-mobile-menu-item" href="/?register=1"><i class="fas fa-user-plus"></i><span>Registrati</span></a>
             </div>
             `;
 
@@ -96,7 +96,7 @@
                 <span></span><span></span><span></span>
             </button>
             <div class="site-mobile-brand" role="button" tabindex="0">
-                <img src="img/logo2.png" alt="equo compenso" class="site-mobile-logo">
+                <img src="/img/logo2.png" alt="equo compenso" class="site-mobile-logo">
             </div>
             <div class="site-mobile-user" aria-label="Utente">
                 <span class="site-mobile-avatar"><span class="site-mobile-initials">${initialsFrom(user)}</span></span>
@@ -119,9 +119,9 @@
         const brand = bar.querySelector('.site-mobile-brand');
 
         if (brand) {
-            brand.addEventListener('click', () => (window.location.href = 'index.html'));
+            brand.addEventListener('click', () => (window.location.href = '/'));
             brand.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') window.location.href = 'index.html';
+                if (e.key === 'Enter' || e.key === ' ') window.location.href = '/';
             });
         }
 
@@ -140,7 +140,7 @@
             const btn = e.target && e.target.closest ? e.target.closest('[data-action="logout"]') : null;
             if (btn) {
                 localStorage.removeItem('authToken');
-                window.location.href = 'index.html';
+                window.location.href = '/';
             }
         });
 

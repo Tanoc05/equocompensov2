@@ -35,6 +35,23 @@ app.use('/api/documents', documentsRoutes);
 const frontendDir = path.resolve(__dirname, '../../frontend');
 app.use(express.static(frontendDir));
 
+// Clean URLs (no .html)
+app.get(['/chi-siamo', '/chi-siamo/'], (req, res) => {
+  res.sendFile(path.join(frontendDir, 'chi-siamo.html'));
+});
+
+app.get(['/calcola', '/calcola/'], (req, res) => {
+  res.sendFile(path.join(frontendDir, 'calcola.html'));
+});
+
+app.get(['/norme', '/norme/'], (req, res) => {
+  res.sendFile(path.join(frontendDir, 'norme.html'));
+});
+
+app.get(['/dashboard', '/dashboard/'], (req, res) => {
+  res.sendFile(path.join(frontendDir, 'dashboard.html'));
+});
+
 // SPA-ish fallback (for direct navigation)
 app.get('*', (req, res) => {
   res.sendFile(path.join(frontendDir, 'index.html'));
