@@ -109,14 +109,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group" id="groupPattuito">
-                            <label for="corrispettivoPattuito">Corrispettivo pattuito (€)</label>
-                            <div class="calc-input">
-                                <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-euro-sign"></i></span>
-                                <input id="corrispettivoPattuito" name="corrispettivoPattuito" type="number" min="0" step="0.01" placeholder="0,00">
-                            </div>
-                        </div>
-
                         <div class="form-group" id="groupPercentuale">
                             <label for="percentuale">Percentuale (%)</label>
                             <div class="calc-input">
@@ -292,6 +284,22 @@
                                 <span class="calc-btn-text">ELABORA COMPENSO</span>
                                 <span class="calc-btn-progress" aria-hidden="true"><span class="calc-btn-progress-bar"></span></span>
                             </button>
+                        </div>
+
+                        <div id="verifyEquoCompenso" class="calc-verify-box" style="display:none;">
+                            <div class="calc-verify-title">Verifica Equo Compenso</div>
+                            <div class="form-group" id="groupPattuito">
+                                <label for="corrispettivoPattuito">Corrispettivo pattuito (€)</label>
+                                <div class="calc-input">
+                                    <span class="calc-icon" aria-hidden="true"><i class="fa-solid fa-euro-sign"></i></span>
+                                    <input id="corrispettivoPattuito" name="corrispettivoPattuito" type="number" min="0" step="0.01" placeholder="0,00" disabled>
+                                </div>
+                                <div class="calc-help">Inserisci il corrispettivo pattuito solo dopo aver calcolato il compenso ministeriale per verificare lo scostamento.</div>
+                            </div>
+                            <div id="pattuitoCompare" class="calc-compare" style="display:none;"></div>
+                        </div>
+
+                        <div class="calc-action-bar calc-action-bar-secondary">
                             <button id="btn_scarica" class="calc-btn calc-btn-outline" type="button" disabled>GENERA E SCARICA PDF</button>
                             <button id="btn_reset" class="calc-btn calc-btn-link" type="reset">RESET CAMPI</button>
                         </div>
@@ -373,6 +381,8 @@
             const resultEl = document.getElementById('calcolaResult');
             const professioneEl = document.getElementById('professione');
             const previewEl = document.getElementById('documentPreview');
+            const verifyEquoEl = document.getElementById('verifyEquoCompenso');
+            const pattuitoCompareEl = document.getElementById('pattuitoCompare');
             const welcomeEl = null;
 
             const nomePraticaEl = document.getElementById('nome_pratica');
@@ -1054,12 +1064,13 @@
             function buildPayloadFromForm({ tipo, criterio, min, max, chosen, details }) {
                 const multi = document.querySelectorAll('input[name="dich_multi"]:checked');
                 const dichiarazioniMulti = Array.from(multi || []).map(el => String(el.value || '')).filter(Boolean);
+                const pattuitoRaw = pattuitoEl ? String(pattuitoEl.value || '').trim() : '';
                 const input = {
                     nome_pratica: nomePraticaEl ? String(nomePraticaEl.value || '') : '',
                     cliente_nome: clienteNomeEl ? String(clienteNomeEl.value || '') : '',
                     documentType: documentTypeEl ? documentTypeEl.value : null,
                     documentCategory: documentCategoryEl ? documentCategoryEl.value : null,
-                    corrispettivoPattuito: pattuitoEl ? Number(pattuitoEl.value) : null,
+                    corrispettivoPattuito: pattuitoRaw !== '' ? Number(pattuitoRaw) : null,
                     percentuale: percentualeEl ? Number(percentualeEl.value) : null,
                     valore: Number(valoreEl.value),
                     valore2: Number(valore2El.value),
@@ -1093,8 +1104,86 @@
                 };
             }
 
+            let lastComputed = null;
+
+            function getPattuitoNumeric() {
+                const raw = pattuitoEl ? String(pattuitoEl.value || '').trim() : '';
+                if (raw === '') return null;
+                const num = Number(raw);
+                if (!Number.isFinite(num) || num < 0) return null;
+                return num;
+            }
+
+            function setVerifyEquoVisible(visible) {
+                if (!verifyEquoEl) return;
+                verifyEquoEl.style.display = visible ? '' : 'none';
+            }
+
+            function setCompareBoxVisible(visible) {
+                if (!pattuitoCompareEl) return;
+                pattuitoCompareEl.style.display = visible ? '' : 'none';
+            }
+
+            function updatePattuitoComparison() {
+                if (!lastComputed) return;
+                const pattuito = getPattuitoNumeric();
+                const pattuitoEff = pattuito !== null ? pattuito : lastComputed.chosen;
+
+                const belowMin = pattuitoEff < lastComputed.min;
+                const aboveMax = pattuitoEff > lastComputed.max;
+                const ref = lastComputed.chosen;
+                const delta = pattuitoEff - ref;
+                const pct = ref > 0 ? (delta / ref) * 100 : null;
+
+                if (pattuitoCompareEl) {
+                    pattuitoCompareEl.classList.toggle('is-bad', belowMin);
+
+                    const trend = delta < 0
+                        ? `Sconto rispetto al riferimento: ${euro(Math.abs(delta))}${pct !== null ? ` (${Math.abs(pct).toFixed(2)}%)` : ''}.`
+                        : (delta > 0
+                            ? `Maggiorazione rispetto al riferimento: ${euro(delta)}${pct !== null ? ` (${pct.toFixed(2)}%)` : ''}.`
+                            : 'Nessuno scostamento rispetto al riferimento.');
+
+                    const rangeNote = belowMin
+                        ? `Attenzione: il pattuito è sotto il minimo (${euro(lastComputed.min)}).`
+                        : (aboveMax ? `Nota: il pattuito è sopra il massimo (${euro(lastComputed.max)}).` : `Il pattuito è nel range (${euro(lastComputed.min)} - ${euro(lastComputed.max)}).`);
+
+                    pattuitoCompareEl.innerHTML = [
+                        `<div><strong>Compenso di riferimento:</strong> ${euro(ref)}</div>`,
+                        `<div><strong>Compenso pattuito:</strong> ${euro(pattuitoEff)}</div>`,
+                        `<div>${escapeHtml(trend)}</div>`,
+                        `<div>${escapeHtml(rangeNote)}</div>`,
+                    ].join('');
+                }
+
+                setResult(`Risultato: Compenso di riferimento ${euro(ref)} | Compenso pattuito ${euro(pattuitoEff)}`, false);
+
+                if (btnDownloadPdf && btnDownloadPdf.dataset && btnDownloadPdf.dataset.payload) {
+                    try {
+                        const p = JSON.parse(btnDownloadPdf.dataset.payload);
+                        if (p && p.input) {
+                            p.input.corrispettivoPattuito = pattuito;
+                        }
+                        if (p && p.result) {
+                            p.result.compenso_pattuito = euro(pattuitoEff);
+                        }
+                        btnDownloadPdf.dataset.payload = JSON.stringify(p);
+                    } catch (_) {
+                        // ignore
+                    }
+                }
+            }
+
             async function compute() {
                 clearFieldErrors();
+
+                lastComputed = null;
+                if (pattuitoEl) {
+                    pattuitoEl.value = '';
+                    pattuitoEl.disabled = true;
+                }
+                setCompareBoxVisible(false);
+                setVerifyEquoVisible(false);
 
                 const nomePratica = nomePraticaEl ? String(nomePraticaEl.value || '').trim() : '';
                 const clienteNome = clienteNomeEl ? String(clienteNomeEl.value || '').trim() : '';
@@ -1181,10 +1270,15 @@
                             chosen: amount,
                             details: ['Somma tariffe fisse dichiarazioni.'].concat(lines),
                         });
+                        payload.result.compenso_pattuito = euro(amount);
                         btnDownloadPdf.disabled = false;
                         btnDownloadPdf.dataset.payload = JSON.stringify(payload);
 
-                        setResult(`Risultato: Compenso di riferimento ${euro(amount)} | Compenso pattuito ${euro(amount)}`, false);
+                        lastComputed = { tipo, criterio, min: amount, max: amount, chosen: amount };
+                        setVerifyEquoVisible(true);
+                        if (pattuitoEl) pattuitoEl.disabled = false;
+                        setCompareBoxVisible(true);
+                        updatePattuitoComparison();
                         setPreview(`<div><strong>Compenso (${escapeHtml(criterio)}):</strong> ${euro(amount)}</div>`);
                         return;
                     }
@@ -1455,12 +1549,16 @@
                             const compensoPattuito = Number.isFinite(pattuitoNum) && pattuitoNum >= 0 ? pattuitoNum : chosen;
 
                             const payload = buildPayloadFromForm({ tipo, criterio, min, max, chosen, details });
-                            payload.result.compenso_pattuito = euro(compensoPattuito);
+                            payload.result.compenso_pattuito = euro(chosen);
 
                             btnDownloadPdf.disabled = false;
                             btnDownloadPdf.dataset.payload = JSON.stringify(payload);
 
-                            setResult(`Risultato: Compenso di riferimento ${euro(chosen)} | Compenso pattuito ${euro(compensoPattuito)}`, false);
+                            lastComputed = { tipo, criterio, min, max, chosen };
+                            setVerifyEquoVisible(true);
+                            if (pattuitoEl) pattuitoEl.disabled = false;
+                            setCompareBoxVisible(true);
+                            updatePattuitoComparison();
 
                             const detailHtml = details.length
                                 ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${escapeHtml(d)}`).join('<br>')}</div>`
@@ -1546,16 +1644,17 @@
                         details.push(`Percentuale applicata nel range ministeriale: ${pct}%.`);
                     }
 
-                    const pattuitoNum = pattuitoEl && pattuitoEl.value !== '' ? Number(pattuitoEl.value) : NaN;
-                    const compensoPattuito = Number.isFinite(pattuitoNum) && pattuitoNum >= 0 ? pattuitoNum : chosen;
-
                     const payload = buildPayloadFromForm({ tipo, criterio, min, max, chosen, details });
-                    payload.result.compenso_pattuito = euro(compensoPattuito);
+                    payload.result.compenso_pattuito = euro(chosen);
 
                     btnDownloadPdf.disabled = false;
                     btnDownloadPdf.dataset.payload = JSON.stringify(payload);
 
-                    setResult(`Risultato: Compenso di riferimento ${euro(chosen)} | Compenso pattuito ${euro(compensoPattuito)}`, false);
+                    lastComputed = { tipo, criterio, min, max, chosen };
+                    setVerifyEquoVisible(true);
+                    if (pattuitoEl) pattuitoEl.disabled = false;
+                    setCompareBoxVisible(true);
+                    updatePattuitoComparison();
 
                     const detailHtml = details.length
                         ? `<div style="margin-top:10px;"><strong>Dettagli</strong><br>${details.map(d => `- ${escapeHtml(d)}`).join('<br>')}</div>`
@@ -1591,6 +1690,13 @@
 
             if (btn) {
                 btn.addEventListener('click', compute);
+            }
+
+            if (pattuitoEl) {
+                pattuitoEl.addEventListener('input', () => {
+                    setCompareBoxVisible(true);
+                    updatePattuitoComparison();
+                });
             }
 
             if (btnDownloadPdf) {
@@ -1645,6 +1751,7 @@
             }
 
             setBlockVisible(groupPattuito, true);
+            setVerifyEquoVisible(false);
             setBlockVisible(groupPercentuale, true);
 
             applyDocType();
