@@ -10,7 +10,11 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
   ensureDir(path.dirname(filePath));
 
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ size: 'A4', margin: 50, autoFirstPage: true, bufferPages: true });
+    const doc = new PDFDocument({
+      size: 'A4',
+      margin: 40,
+      bufferPages: true,
+    });
     const stream = fs.createWriteStream(filePath);
 
     doc.pipe(stream);
@@ -21,6 +25,8 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     const themeGray = '#f5f5f5';
     const themeBorder = '#e0e0e0';
     const brandName = 'equo compenso';
+    const headerPhone = '+39 0942 550660';
+    const headerEmail = 'info@equocompenso.eu';
 
     const input = (calculation && calculation.input_json) ? calculation.input_json : {};
     const nomePratica = input && input.nome_pratica ? String(input.nome_pratica) : '';
@@ -81,7 +87,12 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       doc.fontSize(12).fillColor(themePrimary);
       doc.text(brandName.toUpperCase(), startX, y + 6, { width: headerW, align: 'right' });
 
-      const lineY = y + 44;
+      fontRegular();
+      doc.fontSize(9).fillColor(themePrimary);
+      doc.text(headerPhone, startX, y + 22, { width: headerW, align: 'right' });
+      doc.text(headerEmail, startX, y + 34, { width: headerW, align: 'right' });
+
+      const lineY = y + 54;
       doc.save();
       doc.moveTo(doc.page.margins.left, lineY)
         .lineTo(doc.page.width - doc.page.margins.right, lineY)
@@ -117,7 +128,6 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       const valueRW = colW - 152;
 
       function rowHeightFor(l, r) {
-        const baseY = 0;
         let h = 16;
 
         if (l) {
@@ -742,6 +752,13 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     const criterio = calculation && calculation.criterio ? String(calculation.criterio) : '';
     const m = methodologyData({ riquadro, input, criterio, result });
 
+    const profNome = user && user.nome ? String(user.nome) : '';
+    const profCognome = user && user.cognome ? String(user.cognome) : '';
+    const profEmail = user && user.email ? String(user.email) : '';
+    const profProfessione = user && user.professione ? String(user.professione) : '';
+    const profDisplayName = `${profNome} ${profCognome}`.trim();
+    const generatedBy = `${profProfessione ? profProfessione : 'Professionista'}${profDisplayName ? ` ${profDisplayName}` : ''}`.trim();
+
     drawTwoColumnInfo({
       left: [
         { label: 'Nome Pratica', value: nomePratica },
@@ -750,6 +767,16 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       right: [
         { label: 'Data Generazione', value: createdAt.toLocaleString('it-IT') },
         { label: 'Riferimento Normativo', value: normativa },
+      ],
+    });
+
+    drawTwoColumnInfo({
+      left: [
+        { label: 'Documento generato da', value: generatedBy || '-' },
+        { label: 'Email Professionista', value: profEmail || '-' },
+      ],
+      right: [
+        { label: 'Data Generazione', value: createdAt.toLocaleString('it-IT') },
       ],
     });
 
