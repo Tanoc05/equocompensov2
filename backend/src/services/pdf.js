@@ -108,9 +108,47 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       const colW = (maxW - gap) / 2;
       const y = doc.y;
 
-      const rowH = 16;
       const rows = Math.max(left.length, right.length);
-      const boxH = (rows * rowH) + 16;
+      const padX = 10;
+      const padY = 8;
+      const labelLW = 120;
+      const labelRW = 140;
+      const valueLW = colW - 132;
+      const valueRW = colW - 152;
+
+      function rowHeightFor(l, r) {
+        const baseY = 0;
+        let h = 16;
+
+        if (l) {
+          fontBold();
+          doc.fontSize(10);
+          const lh = doc.heightOfString(String(l.label || ''), { width: labelLW });
+          fontRegular();
+          doc.fontSize(10);
+          const lv = doc.heightOfString(String(l.value || '-'), { width: valueLW });
+          h = Math.max(h, lh, lv);
+        }
+
+        if (r) {
+          fontBold();
+          doc.fontSize(10);
+          const rh = doc.heightOfString(String(r.label || ''), { width: labelRW });
+          fontRegular();
+          doc.fontSize(10);
+          const rv = doc.heightOfString(String(r.value || '-'), { width: valueRW });
+          h = Math.max(h, rh, rv);
+        }
+
+        return Math.ceil(h + 2);
+      }
+
+      const rowHeights = [];
+      for (let i = 0; i < rows; i++) {
+        rowHeights.push(rowHeightFor(left[i], right[i]));
+      }
+      const contentH = rowHeights.reduce((acc, h) => acc + h, 0);
+      const boxH = contentH + (padY * 2);
 
       doc.save();
       doc.rect(startX, y, maxW, boxH).fill(themeGray);
@@ -120,30 +158,29 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       doc.rect(startX, y, maxW, boxH).lineWidth(1).strokeColor(themeBorder).stroke();
       doc.restore();
 
-      const padX = 10;
-      const padY = 8;
       let cy = y + padY;
 
       for (let i = 0; i < rows; i++) {
         const l = left[i];
         const r = right[i];
+        const rh = rowHeights[i] || 16;
+        const rx = startX + colW + gap;
 
         if (l) {
           fontBold();
-          doc.fontSize(10).fillColor('#111').text(l.label, startX + padX, cy, { width: 120 });
+          doc.fontSize(10).fillColor('#111').text(l.label, startX + padX, cy, { width: labelLW });
           fontRegular();
-          doc.fillColor('#111').text(l.value || '-', startX + padX + 122, cy, { width: colW - 132 });
+          doc.fontSize(10).fillColor('#111').text(l.value || '-', startX + padX + 122, cy, { width: valueLW });
         }
 
         if (r) {
-          const rx = startX + colW + gap;
           fontBold();
-          doc.fontSize(10).fillColor('#111').text(r.label, rx + padX, cy, { width: 140 });
+          doc.fontSize(10).fillColor('#111').text(r.label, rx + padX, cy, { width: labelRW });
           fontRegular();
-          doc.fillColor('#111').text(r.value || '-', rx + padX + 142, cy, { width: colW - 152 });
+          doc.fontSize(10).fillColor('#111').text(r.value || '-', rx + padX + 142, cy, { width: valueRW });
         }
 
-        cy += rowH;
+        cy += rh;
       }
 
       doc.y = y + boxH + 14;
@@ -207,44 +244,63 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       const startX = doc.page.margins.left;
       const tableW = doc.page.width - doc.page.margins.left - doc.page.margins.right;
       const colW = [0.36, 0.42, 0.22].map(p => p * tableW);
-      const rowH = 22;
+      const headerH = 22;
+      const padX = 8;
+      const padY = 6;
 
-      // Header
+      function drawHeaderRow(y) {
+        doc.save();
+        doc.rect(startX, y, tableW, headerH).fill(themePrimary);
+        doc.restore();
+
+        fontBold();
+        doc.fontSize(10).fillColor('#FFFFFF');
+        doc.text(columns[0], startX + padX, y + padY, { width: colW[0] - (padX * 2) });
+        doc.text(columns[1], startX + colW[0] + padX, y + padY, { width: colW[1] - (padX * 2) });
+        doc.text(columns[2], startX + colW[0] + colW[1] + padX, y + padY, { width: colW[2] - (padX * 2), align: 'right' });
+      }
+
+      function rowHeightFor(r) {
+        fontRegular();
+        doc.fontSize(10);
+        const h0 = doc.heightOfString(String(r[0] || ''), { width: colW[0] - (padX * 2) });
+        const h1 = doc.heightOfString(String(r[1] || ''), { width: colW[1] - (padX * 2) });
+        fontBold();
+        doc.fontSize(10);
+        const h2 = doc.heightOfString(String(r[2] || ''), { width: colW[2] - (padX * 2) });
+        const contentH = Math.max(h0, h1, h2);
+        return Math.max(22, Math.ceil(contentH + (padY * 2)));
+      }
+
       const headerY = doc.y;
-      doc.save();
-      doc.rect(startX, headerY, tableW, rowH).fill(themePrimary);
-      doc.restore();
-
-      fontBold();
-      doc.fontSize(10).fillColor('#FFFFFF');
-      doc.text(columns[0], startX + 8, headerY + 6, { width: colW[0] - 16 });
-      doc.text(columns[1], startX + colW[0] + 8, headerY + 6, { width: colW[1] - 16 });
-      doc.text(columns[2], startX + colW[0] + colW[1] + 8, headerY + 6, { width: colW[2] - 16, align: 'right' });
-      doc.moveDown();
-
-      // Rows
-      let y = headerY + rowH;
+      drawHeaderRow(headerY);
+      let y = headerY + headerH;
       rows.forEach((r, idx) => {
         const isAlt = idx % 2 === 0;
         const customFill = (typeof rowFill === 'function') ? rowFill(r, idx) : null;
+        const rh = rowHeightFor(r);
+
+        if (y + rh > doc.page.height - doc.page.margins.bottom - 60) {
+          doc.addPage();
+          drawHeader();
+          const newHeaderY = doc.y;
+          drawHeaderRow(newHeaderY);
+          y = newHeaderY + headerH;
+        }
+
         doc.save();
-        doc.rect(startX, y, tableW, rowH).fill(customFill || (isAlt ? '#FFFFFF' : themeGray));
+        doc.rect(startX, y, tableW, rh).fill(customFill || (isAlt ? '#FFFFFF' : themeGray));
         doc.restore();
 
         fontRegular();
         doc.fontSize(10).fillColor('#111');
-        doc.text(r[0], startX + 8, y + 6, { width: colW[0] - 16 });
-        doc.text(r[1], startX + colW[0] + 8, y + 6, { width: colW[1] - 16 });
+        doc.text(String(r[0] || ''), startX + padX, y + padY, { width: colW[0] - (padX * 2) });
+        doc.text(String(r[1] || ''), startX + colW[0] + padX, y + padY, { width: colW[1] - (padX * 2) });
         fontBold();
-        doc.text(r[2], startX + colW[0] + colW[1] + 8, y + 6, { width: colW[2] - 16, align: 'right' });
-        y += rowH;
+        doc.fontSize(10).fillColor('#111');
+        doc.text(String(r[2] || ''), startX + colW[0] + colW[1] + padX, y + padY, { width: colW[2] - (padX * 2), align: 'right' });
 
-        // Auto page break
-        if (y > doc.page.height - doc.page.margins.bottom - 80) {
-          doc.addPage();
-          drawHeader();
-          y = doc.y;
-        }
+        y += rh;
       });
 
       doc.y = y + 12;
