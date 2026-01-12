@@ -112,12 +112,19 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       fontRegular();
     }
 
+    function ensureSpace(minHeight) {
+      const bottomLimit = doc.page.height - doc.page.margins.bottom - 20;
+      if (doc.y + minHeight > bottomLimit) {
+        doc.addPage();
+        drawHeader();
+      }
+    }
+
     function drawTwoColumnInfo({ left, right }) {
       const startX = doc.page.margins.left;
       const maxW = doc.page.width - doc.page.margins.left - doc.page.margins.right;
       const gap = 18;
       const colW = (maxW - gap) / 2;
-      const y = doc.y;
 
       const rows = Math.max(left.length, right.length);
       const padX = 10;
@@ -159,6 +166,9 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       }
       const contentH = rowHeights.reduce((acc, h) => acc + h, 0);
       const boxH = contentH + (padY * 2);
+
+      ensureSpace(boxH + 14);
+      const y = doc.y;
 
       doc.save();
       doc.rect(startX, y, maxW, boxH).fill(themeGray);
@@ -281,6 +291,9 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
         const contentH = Math.max(h0, h1, h2);
         return Math.max(22, Math.ceil(contentH + (padY * 2)));
       }
+
+      const firstRowH = rows && rows.length ? rowHeightFor(rows[0]) : 22;
+      ensureSpace(headerH + firstRowH + 12);
 
       const headerY = doc.y;
       drawHeaderRow(headerY);
