@@ -15,8 +15,11 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
 
     doc.pipe(stream);
 
-    const primary = '#1A535C';
-    const secondary = '#1C4D8D';
+    const themePrimary = '#1a237e';
+    const themePositive = '#2e7d32';
+    const themeNegative = '#c62828';
+    const themeGray = '#f5f5f5';
+    const themeBorder = '#e0e0e0';
     const brandName = 'equo compenso';
 
     const input = (calculation && calculation.input_json) ? calculation.input_json : {};
@@ -44,7 +47,10 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     function toNumber(v) {
       if (v == null) return NaN;
       if (typeof v === 'number') return v;
-      const s = String(v).replace(/\./g, '').replace(',', '.');
+      const s = String(v)
+        .replace(/[^0-9,.-]/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.');
       const n = Number(s);
       return Number.isFinite(n) ? n : NaN;
     }
@@ -72,17 +78,15 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       const headerW = endX - startX;
 
       fontBold();
-      doc.fontSize(10).fillColor(secondary);
-      doc.text('Giardini Naxos', startX, y + 2, { width: headerW, align: 'right' });
-      doc.text('info@equocompenso.eu', startX, y + 16, { width: headerW, align: 'right' });
-      doc.text('0942 550660', startX, y + 30, { width: headerW, align: 'right' });
+      doc.fontSize(12).fillColor(themePrimary);
+      doc.text(brandName.toUpperCase(), startX, y + 6, { width: headerW, align: 'right' });
 
       const lineY = y + 44;
       doc.save();
       doc.moveTo(doc.page.margins.left, lineY)
         .lineTo(doc.page.width - doc.page.margins.right, lineY)
         .lineWidth(2)
-        .strokeColor(secondary)
+        .strokeColor(themePrimary)
         .stroke();
       doc.restore();
 
@@ -92,9 +96,98 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
 
     function sectionTitle(title) {
       fontBold();
-      doc.fontSize(12).fillColor('#111').text(title);
+      doc.fontSize(12).fillColor(themePrimary).text(title);
       doc.moveDown(0.5);
       fontRegular();
+    }
+
+    function drawTwoColumnInfo({ left, right }) {
+      const startX = doc.page.margins.left;
+      const maxW = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+      const gap = 18;
+      const colW = (maxW - gap) / 2;
+      const y = doc.y;
+
+      const rowH = 16;
+      const rows = Math.max(left.length, right.length);
+      const boxH = (rows * rowH) + 16;
+
+      doc.save();
+      doc.rect(startX, y, maxW, boxH).fill(themeGray);
+      doc.restore();
+
+      doc.save();
+      doc.rect(startX, y, maxW, boxH).lineWidth(1).strokeColor(themeBorder).stroke();
+      doc.restore();
+
+      const padX = 10;
+      const padY = 8;
+      let cy = y + padY;
+
+      for (let i = 0; i < rows; i++) {
+        const l = left[i];
+        const r = right[i];
+
+        if (l) {
+          fontBold();
+          doc.fontSize(10).fillColor('#111').text(l.label, startX + padX, cy, { width: 120 });
+          fontRegular();
+          doc.fillColor('#111').text(l.value || '-', startX + padX + 122, cy, { width: colW - 132 });
+        }
+
+        if (r) {
+          const rx = startX + colW + gap;
+          fontBold();
+          doc.fontSize(10).fillColor('#111').text(r.label, rx + padX, cy, { width: 140 });
+          fontRegular();
+          doc.fillColor('#111').text(r.value || '-', rx + padX + 142, cy, { width: colW - 152 });
+        }
+
+        cy += rowH;
+      }
+
+      doc.y = y + boxH + 14;
+    }
+
+    function drawHighlightBox({ title, lines }) {
+      const startX = doc.page.margins.left;
+      const maxW = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+      const y = doc.y;
+
+      const padX = 12;
+      const padY = 10;
+
+      fontBold();
+      doc.fontSize(11).fillColor('#111');
+      const titleH = doc.heightOfString(title, { width: maxW - padX * 2 });
+      fontRegular();
+      const linesH = (lines || []).reduce((acc, line) => {
+        return acc + doc.heightOfString(String(line || ''), { width: maxW - padX * 2 });
+      }, 0);
+
+      const boxH = padY + titleH + 8 + linesH + padY;
+
+      doc.save();
+      doc.rect(startX, y, maxW, boxH).fill(themeGray);
+      doc.restore();
+      doc.save();
+      doc.rect(startX, y, maxW, boxH).lineWidth(1).strokeColor(themeBorder).stroke();
+      doc.restore();
+
+      let cy = y + padY;
+      fontBold();
+      doc.fontSize(11).fillColor('#111').text(title, startX + padX, cy, { width: maxW - padX * 2 });
+      cy += titleH + 8;
+
+      fontRegular();
+      doc.fontSize(10).fillColor('#111');
+      (lines || []).forEach((line) => {
+        const h = doc.heightOfString(String(line || ''), { width: maxW - padX * 2 });
+        doc.text(String(line || ''), startX + padX, cy, { width: maxW - padX * 2 });
+        cy += h;
+      });
+
+      doc.y = y + boxH + 14;
     }
 
     function keyValueRow(label, value) {
@@ -110,7 +203,7 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       doc.moveDown(0.6);
     }
 
-    function drawZebraTable({ columns, rows }) {
+    function drawZebraTable({ columns, rows, rowFill }) {
       const startX = doc.page.margins.left;
       const tableW = doc.page.width - doc.page.margins.left - doc.page.margins.right;
       const colW = [0.36, 0.42, 0.22].map(p => p * tableW);
@@ -119,7 +212,7 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       // Header
       const headerY = doc.y;
       doc.save();
-      doc.rect(startX, headerY, tableW, rowH).fill(primary);
+      doc.rect(startX, headerY, tableW, rowH).fill(themePrimary);
       doc.restore();
 
       fontBold();
@@ -133,8 +226,9 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       let y = headerY + rowH;
       rows.forEach((r, idx) => {
         const isAlt = idx % 2 === 0;
+        const customFill = (typeof rowFill === 'function') ? rowFill(r, idx) : null;
         doc.save();
-        doc.rect(startX, y, tableW, rowH).fill(isAlt ? '#FFFFFF' : '#FAFAFA');
+        doc.rect(startX, y, tableW, rowH).fill(customFill || (isAlt ? '#FFFFFF' : themeGray));
         doc.restore();
 
         fontRegular();
@@ -165,13 +259,12 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       fontRegular();
       doc.fontSize(8).fillColor('#333');
       doc.text(
-        'Il presente documento attesta la conformità della prestazione professionale ai sensi della Legge 49/2023.\n' +
-          "Il calcolo è generato in conformità ai parametri del D.M. 140/2012 e successive integrazioni sull'Equo Compenso.",
+        'Il presente documento attesta la conformità ai sensi della Legge 49/2023.',
         startX,
         footerY - 30,
         { width: maxW, align: 'left' }
       );
-      doc.text(`${pageNumber}/${pageCount}`, startX, footerY - 8, { width: maxW, align: 'center' });
+      doc.text(`Pagina ${pageNumber} di ${pageCount}`, startX, footerY - 8, { width: maxW, align: 'center' });
       doc.restore();
     }
 
@@ -587,71 +680,109 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
 
     drawHeader();
 
-    sectionTitle('RIEPILOGO PRATICA');
-    keyValueRow('Nome Pratica', nomePratica);
-    keyValueRow('Cliente/Società', clienteNome);
-    keyValueRow('Data Generazione', createdAt.toLocaleString('it-IT'));
-
-    doc.moveDown(0.6);
-
     const riquadro = calculation && calculation.riquadro ? String(calculation.riquadro) : '';
     const docType = input && input.documentType ? String(input.documentType) : '';
     const normativa = normativeReferenceFor(riquadro, docType);
-    const m = methodologyData({ riquadro, input, criterio: calculation && calculation.criterio ? calculation.criterio : '', result });
+    const criterio = calculation && calculation.criterio ? String(calculation.criterio) : '';
+    const m = methodologyData({ riquadro, input, criterio, result });
 
-    sectionTitle('METODOLOGIA DI CALCOLO');
+    drawTwoColumnInfo({
+      left: [
+        { label: 'Nome Pratica', value: nomePratica },
+        { label: 'Cliente/Società', value: clienteNome },
+      ],
+      right: [
+        { label: 'Data Generazione', value: createdAt.toLocaleString('it-IT') },
+        { label: 'Riferimento Normativo', value: normativa },
+      ],
+    });
+
+    sectionTitle('Dettaglio della Metodologia di Calcolo');
     fontRegular();
     doc.fontSize(10).fillColor('#111');
-    doc.text('Il compenso è determinato applicando i parametri ministeriali al valore di riferimento indicato, calcolando un range (minimo e massimo) e individuando un valore all\'interno del range secondo il criterio (min/medio/max) o la percentuale (0%=min, 100%=max). Eventuali riduzioni o maggiorazioni previste dalla norma e il corrispettivo pattuito sono riportati a fini di trasparenza.', {
-      align: 'left',
-    });
-    doc.moveDown(0.6);
+    if (normativa) {
+      doc.text(normativa, { align: 'left' });
+      doc.moveDown(0.4);
+    }
 
-    sectionTitle('DETTAGLIO DELLA METODOLOGIA DI CALCOLO');
-    keyValueRow('Riferimento normativo', normativa);
-    keyValueRow('Riquadro ministeriale', riquadro || '-');
-    doc.moveDown(0.2);
-
-    sectionTitle('RIEPILOGO DATI INSERITI');
+    sectionTitle('Riepilogo Dati Inseriti');
     drawZebraTable({
       columns: ['Voce', 'Dettaglio', 'Valore'],
       rows: m.inputRows.length ? m.inputRows : [['N/D', 'Nessun dato disponibile', '-']],
     });
 
-    sectionTitle('LOGICA STEP-BY-STEP (SCAGLIONI)');
     drawZebraTable({
-      columns: ['Fascia', 'Dettaglio', 'Parziale'],
+      columns: ['Fascia', 'Descrizione Quota/Aliquota', 'Importo Parziale'],
       rows: m.scaglioniRows,
+      rowFill: (r) => {
+        const label = r && r[0] ? String(r[0]) : '';
+        if (label.toLowerCase().includes('base fissa')) return '#e8eaf6';
+        if (label.toLowerCase().includes('totale')) return '#ede7f6';
+        return null;
+      },
     });
 
-    sectionTitle('MODIFICATORI APPLICATI');
-    fontRegular();
-    doc.fontSize(10).fillColor('#111');
-    m.mods.forEach((line) => {
-      doc.text(line);
+    sectionTitle('Modificatori e Coefficienti');
+    drawHighlightBox({
+      title: 'Modificatori Applicati',
+      lines: m.mods,
     });
-    doc.moveDown(0.8);
 
-    sectionTitle('TABELLA CALCOLO');
+    sectionTitle('Riepilogo Finale e Confronto');
 
-    const inputCorr = input && input.corrispettivoPattuito != null && !Number.isNaN(input.corrispettivoPattuito)
-      ? currency(input.corrispettivoPattuito)
-      : '-';
-    const inputPct = input && input.percentuale != null && !Number.isNaN(input.percentuale)
-      ? `${input.percentuale}%`
-      : '-';
+    const refNum = toNumber(result && result.chosen);
+    const refDisplay = Number.isFinite(refNum) ? currency(refNum) : String(result && result.chosen ? result.chosen : '-');
 
-    const rows = [
-      ['Corrispettivo pattuito', 'Valore inserito', inputCorr],
-      ['Parametro di riferimento ministeriale', `Criterio: ${calculation.criterio}`, String(result.chosen || '-')],
-      ['Percentuale', 'Posizionamento nel range (0%=min, 100%=max)', inputPct],
-      ['TOTALE EQUO COMPENSO', 'Importo finale', String(result.compenso_pattuito || result.chosen || '-')],
-    ];
+    const minNum = toNumber(result && result.min);
+    const minDisplay = Number.isFinite(minNum) ? currency(minNum) : String(result && result.min ? result.min : '-');
+
+    const pattuitoInput = toNumber(input && input.corrispettivoPattuito);
+    const pattuitoEff = Number.isFinite(pattuitoInput) ? pattuitoInput : (Number.isFinite(refNum) ? refNum : NaN);
+    const pattuitoDisplay = Number.isFinite(pattuitoEff)
+      ? currency(pattuitoEff)
+      : (result && result.compenso_pattuito ? String(result.compenso_pattuito) : '-');
+
+    const delta = (Number.isFinite(pattuitoEff) && Number.isFinite(refNum)) ? (pattuitoEff - refNum) : NaN;
+    const deltaDisplay = Number.isFinite(delta) ? currency(delta) : '-';
+
+    const pctDelta = (Number.isFinite(delta) && Number.isFinite(refNum) && refNum !== 0) ? ((delta / refNum) * 100) : NaN;
+    const pctLabel = Number.isFinite(pctDelta) ? `${pctDelta.toFixed(2)}%` : 'N/D';
+
+    const isBelowMin = (Number.isFinite(minNum) && Number.isFinite(pattuitoEff))
+      ? (pattuitoEff < minNum)
+      : (Number.isFinite(delta) ? (delta < 0) : false);
+    const statusLabel = (Number.isFinite(pattuitoEff) && (Number.isFinite(minNum) || Number.isFinite(delta)))
+      ? (isBelowMin ? `SOTTO SOGLIA (${pctLabel})` : `CONFORME (${pctLabel})`)
+      : 'N/D';
 
     drawZebraTable({
-      columns: ['Voce', 'Dettaglio', 'Importo (€)'],
-      rows,
+      columns: ['Voce', 'Dettaglio', 'Valore'],
+      rows: [
+        ['Parametro Ministeriale', `Criterio: ${criterio || '-'}`, refDisplay],
+        ['Corrispettivo Pattuito', 'Valore inserito dall\'utente', pattuitoDisplay],
+        ['Scostamento (Delta)', 'Pattuito - Ministeriale', deltaDisplay],
+        ['Stato Conformità Legge 49/2023', isBelowMin ? `Sotto soglia (min ${minDisplay})` : `Conforme (min ${minDisplay})`, statusLabel],
+      ],
+      rowFill: (r) => {
+        const label = r && r[0] ? String(r[0]) : '';
+        if (label.toLowerCase().includes('stato conformità') && Number.isFinite(delta)) {
+          return isBelowMin ? '#ffebee' : '#e8f5e9';
+        }
+        return null;
+      },
     });
+
+    if (Number.isFinite(delta)) {
+      fontBold();
+      doc.fontSize(10).fillColor(isBelowMin ? themeNegative : themePositive);
+      doc.text(isBelowMin
+        ? `Esito: corrispettivo sotto soglia (min ${minDisplay}) (${pctLabel}).`
+        : `Esito: corrispettivo conforme (min ${minDisplay}) (${pctLabel}).`
+      );
+      fontRegular();
+      doc.fillColor('#111');
+      doc.moveDown(0.4);
+    }
 
     // Apply footer + pagination to each buffered page
     const range = doc.bufferedPageRange();
