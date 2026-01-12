@@ -330,21 +330,42 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     }
 
     function drawFooter(pageNumber, pageCount) {
-      const footerY = doc.page.height - doc.page.margins.bottom + 8;
+      const footerY = doc.page.height - doc.page.margins.bottom - 28;
       const startX = doc.page.margins.left;
       const maxW = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+
+      const prevX = doc.x;
+      const prevY = doc.y;
+
+      function fitToWidth(text, width) {
+        const s = String(text || '');
+        if (doc.widthOfString(s) <= width) return s;
+        const ell = '...';
+        let out = s;
+        while (out.length > 0 && doc.widthOfString(out + ell) > width) {
+          out = out.slice(0, -1);
+        }
+        return out.length ? (out + ell) : ell;
+      }
 
       doc.save();
       fontRegular();
       doc.fontSize(8).fillColor('#333');
-      doc.text(
+
+      const legal = fitToWidth(
         'Il presente documento attesta la conformità ai sensi della Legge 49/2023.',
-        startX,
-        footerY - 30,
-        { width: maxW, align: 'left' }
+        maxW
       );
-      doc.text(`Pagina ${pageNumber} di ${pageCount}`, startX, footerY - 8, { width: maxW, align: 'center' });
+      doc.text(legal, startX, footerY, { lineBreak: false });
+
+      const pageLabel = `Pagina ${pageNumber} di ${pageCount}`;
+      const pageLabelW = doc.widthOfString(pageLabel);
+      const pageX = startX + Math.max(0, (maxW - pageLabelW) / 2);
+      doc.text(pageLabel, pageX, footerY + 14, { lineBreak: false });
       doc.restore();
+
+      doc.x = prevX;
+      doc.y = prevY;
     }
 
     function normativeReferenceFor(riquadro, docType) {
