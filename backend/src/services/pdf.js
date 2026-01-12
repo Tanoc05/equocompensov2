@@ -829,13 +829,15 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
     const deltaDisplay = Number.isFinite(delta) ? currency(delta) : '-';
 
     const pctDelta = (Number.isFinite(delta) && Number.isFinite(refNum) && refNum !== 0) ? ((delta / refNum) * 100) : NaN;
-    const pctLabel = Number.isFinite(pctDelta) ? `${pctDelta.toFixed(2)}%` : 'N/D';
+    const pctRounded = Number.isFinite(pctDelta) ? Number(pctDelta.toFixed(2)) : NaN;
+    const pctLabel = Number.isFinite(pctRounded) ? `${pctRounded.toFixed(2)}%` : 'N/D';
+    const pctSuffix = Number.isFinite(pctRounded) && pctRounded !== 0 ? ` (${pctLabel})` : '';
 
     const isBelowMin = (Number.isFinite(minNum) && Number.isFinite(pattuitoEff))
       ? (pattuitoEff < minNum)
       : (Number.isFinite(delta) ? (delta < 0) : false);
     const statusLabel = (Number.isFinite(pattuitoEff) && (Number.isFinite(minNum) || Number.isFinite(delta)))
-      ? (isBelowMin ? `SOTTO SOGLIA (${pctLabel})` : `CONFORME (${pctLabel})`)
+      ? (isBelowMin ? `SOTTO SOGLIA${pctSuffix}` : `CONFORME${pctSuffix}`)
       : 'N/D';
 
     drawZebraTable({
@@ -859,8 +861,8 @@ function generateCalculationPdf({ filePath, user, calculation, result }) {
       fontBold();
       doc.fontSize(10).fillColor(isBelowMin ? themeNegative : themePositive);
       doc.text(isBelowMin
-        ? `Esito: corrispettivo sotto soglia (min ${minDisplay}) (${pctLabel}).`
-        : `Esito: corrispettivo conforme (min ${minDisplay}) (${pctLabel}).`
+        ? `Esito: corrispettivo sotto soglia (min ${minDisplay})${pctSuffix}.`
+        : `Esito: corrispettivo conforme (min ${minDisplay})${pctSuffix}.`
       );
       fontRegular();
       doc.fillColor('#111');
